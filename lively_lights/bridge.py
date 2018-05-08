@@ -1,7 +1,8 @@
 #! /usr/bin/env python3
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 app = Flask(__name__)
+
 
 @app.route('/api/username/lights/1', methods=['GET'])
 def get_light():

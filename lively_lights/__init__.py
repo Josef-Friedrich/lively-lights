@@ -15,6 +15,10 @@ import lockfile
 import astral
 from datetime import date
 
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
+
 args = None
 
 

@@ -17,6 +17,11 @@ setup(
     license='MIT',
     packages=['lively_lights'],
     url='https://github.com/Josef-Friedrich/lively_lights',
+    entry_points = {
+        'console_scripts': [
+            'lively-lights.py = lively_lights:main',
+        ],
+    },
     install_requires = [
         'astral',
         'flask',
@@ -27,4 +32,4 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
     ],
-    zip_safe=False, )
+)
