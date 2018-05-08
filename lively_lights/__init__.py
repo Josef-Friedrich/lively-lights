@@ -285,6 +285,8 @@ def parse_args():
         help='Lively scenes',
     )
 
+    subparsers.required = True
+
     breath = subparsers.add_parser(
         'breath',
         help='Fade the lights smoothly up and down, so it seems that they '
