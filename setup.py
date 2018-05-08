@@ -8,24 +8,21 @@ def read(fname):
 
 
 setup(
-    name='audiorename',
+    name='lively_lights',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     author='Josef Friedrich',
     author_email='josef@friedrich.rocks',
-    description=('Rename audio files from metadata tags.'),
+    description=('Lively light scenes on then Philips Hue lamps using Python.'),
     license='MIT',
-    packages=['audiorename'],
-    keywords='audio',
-    url='https://github.com/Josef-Friedrich/audiorename',
-    install_requires=[
-        'phrydy>=1.2.0',
-        'tmep>=1.0.8',
-        'ansicolor',
-        'six',
-        'musicbrainzngs',
+    packages=['lively_lights'],
+    url='https://github.com/Josef-Friedrich/lively_lights',
+    install_requires = [
+        'astral',
+        'flask',
+        'phue',
+        'python-daemon',
     ],
-    scripts=['bin/audiorenamer'],
     long_description=read('README.rst'),
     classifiers=[
         'Development Status :: 3 - Alpha',
