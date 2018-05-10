@@ -66,8 +66,8 @@ class Hue(object):
         if not ip or not username:
             ip, username = self._read_config()
 
-        self._phue_bridge = Bridge(ip, username)
-        self.lights = Lights(self._phue_bridge)
+        self.bridge = Bridge(ip, username)
+        self.lights = Lights(self.bridge)
 
     def _get_environ(self, key):
             if key in os.environ:
@@ -503,11 +503,7 @@ def main():
         sunset_sunrise()
         return
 
-    bridge = Bridge(ip=args.ip, username=args.username)
-    lights = Lights(bridge, light_ids=args.lights,
-                    detect_reachable=args.reachable)
-
-    print(args)
+    hue = Hue(ip=args.ip, username=args.username)
 
     if args.daemonize:
         ctx_mgr = daemon.DaemonContext(
@@ -519,8 +515,8 @@ def main():
     with ctx_mgr:
         if args.scene == 'pendulum':
             scene = ScenePendulum(
-                bridge,
-                lights,
+                hue.bridge,
+                hue.lights,
                 color_1=args.color1,
                 color_2=args.color2,
                 lights_1=args.lights1,
@@ -530,9 +526,13 @@ def main():
             )
 
         elif args.scene == 'sequence':
-            scene = SceneSequence(bridge, lights, args.brightness,
-                                  args.hue_sequence, args.sleep_time,
-                                  args.transition_time)
+            scene = SceneSequence(
+                hue.bridge,
+                hue.lights,
+                args.brightness,
+                args.hue_sequence, args.sleep_time,
+                args.transition_time
+            )
 
         scene.start(time_out=args.time_out)
 

@@ -56,4 +56,5 @@ class TestClassHue(unittest.TestCase):
         self._del_environs('LILY_LIGHTS_IP', 'LIVELY_LIGHTS_USERNAME')
 
         lively_lights.Hue()
+        os.remove(self.config_path)
         bridge.assert_called_with('5.6.7.8', 'test2')
