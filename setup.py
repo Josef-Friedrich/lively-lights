@@ -1,6 +1,6 @@
-import versioneer
-import os
 from setuptools import setup
+import os
+import versioneer
 
 
 def read(fname):
@@ -16,12 +16,13 @@ setup(
     description=('Lively light scenes on then Philips Hue lamps using Python.'),
     license='MIT',
     packages=['lively_lights'],
-    url='https://github.com/Josef-Friedrich/lively_lights',
+    url='https://github.com/Josef-Friedrich/lively-lights',
     entry_points = {
         'console_scripts': [
             'lively-lights.py = lively_lights:main',
         ],
     },
+    keywords='hue philips',
     install_requires = [
         'astral',
         'flask',
