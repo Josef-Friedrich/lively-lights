@@ -61,24 +61,40 @@ def get_reachable_lights(bridge):
 
 class Lights(object):
 
-    def __init__(self, bridge, light_ids=None, detect_reachable=False):
+    def __init__(self, bridge, light_ids=None, detect_reachable=False,
+                 refresh_interval=60):
+        """
+        :param int interval: Search every n seconds for new lights
+        """
         self.bridge = bridge
         self.light_ids = light_ids
         self.detect_reachable = detect_reachable
+        self.refresh_interval = refresh_interval
+        self._last_refresh = None
+        self._reachable_lights = None
 
-    def _get_all_reachable(self):
+    def _get_reachable(self, light_ids=None):
         lights = []
-        for light in self.bridge.lights:
-            if light.reachable:
-                lights.append(light)
-        return lights
 
-    def _get_reachable_by_id(self, light_ids):
-        lights = []
-        for light_id in light_ids:
-            if self.bridge[light_id].reachable:
-                lights.append(self.bridge[light_id])
-        return lights
+        if self._reachable_lights and \
+           self.refresh_interval and \
+           self._last_refresh and \
+           time.time() - self._last_refresh < self.refresh_interval:
+            return self._reachable_lights
+        else: # refresh
+            self._last_refresh = time.time()
+            if light_ids:
+                for light_id in light_ids:
+                    if self.bridge[light_id].reachable:
+                        lights.append(self.bridge[light_id])
+            else:
+                for light in self.bridge.lights:
+                    if light.reachable:
+                        lights.append(light)
+
+            self._reachable_lights = lights
+
+            return lights
 
     def _convert_to_light_objects(self, light_ids):
         lights = []
@@ -89,9 +105,9 @@ class Lights(object):
     def list(self):
         if self.detect_reachable:
             if self.light_ids:
-                return self._get_reachable_by_id(self.light_ids)
+                return self._get_reachable(self.light_ids)
             else:
-                return self._get_all_reachable()
+                return self._get_reachable()
         else:  # not detect_reachable
             if self.light_ids:
                 return self._convert_to_light_objects(self.light_ids)
