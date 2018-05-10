@@ -408,13 +408,15 @@ def main():
     else:
         ctx_mgr = contextlib.suppress()
 
-    if args.scene == 'sequence':
-        with ctx_mgr:
-            sequence = SceneSequence(bridge, lights, args.brightness,
+
+    with ctx_mgr:
+        if args.scene == 'sequence':
+
+            scene = SceneSequence(bridge, lights, args.brightness,
                                      args.hue_sequence, args.sleep_time,
                                      args.transition_time)
 
-            sequence.start(time_out=args.time_out)
+        scene.start(time_out=args.time_out)
 
 
 if __name__ == '__main__':
