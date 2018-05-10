@@ -185,8 +185,8 @@ class SceneBreath(object):
 
 class SceneSequence(object):
 
-    def __init__(self, bridge, lights, brightness, hue_sequence, sleep_time,
-                 transition_time):
+    def __init__(self, bridge, lights, brightness=None, hue_sequence=None,
+                 sleep_time=None, transition_time=None):
         self.bridge = bridge
         self.lights = lights
         self.brightness = brightness
@@ -194,9 +194,7 @@ class SceneSequence(object):
         self.sleep_time = sleep_time
         self.transition_time = transition_time
 
-        self._set_defaults()
-
-    def _set_defaults(self):
+    def _setup(self):
         if not self.brightness:
             self.brightness = randint(100, 255)
 
@@ -215,6 +213,7 @@ class SceneSequence(object):
             self.transition_time = randint(1, 3)
 
     def start(self, time_out=None):
+        self._setup()
         begin = time.time()
         while True:
             for hue in self.hue_sequence:
@@ -408,13 +407,12 @@ def main():
     else:
         ctx_mgr = contextlib.suppress()
 
-
     with ctx_mgr:
         if args.scene == 'sequence':
 
             scene = SceneSequence(bridge, lights, args.brightness,
-                                     args.hue_sequence, args.sleep_time,
-                                     args.transition_time)
+                                  args.hue_sequence, args.sleep_time,
+                                  args.transition_time)
 
         scene.start(time_out=args.time_out)
 
