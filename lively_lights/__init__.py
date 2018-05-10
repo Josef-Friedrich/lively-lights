@@ -53,6 +53,19 @@ def set_light_multiple(bridge, light_id, data):
     )
 
 
+class Hue(object):
+
+    def __init__(self, ip=None, username=None):
+        if not ip and 'LIVELY_LIGHTS_IP' in os.environ:
+            ip = os.environ['LIVELY_LIGHTS_IP']
+
+        if not username and 'LIVELY_LIGHTS_USERNAME' in os.environ:
+            username = os.environ['LIVELY_LIGHTS_USERNAME']
+
+        self._phue_bridge = Bridge(ip, username)
+        self.lights = Lights(self._phue_bridge)
+
+
 def get_reachable_lights(bridge):
     lights = []
     for light in bridge.lights:
