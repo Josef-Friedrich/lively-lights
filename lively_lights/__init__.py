@@ -22,6 +22,13 @@ del get_versions
 args = None
 
 
+def float_range(min, max, decimal_places=1):
+    base = 10 ** decimal_places
+    min = min * base
+    max = max * base
+    return randint(min, max) / base
+
+
 def sunset_sunrise():
     loc = astral.Location(('Bern', 'Switzerland', 46.95, 7.47, 'Europe/Zurich',
                            510))
@@ -223,12 +230,12 @@ class SceneSequence(object):
             )
 
         if not self.sleep_time:
-            self.sleep_time = randint(4, 8)
+            self.sleep_time = float_range(4, 8)
 
         if not self.transition_time:
-            self.transition_time = randint(1, 3)
+            self.transition_time = float_range(1, 3)
 
-        self.transition_time = self.transition_time * 10
+        self.transition_time = int(round(self.transition_time * 10))
 
     def start(self, time_out=None):
         self._setup()
