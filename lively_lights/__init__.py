@@ -81,7 +81,7 @@ class Lights(object):
            self._last_refresh and \
            time.time() - self._last_refresh < self.refresh_interval:
             return self._reachable_lights
-        else: # refresh
+        else:  # refresh
             self._last_refresh = time.time()
             if light_ids:
                 for light_id in light_ids:
