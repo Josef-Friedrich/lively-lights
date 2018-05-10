@@ -15,6 +15,7 @@ import lockfile
 import os
 import signal
 import time
+import configparser
 
 
 from ._version import get_versions
@@ -56,14 +57,30 @@ def set_light_multiple(bridge, light_id, data):
 class Hue(object):
 
     def __init__(self, ip=None, username=None):
-        if not ip and 'LIVELY_LIGHTS_IP' in os.environ:
-            ip = os.environ['LIVELY_LIGHTS_IP']
+        if not ip:
+            ip = self._get_environ('LIVELY_LIGHTS_IP')
 
-        if not username and 'LIVELY_LIGHTS_USERNAME' in os.environ:
-            username = os.environ['LIVELY_LIGHTS_USERNAME']
+        if not username:
+            username = self._get_environ('LIVELY_LIGHTS_USERNAME')
+
+        if not ip or not username:
+            ip, username = self._read_config()
 
         self._phue_bridge = Bridge(ip, username)
         self.lights = Lights(self._phue_bridge)
+
+    def _get_environ(self, key):
+            if key in os.environ:
+                return os.environ[key]
+
+    def _read_config(self):
+        config_path = os.path.expanduser('~/.lively-lights.ini')
+        if os.path.exists(config_path):
+            config = configparser.ConfigParser()
+            config.read(config_path)
+            return config['default']['ip'], config['default']['username']
+        else:
+            return None, None
 
 
 def get_reachable_lights(bridge):
