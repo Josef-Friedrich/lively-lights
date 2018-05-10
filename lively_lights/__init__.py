@@ -2,31 +2,26 @@
 
 """Control the hue lamps from Philips using Python."""
 
+from datetime import date
+from lively_lights import _random as random
 from multiprocessing import Process, Queue
 from phue import Bridge
 from random import randint
 import argparse
+import astral
+import contextlib
 import daemon
+import lockfile
 import os
 import signal
 import time
-import contextlib
-import lockfile
-import astral
-from datetime import date
+
 
 from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 
 args = None
-
-
-def float_range(min, max, decimal_places=1):
-    base = 10 ** decimal_places
-    min = min * base
-    max = max * base
-    return randint(min, max) / base
 
 
 def sunset_sunrise():
@@ -206,6 +201,67 @@ class SceneBreath(object):
             os.kill(pid, signal.SIGTERM)
 
 
+class ScenePendulum(object):
+
+    def __init__(self, bridge, lights, color_1=None, color_2=None,
+                 lights_1=None, lights_2=None, sleep_time=None,
+                 transition_time=None):
+        self.bridge = bridge
+        self.lights = lights
+        self.color_1 = color_1
+        self.color_2 = color_1
+        self.lights_1 = lights_1
+        self.lights_2 = lights_2
+        self.sleep_time = sleep_time
+        self.transition_time = transition_time
+
+    def _distribute_lights(self):
+        lights = self.lights.list()
+        random.shuffle(lights)
+        count = len(lights)
+        half = int(count / 2)
+        return (lights[0:half], lights[half:])
+
+    def _setup(self):
+        if not self.color_1:
+            self.color_1 = random.hue()
+
+        if not self.color_2:
+            self.color_2 = random.hue()
+
+        self.lights_1, self.lights_2 = self._distribute_lights()
+
+        if not self.sleep_time:
+            self.sleep_time = random.time(4, 8)
+
+        if not self.transition_time:
+            self.transition_time = random.time(1, 3, is_transition_time=True)
+
+    def _set_light_group(self, lights, hue):
+        for light in lights:
+            data = {
+                'hue': hue,
+                'bri': 254,
+                'transitiontime': self.transition_time,
+                'sat': 254,
+            }
+            set_light_multiple(self.bridge, light.light_id, data)
+
+    def start(self, time_out=None):
+        self._setup()
+        begin = time.time()
+        while True:
+            self._set_light_group(self.lights_1, self.color_1)
+            self._set_light_group(self.lights_2, self.color_2)
+            time.sleep(self.sleep_time)
+            self._set_light_group(self.lights_1, self.color_2)
+            self._set_light_group(self.lights_2, self.color_1)
+            time.sleep(self.sleep_time)
+
+            if time_out and time.time() - begin > time_out:
+                break
+
+
 class SceneSequence(object):
 
     def __init__(self, bridge, lights, brightness=None, hue_sequence=None,
@@ -219,23 +275,21 @@ class SceneSequence(object):
 
     def _setup(self):
         if not self.brightness:
-            self.brightness = randint(100, 255)
+            self.brightness = random.brightness(min=100)
 
         if not self.hue_sequence:
             self.hue_sequence = (
-                randint(0, 65535),
-                randint(0, 65535),
-                randint(0, 65535),
-                randint(0, 65535),
+                random.hue(),
+                random.hue(),
+                random.hue(),
+                random.hue(),
             )
 
         if not self.sleep_time:
-            self.sleep_time = float_range(4, 8)
+            self.sleep_time = random.time(4, 8)
 
         if not self.transition_time:
-            self.transition_time = float_range(1, 3)
-
-        self.transition_time = int(round(self.transition_time * 10))
+            self.transition_time = random.time(1, 3, is_transition_time=True)
 
     def start(self, time_out=None):
         self._setup()
@@ -363,7 +417,7 @@ def parse_args():
     )
 
     pendulum.add_argument(
-        '-s', '--switch-time',
+        '-s', '--sleep-time',
         type=float,
         help='Time in seconds to switch between the two lights groups.',
     )
@@ -433,8 +487,19 @@ def main():
         ctx_mgr = contextlib.suppress()
 
     with ctx_mgr:
-        if args.scene == 'sequence':
+        if args.scene == 'pendulum':
+            scene = ScenePendulum(
+                bridge,
+                lights,
+                color_1=args.color1,
+                color_2=args.color2,
+                lights_1=args.lights1,
+                lights_2=args.lights2,
+                sleep_time=args.sleep_time,
+                transition_time=args.transition_time,
+            )
 
+        elif args.scene == 'sequence':
             scene = SceneSequence(bridge, lights, args.brightness,
                                   args.hue_sequence, args.sleep_time,
                                   args.transition_time)
