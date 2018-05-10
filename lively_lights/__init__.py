@@ -228,6 +228,8 @@ class SceneSequence(object):
         if not self.transition_time:
             self.transition_time = randint(1, 3)
 
+        self.transition_time = self.transition_time * 10
+
     def start(self, time_out=None):
         self._setup()
         begin = time.time()
