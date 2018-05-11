@@ -54,33 +54,40 @@ def set_light_multiple(bridge, light_id, data):
     )
 
 
+class Configuration(object):
+
+    def __init__(self):
+        self.config_path = os.path.expanduser('~/.lively-lights.ini')
+        if os.path.exists(self.config_path):
+            self.config = configparser.ConfigParser()
+            self.config.read(self.config_path)
+
+    @staticmethod
+    def _envrion_key(section, key):
+        return 'LIVELY_LIGHTS_{}_{}'.format(section.upper(), key.upper())
+
+    def get(self, section, key):
+        envrion_key = self._envrion_key(section, key)
+        if envrion_key in os.environ:
+            return os.environ[envrion_key]
+        elif section in self.config and key in self.config[section]:
+            return self.config[section][key]
+
+
 class Hue(object):
 
     def __init__(self, ip=None, username=None):
+        self.config = Configuration()
+
         if not ip:
-            ip = self._get_environ('LIVELY_LIGHTS_IP')
+            ip = self.config.get('bridge', 'ip')
 
         if not username:
-            username = self._get_environ('LIVELY_LIGHTS_USERNAME')
-
-        if not ip or not username:
-            ip, username = self._read_config()
+            username = self.config.get('bridge', 'username')
 
         self.bridge = Bridge(ip, username)
         self.lights = Lights(self.bridge)
-
-    def _get_environ(self, key):
-            if key in os.environ:
-                return os.environ[key]
-
-    def _read_config(self):
-        config_path = os.path.expanduser('~/.lively-lights.ini')
-        if os.path.exists(config_path):
-            config = configparser.ConfigParser()
-            config.read(config_path)
-            return config['bridge']['ip'], config['bridge']['username']
-        else:
-            return None, None
+        self.config = Configuration()
 
 
 def get_reachable_lights(bridge):
