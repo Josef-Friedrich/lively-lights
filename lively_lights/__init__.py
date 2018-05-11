@@ -78,7 +78,7 @@ class Hue(object):
         if os.path.exists(config_path):
             config = configparser.ConfigParser()
             config.read(config_path)
-            return config['default']['ip'], config['default']['username']
+            return config['bridge']['ip'], config['bridge']['username']
         else:
             return None, None
 

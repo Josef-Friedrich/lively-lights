@@ -50,7 +50,7 @@ class TestClassHue(unittest.TestCase):
     @mock.patch('lively_lights.Bridge')
     def test_ini(self, bridge):
         config = open(self.config_path, 'w')
-        config.write('[default]\nip = 5.6.7.8\nusername = test2\n')
+        config.write('[bridge]\nip = 5.6.7.8\nusername = test2\n')
         config.close()
 
         self._del_environs('LILY_LIGHTS_IP', 'LIVELY_LIGHTS_USERNAME')
