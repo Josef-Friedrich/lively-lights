@@ -32,9 +32,12 @@ class DayLight(object):
             'region',
             config.get('location', 'latitude'),
             config.get('location', 'longitude'),
-            config.get('location', 'time_zone'),
+            config.get('location', 'timezone'),
             config.get('location', 'elevation'),
         ))
+
+    def sunrise(self):
+        return self.location.sunset()
 
 
 def light_info(light, attr):

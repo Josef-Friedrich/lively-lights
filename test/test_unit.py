@@ -31,3 +31,13 @@ class TestClassConfiguration(unittest.TestCase):
         config = lively_lights.Configuration(config_environ_prefix='AAA')
         self.assertEqual(config.get('bridge', 'ip'), '1.2.3.4')
         self.assertEqual(config.get('bridge', 'username'), 'test')
+
+
+class TestClassDayLight(unittest.TestCase):
+
+    def test_day_light(self):
+        config = lively_lights.Configuration(config_file_path=config_file)
+
+        day_light = lively_lights.DayLight(config)
+
+        self.assertTrue(day_light)
