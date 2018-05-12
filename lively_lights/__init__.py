@@ -2,7 +2,6 @@
 
 """Control the hue lamps from Philips using Python."""
 
-from datetime import date
 from lively_lights import _random as random
 from multiprocessing import Process, Queue
 from phue import Bridge
@@ -25,11 +24,17 @@ del get_versions
 args = None
 
 
-def sunset_sunrise():
-    loc = astral.Location(('Bern', 'Switzerland', 46.95, 7.47, 'Europe/Zurich',
-                           510))
-    for event, _time in loc.sun(date.today()).items():
-        print(event, 'at', _time)
+class DayLight(object):
+
+    def __init__(self, config):
+        self.location = astral.Location((
+            'name',
+            'region',
+            config.get('location', 'latitude'),
+            config.get('location', 'longitude'),
+            config.get('location', 'time_zone'),
+            config.get('location', 'elevation'),
+        ))
 
 
 def light_info(light, attr):
@@ -56,15 +61,17 @@ def set_light_multiple(bridge, light_id, data):
 
 class Configuration(object):
 
-    def __init__(self):
-        self.config_path = os.path.expanduser('~/.lively-lights.ini')
+    def __init__(self, config_file_path='~/.lively-lights.ini',
+                 config_environ_prefix='LIVELY_LIGHTS'):
+        self.config_path = os.path.expanduser(config_file_path)
+        self.environ_prefix = config_environ_prefix
         if os.path.exists(self.config_path):
             self.config = configparser.ConfigParser()
             self.config.read(self.config_path)
 
-    @staticmethod
-    def _envrion_key(section, key):
-        return 'LIVELY_LIGHTS_{}_{}'.format(section.upper(), key.upper())
+    def _envrion_key(self, section, key):
+        return '{}_{}_{}'.format(self.environ_prefix, section.upper(),
+                                 key.upper())
 
     def get(self, section, key):
         envrion_key = self._envrion_key(section, key)
@@ -76,8 +83,10 @@ class Configuration(object):
 
 class Hue(object):
 
-    def __init__(self, ip=None, username=None):
-        self.config = Configuration()
+    def __init__(self, ip=None, username=None,
+                 config_file_path='~/.lively-lights.ini',
+                 config_environ_prefix='LIVELY_LIGHTS'):
+        self.config = Configuration(config_file_path, config_environ_prefix)
 
         if not ip:
             ip = self.config.get('bridge', 'ip')
@@ -87,7 +96,6 @@ class Hue(object):
 
         self.bridge = Bridge(ip, username)
         self.lights = Lights(self.bridge)
-        self.config = Configuration()
 
 
 def get_reachable_lights(bridge):
@@ -506,11 +514,12 @@ def main():
     global args
     args = parse_args()
 
-    if args.scene == 'sunset':
-        sunset_sunrise()
-        return
-
     hue = Hue(ip=args.ip, username=args.username)
+
+    if args.scene == 'sunset':
+        day_light = DayLight(hue.config)
+        print(day_light)
+        return
 
     if args.daemonize:
         ctx_mgr = daemon.DaemonContext(
