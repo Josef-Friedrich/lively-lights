@@ -15,6 +15,7 @@ import os
 import signal
 import time
 import configparser
+import datetime
 
 
 from ._version import get_versions
@@ -24,20 +25,30 @@ del get_versions
 args = None
 
 
-class DayLight(object):
+class DayNight(object):
 
     def __init__(self, config):
         self.location = astral.Location((
             'name',
             'region',
-            config.get('location', 'latitude'),
-            config.get('location', 'longitude'),
+            float(config.get('location', 'latitude')),
+            float(config.get('location', 'longitude')),
             config.get('location', 'timezone'),
-            config.get('location', 'elevation'),
+            float(config.get('location', 'elevation')),
         ))
 
     def sunrise(self):
+        return self.location.sunrise()
+
+    def sunset(self):
         return self.location.sunset()
+
+    def is_day(self):
+        sunrise = self.sunrise()
+        return sunrise < datetime.datetime.now(sunrise.tzinfo) < self.sunset()
+
+    def is_night(self):
+        return not self.is_day()
 
 
 def light_info(light, attr):
@@ -520,8 +531,8 @@ def main():
     hue = Hue(ip=args.ip, username=args.username)
 
     if args.scene == 'sunset':
-        day_light = DayLight(hue.config)
-        print(day_light)
+        day_night = DayNight(hue.config)
+        print(day_night)
         return
 
     if args.daemonize:

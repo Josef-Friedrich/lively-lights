@@ -33,11 +33,11 @@ class TestClassConfiguration(unittest.TestCase):
         self.assertEqual(config.get('bridge', 'username'), 'test')
 
 
-class TestClassDayLight(unittest.TestCase):
+class TestClassDayNight(unittest.TestCase):
 
     def test_day_light(self):
         config = lively_lights.Configuration(config_file_path=config_file)
 
-        day_light = lively_lights.DayLight(config)
+        day_light = lively_lights.DayNight(config)
 
         self.assertTrue(day_light)
