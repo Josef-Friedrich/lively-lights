@@ -1,9 +1,8 @@
-import unittest
+from _helper import config_file
+from unittest import mock
 import lively_lights
 import os
-from unittest import mock
-
-config_file = os.path.join(os.path.dirname(__file__), 'lively-lights.ini')
+import unittest
 
 
 class TestClassHue(unittest.TestCase):

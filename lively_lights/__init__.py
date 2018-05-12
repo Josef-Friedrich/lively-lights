@@ -81,8 +81,14 @@ def set_light_multiple(bridge, light_id, data):
 
 class Configuration(object):
 
-    def __init__(self, config_file_path='~/.lively-lights.ini',
-                 config_environ_prefix='LIVELY_LIGHTS'):
+    def __init__(self, config_file_path=None,
+                 config_environ_prefix=None):
+
+        if not config_file_path:
+            config_file_path = '~/.lively-lights.ini'
+        if not config_environ_prefix:
+            config_environ_prefix = 'LIVELY_LIGHTS'
+
         self.config_path = os.path.expanduser(config_file_path)
         self.environ_prefix = config_environ_prefix
         if os.path.exists(self.config_path):
@@ -104,8 +110,8 @@ class Configuration(object):
 class Hue(object):
 
     def __init__(self, ip=None, username=None,
-                 config_file_path='~/.lively-lights.ini',
-                 config_environ_prefix='LIVELY_LIGHTS'):
+                 config_file_path=None,
+                 config_environ_prefix=None):
         self.config = Configuration(config_file_path, config_environ_prefix)
 
         if not ip:
@@ -382,6 +388,11 @@ def parse_args():
     )
 
     parser.add_argument(
+        '-c', '--config-file',
+        help='Path to configuration file',
+    )
+
+    parser.add_argument(
         '-d', '--daemonize',
         action='store_true',
         help='Fork the process in the background.',
@@ -534,13 +545,14 @@ def main():
     global args
     args = parse_args()
 
-    config = Configuration()
+    config = Configuration(config_file_path=args.config_file)
     if args.scene == 'daynight':
         day_night = DayNight(config)
         day_night.overview()
         return
 
-    hue = Hue(ip=args.ip, username=args.username)
+    hue = Hue(ip=args.ip, username=args.username,
+              config_file_path=args.config_file)
 
     if args.daemonize:
         ctx_mgr = daemon.DaemonContext(
