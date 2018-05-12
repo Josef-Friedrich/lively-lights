@@ -72,8 +72,6 @@ def light_info(light, attr):
 
 
 def set_light_multiple(bridge, light_id, data):
-    if args.verbose:
-        print('{}{}'.format(light_id, data))
     return bridge.request(
         mode='PUT',
         address='/api/{}/lights/{}/state'.format(bridge.username, light_id),
