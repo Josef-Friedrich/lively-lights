@@ -1,6 +1,7 @@
 from pygments import highlight, lexers, formatters
 import json
 
+
 def colorful_json(data):
     formatted_json = json.dumps(data, sort_keys=True, indent=4)
 
