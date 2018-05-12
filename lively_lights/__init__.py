@@ -50,6 +50,14 @@ class DayNight(object):
     def is_night(self):
         return not self.is_day()
 
+    def overview(self):
+        sun = self.location.sun()
+        print('Dawn:    {}'.format(sun['dawn']))
+        print('Sunrise: {}'.format(sun['sunrise']))
+        print('Noon:    {}'.format(sun['noon']))
+        print('Sunset:  {}'.format(sun['sunset']))
+        print('Dusk:    {}'.format(sun['dusk']))
+
 
 def light_info(light, attr):
     attr_strings = []
@@ -517,7 +525,7 @@ def parse_args():
     )
 
     subparsers.add_parser(
-        'sunset',
+        'daynight',
         help='Print the current sunset and sunrise times.'
     )
 
@@ -528,12 +536,13 @@ def main():
     global args
     args = parse_args()
 
-    hue = Hue(ip=args.ip, username=args.username)
-
-    if args.scene == 'sunset':
-        day_night = DayNight(hue.config)
-        print(day_night)
+    config = Configuration()
+    if args.scene == 'daynight':
+        day_night = DayNight(config)
+        day_night.overview()
         return
+
+    hue = Hue(ip=args.ip, username=args.username)
 
     if args.daemonize:
         ctx_mgr = daemon.DaemonContext(
