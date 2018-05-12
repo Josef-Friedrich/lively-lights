@@ -4,7 +4,7 @@
 
 from lively_lights import _random as random
 from multiprocessing import Process, Queue
-from phue import Bridge
+from lively_lights.phue import Bridge
 from random import randint
 import argparse
 import astral

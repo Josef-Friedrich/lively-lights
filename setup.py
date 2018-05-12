@@ -27,6 +27,7 @@ setup(
         'astral',
         'flask',
         'phue',
+        'Pygments',
         'python-daemon',
     ],
     long_description=read('README.rst'),

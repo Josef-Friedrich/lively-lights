@@ -20,6 +20,7 @@ import os
 import platform
 import sys
 import socket
+from lively_lights._utils import print_request, colorful_json
 if sys.version_info[0] > 2:
     PY3K = True
 else:
@@ -644,6 +645,7 @@ class Bridge(object):
 
     def request(self, mode='GET', address=None, data=None):
         """ Utility function for HTTP GET/PUT requests for the API"""
+        print_request(mode, address, data)
         connection = httplib.HTTPConnection(self.ip, timeout=10)
 
         try:
@@ -662,6 +664,8 @@ class Bridge(object):
 
         result = connection.getresponse()
         response = result.read()
+        if response:
+            print(colorful_json(json.loads(response.decode('utf-8'))))
         connection.close()
         if PY3K:
             return json.loads(response.decode('utf-8'))
