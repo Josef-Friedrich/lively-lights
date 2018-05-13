@@ -8,6 +8,10 @@ def get_parser():
         description='Control the hue lamps from Philips using Python.',
     )
 
+    ##
+    # global
+    ##
+
     parser.add_argument(
         '-c', '--config-file',
         help='Path to configuration file',
@@ -55,12 +59,20 @@ def get_parser():
         help='Make output more verbose.',
     )
 
+    ###########################################################################
+    #
+    ###########################################################################
+
     subparsers = parser.add_subparsers(
-        dest='scene',
+        dest='subcommand',
         help='Lively scenes',
     )
 
     subparsers.required = True
+
+    ##
+    # breath
+    ##
 
     breath = subparsers.add_parser(
         'breath',
@@ -83,6 +95,10 @@ def get_parser():
     # 	-t, --time-range
     # 		A time range in seconds separated by a colon.
     #
+
+    ##
+    # pendulum
+    ##
 
     pendulum = subparsers.add_parser(
         'pendulum',
@@ -125,6 +141,10 @@ def get_parser():
         help='Transition time for the color change (-t 10 = one second).',
     )
 
+    ##
+    # sequence
+    ##
+
     sequence = subparsers.add_parser(
         'sequence',
         help='Change all lights at the same time in a certain sequence.',
@@ -153,6 +173,10 @@ def get_parser():
         type=float,
         help='Transition time in seconds.',
     )
+
+    ##
+    #
+    ##
 
     subparsers.add_parser(
         'daynight',
