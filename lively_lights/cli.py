@@ -60,31 +60,49 @@ def get_parser():
     )
 
     ###########################################################################
+    ###########################################################################
     #
+    ###########################################################################
     ###########################################################################
 
     subcommand = parser.add_subparsers(
-        dest='subcommand',
+        dest='sub',
         help='Lively scenes',
     )
 
     subcommand.required = True
 
+    ###########################################################################
+    # info
+    ###########################################################################
+
+    info_parser = subcommand.add_parser('info')
+    info = info_parser.add_subparsers(dest='subsub')
+    info.required = True
+
     ##
-    # info-daynight
+    # info daynight
     ##
 
-    subcommand.add_parser(
-        'info-daynight',
+    info.add_parser(
+        'daynight',
         help='Print the current sunset and sunrise times.'
     )
 
+    ###########################################################################
+    # scene
+    ###########################################################################
+
+    scene_parser = subcommand.add_parser('scene')
+    scene = scene_parser.add_subparsers(dest='subsub')
+    scene.required = True
+
     ##
-    # scene-breath
+    # scene breath
     ##
 
-    scene_breath = subcommand.add_parser(
-        'scene-breath',
+    scene_breath = scene.add_parser(
+        'breath',
         help='Fade the lights smoothly up and down, so it seems that they '
         'were breathing.'
     )
@@ -109,8 +127,8 @@ def get_parser():
     # scene-pendulum
     ##
 
-    scene_pendulum = subcommand.add_parser(
-        'scene-pendulum',
+    scene_pendulum = scene.add_parser(
+        'pendulum',
         help='Switch two group of lights between twocolors.',
     )
 
@@ -151,11 +169,11 @@ def get_parser():
     )
 
     ##
-    # scene-sequence
+    # scene sequence
     ##
 
-    scene_sequence = subcommand.add_parser(
-        'scene-sequence',
+    scene_sequence = scene.add_parser(
+        'sequence',
         help='Change all lights at the same time in a certain sequence.',
     )
 

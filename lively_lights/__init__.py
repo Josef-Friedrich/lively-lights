@@ -387,7 +387,7 @@ def main():
     args = get_parser().parse_args()
 
     config = Configuration(config_file_path=args.config_file)
-    if args.subcommand == 'info-daynight':
+    if args.sub == 'info' and args.subsub == 'daynight':
         day_night = DayNight(config)
         day_night.overview()
         return
@@ -403,26 +403,27 @@ def main():
         ctx_mgr = contextlib.suppress()
 
     with ctx_mgr:
-        if args.subcommand == 'scene-pendulum':
-            scene = ScenePendulum(
-                hue.bridge,
-                hue.lights,
-                color_1=args.color1,
-                color_2=args.color2,
-                lights_1=args.lights1,
-                lights_2=args.lights2,
-                sleep_time=args.sleep_time,
-                transition_time=args.transition_time,
-            )
+        if args.sub == 'scene':
+            if args.subsub == 'pendulum':
+                scene = ScenePendulum(
+                    hue.bridge,
+                    hue.lights,
+                    color_1=args.color1,
+                    color_2=args.color2,
+                    lights_1=args.lights1,
+                    lights_2=args.lights2,
+                    sleep_time=args.sleep_time,
+                    transition_time=args.transition_time,
+                )
 
-        elif args.subcommand == 'scene-sequence':
-            scene = SceneSequence(
-                hue.bridge,
-                hue.lights,
-                args.brightness,
-                args.hue_sequence, args.sleep_time,
-                args.transition_time
-            )
+            elif args.subsub == 'scene-sequence':
+                scene = SceneSequence(
+                    hue.bridge,
+                    hue.lights,
+                    args.brightness,
+                    args.hue_sequence, args.sleep_time,
+                    args.transition_time
+                )
 
         scene.start(time_out=args.time_out)
 
