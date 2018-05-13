@@ -21,7 +21,8 @@ class TestCli(unittest.TestCase):
         self.assertTrue(usage in run.stdout)
 
     def test_daynight(self):
-        run = subprocess.run([command_name, '-c',  config_file, 'daynight'],
+        run = subprocess.run([command_name, '-c',  config_file,
+                              'info-daynight'],
                              encoding='utf-8',
                              stdout=subprocess.PIPE)
         self.assertEqual(run.returncode, 0)
