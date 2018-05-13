@@ -13,6 +13,12 @@ def get_parser():
     ##
 
     parser.add_argument(
+        '-C', '--colorize',
+        action='store_true',
+        help='Colorize info and debug output on the command line interface.',
+    )
+
+    parser.add_argument(
         '-c', '--config-file',
         help='Path to configuration file',
     )
@@ -55,7 +61,8 @@ def get_parser():
 
     parser.add_argument(
         '-v', '--verbose',
-        action='store_true',
+        default=0,
+        action='count',
         help='Make output more verbose.',
     )
 
