@@ -29,6 +29,7 @@ setup(
         'phue',
         'Pygments',
         'python-daemon',
+        'sphinx-argparse',
     ],
     long_description=read('README.rst'),
     classifiers=[

@@ -1129,7 +1129,7 @@ class Bridge(object):
         """ Create a group of lights
 
         Parameters
-        ------------
+
         name : string
             Name for this group of lights
         lights : list
@@ -1175,8 +1175,8 @@ class Bridge(object):
         can be improved later).
 
         :param transition_time: The duration of the transition from the
-        light’s current state to the new state in a multiple of 100ms
-        :returns True if a scene was run, False otherwise
+          light’s current state to the new state in a multiple of 100ms
+        :returns: True if a scene was run, False otherwise
 
         """
         groups = [x for x in self.groups if x.name == group_name]

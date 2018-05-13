@@ -8,3 +8,12 @@ Module contents
     :members:
     :undoc-members:
     :show-inheritance:
+
+
+lively_lights.phue
+------------------
+
+.. automodule:: lively_lights.phue
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -9,8 +9,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
 ]
-templates_path = ['_templates']
-source_suffix = '.rst'
+extensions += ['sphinxarg.ext']
 
 master_doc = 'index'
 
@@ -23,29 +22,6 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 
-html_static_path = []
-htmlhelp_basename = 'lively_lightsdoc'
-
-latex_elements = {
-     'papersize': 'a4paper',
-     'pointsize': '11pt',
-}
-
-latex_documents = [
-    (master_doc, 'lively_lights.tex', u'lively_lights Documentation',
-     u'Josef Friedrich', 'manual'),
-]
-
-man_pages = [
-    (master_doc, 'lively_lights', u'lively_lights Documentation',
-     [author], 1)
-]
-
-texinfo_documents = [
-    (master_doc, 'lively_lights', u'lively_lights Documentation',
-     author, 'lively_lights', 'Rename audio files from metadata tags.',
-     'Miscellaneous'),
-]
 
 [extensions]
 todo_include_todos = True

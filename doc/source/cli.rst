@@ -1,4 +1,7 @@
 Comande line interface
 ======================
 
-.. code-block:: text
+.. argparse::
+   :module: lively_lights.cli
+   :func: get_parser
+   :prog: lively-lights.py
