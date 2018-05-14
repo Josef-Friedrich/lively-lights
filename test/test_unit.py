@@ -13,13 +13,15 @@ class TestClassHue(unittest.TestCase):
         os.environ['LL_BRIDGE_USERNAME'] = 'test'
 
         lively_lights.Hue(config_environ_prefix='LL')
-        bridge.assert_called_with('1.2.3.4', 'test')
+        bridge.assert_called_with('1.2.3.4', 'test', colorize_output=False,
+                                  verbosity_level=0)
 
     @mock.patch('lively_lights.Bridge')
     def test_ini(self, bridge):
         lively_lights.Hue(config_environ_prefix='XX',
                           config_file_path=config_file)
-        bridge.assert_called_with('192.168.3.60', 'joseffriedrich')
+        bridge.assert_called_with('192.168.3.60', 'joseffriedrich',
+                                  colorize_output=False, verbosity_level=0)
 
 
 class TestClassConfiguration(unittest.TestCase):

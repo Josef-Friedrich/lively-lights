@@ -111,7 +111,8 @@ class Hue(object):
 
     def __init__(self, ip=None, username=None,
                  config_file_path=None,
-                 config_environ_prefix=None):
+                 config_environ_prefix=None, verbosity_level=0,
+                 colorize_output=False):
         self.config = Configuration(config_file_path, config_environ_prefix)
 
         if not ip:
@@ -120,7 +121,8 @@ class Hue(object):
         if not username:
             username = self.config.get('bridge', 'username')
 
-        self.bridge = Bridge(ip, username)
+        self.bridge = Bridge(ip, username, verbosity_level=verbosity_level,
+                             colorize_output=colorize_output)
         self.lights = Lights(self.bridge)
 
 
@@ -393,7 +395,8 @@ def main():
         return
 
     hue = Hue(ip=args.ip, username=args.username,
-              config_file_path=args.config_file)
+              config_file_path=args.config_file, verbosity_level=args.verbose,
+              colorize_output=args.colorize)
 
     if args.daemonize:
         ctx_mgr = daemon.DaemonContext(
@@ -416,7 +419,7 @@ def main():
                     transition_time=args.transition_time,
                 )
 
-            elif args.subsub == 'scene-sequence':
+            elif args.subsub == 'sequence':
                 scene = SceneSequence(
                     hue.bridge,
                     hue.lights,

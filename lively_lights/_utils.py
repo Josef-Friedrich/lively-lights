@@ -2,19 +2,44 @@ from pygments import highlight, lexers, formatters
 import json
 
 
-def colorful_json(data):
-    formatted_json = json.dumps(data, sort_keys=True, indent=4)
+class RestDebug(object):
 
-    return highlight(
-        formatted_json,
-        lexers.JsonLexer(),
-        formatters.TerminalFormatter()
-    )
+    def __init__(self, verbosity_level=0, colorize_output=False):
+        self.verbosity_level = verbosity_level
+        self.colorize_output = colorize_output
 
+    def _format_json(self, data):
+        if self.verbosity_level == 1:
+            formatted_json = json.dumps(data)
+        else:
+            formatted_json = json.dumps(data, sort_keys=True, indent=4)
 
-def print_request(mode, address, data):
-    print()
-    print(mode)
-    print(address)
-    if data:
-        print(colorful_json(data))
+        if self.colorize_output:
+            return highlight(
+                formatted_json,
+                lexers.JsonLexer(),
+                formatters.TerminalFormatter()
+            )
+        else:
+            return formatted_json
+
+    def print_json(self, data):
+        if not self.verbosity_level:
+            return
+        print(self._format_json(data))
+
+    def print_request(self, mode, address, data):
+        if not self.verbosity_level:
+            return
+
+        if self.verbosity_level >= 2:
+            join_phrase = '\n'
+        else:
+            join_phrase = ' '
+
+        out = [mode, address]
+
+        if data:
+            out.append(self._format_json(data))
+
+        print(join_phrase.join(out))

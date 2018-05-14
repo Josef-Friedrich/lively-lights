@@ -20,7 +20,7 @@ import os
 import platform
 import sys
 import socket
-from lively_lights._utils import print_request, colorful_json
+from lively_lights._utils import RestDebug
 if sys.version_info[0] > 2:
     PY3K = True
 else:
@@ -596,7 +596,8 @@ class Bridge(object):
 
 
     """
-    def __init__(self, ip=None, username=None, config_file_path=None):
+    def __init__(self, ip=None, username=None, config_file_path=None,
+                 verbosity_level=0, colorize_output=False):
         """ Initialization function.
 
         Parameters:
@@ -622,6 +623,8 @@ class Bridge(object):
         self.lights_by_name = {}
         self.sensors_by_id = {}
         self.sensors_by_name = {}
+        self.verbosity_level = verbosity_level
+        self.colorize_output = colorize_output
         self._name = None
 
         # self.minutes = 600 # these do not seem to be used anywhere?
@@ -645,7 +648,9 @@ class Bridge(object):
 
     def request(self, mode='GET', address=None, data=None):
         """ Utility function for HTTP GET/PUT requests for the API"""
-        print_request(mode, address, data)
+
+        rest_debug = RestDebug(self.verbosity_level, self.colorize_output)
+        rest_debug.print_request(mode, address, data)
         connection = httplib.HTTPConnection(self.ip, timeout=10)
 
         try:
@@ -665,7 +670,7 @@ class Bridge(object):
         result = connection.getresponse()
         response = result.read()
         if response:
-            print(colorful_json(json.loads(response.decode('utf-8'))))
+            rest_debug.print_json(json.loads(response.decode('utf-8')))
         connection.close()
         if PY3K:
             return json.loads(response.decode('utf-8'))
