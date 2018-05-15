@@ -3,16 +3,15 @@
 """Control the hue lamps from Philips using Python."""
 
 from lively_lights import _random as random
-from multiprocessing import Process, Queue
 from lively_lights.phue import Bridge
 from lively_lights.cli import get_parser
+import threading
 from random import randint
 import astral
 import contextlib
 import daemon
 import lockfile
 import os
-import signal
 import time
 import configparser
 import datetime
@@ -178,86 +177,53 @@ class ReachableLights(object):
 
 class SceneBreath(object):
 
-    def __init__(self, bridge, reachable_lights='auto',
+    def __init__(self, bridge, reachable_lights,
                  hue_range=(randint(0, 32766), randint(32767, 65535)),
                  time_range=(randint(1, 4), randint(5, 8)),
                  bri_range=(randint(1, 100), randint(101, 255))):
 
-        self.queue = Queue()
         self.bridge = bridge
         self.reachable_lights = reachable_lights
         self.hue_range = hue_range
         self.time_range = time_range
         self.bri_range = bri_range
-        self.process = None
+        self._threads = {}
 
     @staticmethod
-    def _set_light(bridge, light_id, hue_range, time_range, bri_range):
+    def _set_light(bridge, reachable_lights, light_id, hue_range, time_range,
+                   bri_range):
         while True:
-            transitiontime = randint(*time_range)
-            data = {
-                'hue': randint(hue_range[0], hue_range[1]),
-                'transitiontime': transitiontime * 10,
-                'bri': randint(*bri_range),
-                'sat': 254,
-            }
-            set_light_multiple(bridge, light_id, data)
-            time.sleep(transitiontime + 0.2)
+            if reachable_lights.is_reachable(light_id):
+                transitiontime = randint(*time_range)
+                data = {
+                    'hue': randint(hue_range[0], hue_range[1]),
+                    'transitiontime': transitiontime * 10,
+                    'bri': randint(*bri_range),
+                    'sat': 254,
+                }
+                set_light_multiple(bridge, light_id, data)
+                time.sleep(transitiontime + 0.2)
+            else:
+                break
 
-    @staticmethod
-    def _light_process_manager(queue, bridge, hue_range, time_range,
-                               bri_range):
-        processes = {}
+    def start(self, time_out=None):
         while True:
-            for light in bridge.lights:
-
-                lid = light.light_id
-
-                if lid in processes and processes[lid].is_alive and \
-                   not light.reachable:
-                    processes[lid].terminate()
-
-                elif lid not in processes and light.reachable:
-                    p = Process(
+            for light in self.reachable_lights.list():
+                if light.light_id not in self._threads or \
+                   not self._threads[light.light_id].is_alive():
+                    t = threading.Thread(
                         target=SceneBreath._set_light,
                         args=(
-                            bridge,
-                            lid,
-                            hue_range,
-                            time_range,
-                            bri_range,
+                            self.bridge,
+                            self.reachable_lights,
+                            light.light_id,
+                            self.hue_range,
+                            self.time_range,
+                            self.bri_range,
                         ),
                     )
-                    p.start()
-                    processes[lid] = p
-                    queue.put(p.pid)
-
-            time.sleep(10)
-
-    def start(self, duration=None):
-        p = Process(
-            target=SceneBreath._light_process_manager,
-            args=(
-                self.queue,
-                self.bridge,
-                self.hue_range,
-                self.time_range,
-                self.bri_range,
-            ),
-        )
-        p.start()
-        self.queue.put(p.pid)
-
-        if duration:
-            time.sleep(duration)
-            while self.queue.qsize():
-                pid = self.queue.get()
-                os.kill(pid, signal.SIGTERM)
-
-    def stop(self):
-        while self.queue.qsize():
-            pid = self.queue.get()
-            os.kill(pid, signal.SIGTERM)
+                    t.start()
+                    self._threads[light.light_id] = t
 
 
 class ScenePendulum(object):
@@ -395,7 +361,13 @@ def main():
 
     with ctx_mgr:
         if args.subcommand == 'scene':
-            if args.scene == 'pendulum':
+            if args.scene == 'breath':
+                scene = SceneBreath(
+                    hue.bridge,
+                    hue.reachable_lights,
+                )
+
+            elif args.scene == 'pendulum':
                 scene = ScenePendulum(
                     hue.bridge,
                     hue.reachable_lights,

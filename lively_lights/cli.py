@@ -117,15 +117,23 @@ def get_parser():
         help='Two brightness values (e. g. 10 255).'
     )
 
-    # 	-H, --hue-range
-    # 		Two hue color values (e. g. 23461:40123)
-    #
-    # 	-l, --lights
-    # 		Lights to use (comma seperated numbers, e. g.: 1,2,3).
-    #
-    # 	-t, --time-range
-    # 		A time range in seconds separated by a colon.
-    #
+    scene_breath.add_argument(
+        '-H', '--hue-range',
+        nargs=2,
+        help='Two hue color values (e. g. 23461 40123).'
+    )
+
+    scene_breath.add_argument(
+        '-l', '--lights',
+        nargs='+',
+        help='Lights (spaces seperated light IDs, e. g.: 1 2 3).',
+    )
+
+    scene_breath.add_argument(
+        '-t', '--time-range',
+        nargs=2,
+        help='A time range in seconds separated by a space.'
+    )
 
     ##
     # scene-pendulum
@@ -150,7 +158,7 @@ def get_parser():
 
     scene_pendulum.add_argument(
         '-l1', '--lights1',
-        type=int,
+        nargs='+',
         help='Lights group 1 (spaces seperated numbers, e. g.: 4 5 6).',
     )
 
