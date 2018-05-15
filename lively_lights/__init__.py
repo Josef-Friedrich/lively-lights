@@ -376,10 +376,11 @@ def main():
     args = get_parser().parse_args()
 
     config = Configuration(config_file_path=args.config_file)
-    if args.sub == 'info' and args.subsub == 'daynight':
-        day_night = DayNight(config)
-        day_night.overview()
-        return
+    if args.subcommand == 'info':
+        if args.info == 'daynight':
+            day_night = DayNight(config)
+            day_night.overview()
+            return
 
     hue = Hue(ip=args.ip, username=args.username,
               config_file_path=args.config_file, verbosity_level=args.verbose,
@@ -393,8 +394,8 @@ def main():
         ctx_mgr = contextlib.suppress()
 
     with ctx_mgr:
-        if args.sub == 'scene':
-            if args.subsub == 'pendulum':
+        if args.subcommand == 'scene':
+            if args.scene == 'pendulum':
                 scene = ScenePendulum(
                     hue.bridge,
                     hue.reachable_lights,

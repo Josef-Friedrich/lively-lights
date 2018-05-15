@@ -67,7 +67,7 @@ def get_parser():
     ###########################################################################
 
     subcommand = parser.add_subparsers(
-        dest='sub',
+        dest='subcommand',
         help='Subcommand',
     )
 
@@ -79,7 +79,7 @@ def get_parser():
 
     info_parser = subcommand.add_parser('info')
     info = info_parser.add_subparsers(
-        dest='subsub',
+        dest='info',
         help='Print informations about the current Phillips Hue System'
     )
     info.required = True
@@ -98,7 +98,7 @@ def get_parser():
     ###########################################################################
 
     scene_parser = subcommand.add_parser('scene')
-    scene = scene_parser.add_subparsers(dest='subsub')
+    scene = scene_parser.add_subparsers(dest='scene')
     scene.required = True
 
     ##
