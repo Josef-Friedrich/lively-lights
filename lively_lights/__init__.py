@@ -125,14 +125,6 @@ class Hue(object):
         self.reachable_lights = ReachableLights(self.bridge)
 
 
-def get_reachable_lights(bridge):
-    lights = []
-    for light in bridge.lights:
-        if light.reachable:
-            lights.append(light)
-    return lights
-
-
 class ReachableLights(object):
 
     def __init__(self, bridge, light_ids=None, refresh_interval=60):
@@ -189,19 +181,17 @@ class SceneBreath(object):
         self.bri_range = bri_range
         self._threads = {}
 
-    @staticmethod
-    def _set_light(bridge, reachable_lights, light_id, hue_range, time_range,
-                   bri_range):
+    def _set_light(self, light_id):
         while True:
-            if reachable_lights.is_reachable(light_id):
-                transitiontime = randint(*time_range)
+            if self.reachable_lights.is_reachable(light_id):
+                transitiontime = randint(*self.time_range)
                 data = {
-                    'hue': randint(hue_range[0], hue_range[1]),
+                    'hue': randint(*self.hue_range),
                     'transitiontime': transitiontime * 10,
-                    'bri': randint(*bri_range),
+                    'bri': randint(*self.bri_range),
                     'sat': 254,
                 }
-                set_light_multiple(bridge, light_id, data)
+                set_light_multiple(self.bridge, light_id, data)
                 time.sleep(transitiontime + 0.2)
             else:
                 break
@@ -212,14 +202,9 @@ class SceneBreath(object):
                 if light.light_id not in self._threads or \
                    not self._threads[light.light_id].is_alive():
                     t = threading.Thread(
-                        target=SceneBreath._set_light,
+                        target=self._set_light,
                         args=(
-                            self.bridge,
-                            self.reachable_lights,
                             light.light_id,
-                            self.hue_range,
-                            self.time_range,
-                            self.bri_range,
                         ),
                     )
                     t.start()
