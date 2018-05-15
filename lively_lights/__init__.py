@@ -123,7 +123,7 @@ class Hue(object):
 
         self.bridge = Bridge(ip, username, verbosity_level=verbosity_level,
                              colorize_output=colorize_output)
-        self.lights = ReachableLights(self.bridge)
+        self.reachable_lights = ReachableLights(self.bridge)
 
 
 def get_reachable_lights(bridge):
@@ -178,14 +178,14 @@ class ReachableLights(object):
 
 class SceneBreath(object):
 
-    def __init__(self, bridge, lights='auto',
+    def __init__(self, bridge, reachable_lights='auto',
                  hue_range=(randint(0, 32766), randint(32767, 65535)),
                  time_range=(randint(1, 4), randint(5, 8)),
                  bri_range=(randint(1, 100), randint(101, 255))):
 
         self.queue = Queue()
         self.bridge = bridge
-        self.lights = lights
+        self.reachable_lights = reachable_lights
         self.hue_range = hue_range
         self.time_range = time_range
         self.bri_range = bri_range
@@ -262,11 +262,11 @@ class SceneBreath(object):
 
 class ScenePendulum(object):
 
-    def __init__(self, bridge, lights, color_1=None, color_2=None,
+    def __init__(self, bridge, reachable_lights, color_1=None, color_2=None,
                  lights_1=None, lights_2=None, sleep_time=None,
                  transition_time=None):
         self.bridge = bridge
-        self.lights = lights
+        self.reachable_lights = reachable_lights
         self.color_1 = color_1
         self.color_2 = color_1
         self.lights_1 = lights_1
@@ -275,7 +275,7 @@ class ScenePendulum(object):
         self.transition_time = transition_time
 
     def _distribute_lights(self):
-        lights = self.lights.list()
+        lights = self.reachable_lights.list()
         random.shuffle(lights)
         count = len(lights)
         half = int(count / 2)
@@ -323,10 +323,10 @@ class ScenePendulum(object):
 
 class SceneSequence(object):
 
-    def __init__(self, bridge, lights, brightness=None, hue_sequence=None,
+    def __init__(self, bridge, reachable_lights, brightness=None, hue_sequence=None,
                  sleep_time=None, transition_time=None):
         self.bridge = bridge
-        self.lights = lights
+        self.reachable_lights = reachable_lights
         self.brightness = brightness
         self.hue_sequence = hue_sequence
         self.sleep_time = sleep_time
@@ -355,7 +355,7 @@ class SceneSequence(object):
         begin = time.time()
         while True:
             for hue in self.hue_sequence:
-                for light in self.lights.list():
+                for light in self.reachable_lights.list():
                     data = {
                         'hue': hue,
                         'bri': self.brightness,
@@ -396,7 +396,7 @@ def main():
             if args.subsub == 'pendulum':
                 scene = ScenePendulum(
                     hue.bridge,
-                    hue.lights,
+                    hue.reachable_lights,
                     color_1=args.color1,
                     color_2=args.color2,
                     lights_1=args.lights1,
@@ -408,7 +408,7 @@ def main():
             elif args.subsub == 'sequence':
                 scene = SceneSequence(
                     hue.bridge,
-                    hue.lights,
+                    hue.reachable_lights,
                     args.brightness,
                     args.hue_sequence, args.sleep_time,
                     args.transition_time
