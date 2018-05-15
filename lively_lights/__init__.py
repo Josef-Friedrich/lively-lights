@@ -323,7 +323,8 @@ class ScenePendulum(object):
 
 class SceneSequence(object):
 
-    def __init__(self, bridge, reachable_lights, brightness=None, hue_sequence=None,
+    def __init__(self, bridge, reachable_lights, brightness=None,
+                 hue_sequence=None,
                  sleep_time=None, transition_time=None):
         self.bridge = bridge
         self.reachable_lights = reachable_lights
