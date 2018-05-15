@@ -48,12 +48,6 @@ def get_parser():
     )
 
     parser.add_argument(
-        '-r', '--reachable',
-        action='store_true',
-        help='Detect and use only reachable lights.',
-    )
-
-    parser.add_argument(
         '-t', '--time-out',
         type=float,
         help='Set time out in seconds.',

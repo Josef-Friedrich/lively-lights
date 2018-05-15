@@ -123,7 +123,7 @@ class Hue(object):
 
         self.bridge = Bridge(ip, username, verbosity_level=verbosity_level,
                              colorize_output=colorize_output)
-        self.lights = Lights(self.bridge)
+        self.lights = ReachableLights(self.bridge)
 
 
 def get_reachable_lights(bridge):
@@ -134,60 +134,46 @@ def get_reachable_lights(bridge):
     return lights
 
 
-class Lights(object):
+class ReachableLights(object):
 
-    def __init__(self, bridge, light_ids=None, detect_reachable=False,
-                 refresh_interval=60):
+    def __init__(self, bridge, light_ids=None, refresh_interval=60):
         """
         :param int interval: Search every n seconds for new lights
         """
         self.bridge = bridge
         self.light_ids = light_ids
-        self.detect_reachable = detect_reachable
         self.refresh_interval = refresh_interval
-        self._last_refresh = None
-        self._reachable_lights = None
+        self._lights_refresh_state = {}
 
     def _get_reachable(self, light_ids=None):
         lights = []
 
-        if self._reachable_lights and \
-           self.refresh_interval and \
-           self._last_refresh and \
-           time.time() - self._last_refresh < self.refresh_interval:
-            return self._reachable_lights
-        else:  # refresh
-            self._last_refresh = time.time()
-            if light_ids:
-                for light_id in light_ids:
-                    if self.bridge[light_id].reachable:
-                        lights.append(self.bridge[light_id])
-            else:
-                for light in self.bridge.lights:
-                    if light.reachable:
-                        lights.append(light)
+        if light_ids:
+            for light_id in light_ids:
+                if self.is_reachable(light_id):
+                    lights.append(self.bridge[light_id])
+        else:
+            for light in self.bridge.lights:
+                if self.is_reachable(light.light_id):
+                    lights.append(light)
 
-            self._reachable_lights = lights
-
-            return lights
-
-    def _convert_to_light_objects(self, light_ids):
-        lights = []
-        for light_id in light_ids:
-            lights.append(self.bridge[light_id])
         return lights
 
+    def is_reachable(self, light_id):
+        state = self._lights_refresh_state
+        if light_id in state and \
+           time.time() - state[light_id][0] < self.refresh_interval:
+            return state[light_id][1]
+        else:
+            reachable = self.bridge[light_id].reachable
+            state[light_id] = (time.time(), reachable)
+            return reachable
+
     def list(self):
-        if self.detect_reachable:
-            if self.light_ids:
-                return self._get_reachable(self.light_ids)
-            else:
-                return self._get_reachable()
-        else:  # not detect_reachable
-            if self.light_ids:
-                return self._convert_to_light_objects(self.light_ids)
-            else:
-                return self.bridge.lights
+        if self.light_ids:
+            return self._get_reachable(self.light_ids)
+        else:
+            return self._get_reachable()
 
 
 class SceneBreath(object):
