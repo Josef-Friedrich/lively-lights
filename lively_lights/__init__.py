@@ -170,9 +170,9 @@ class ReachableLights(object):
 class SceneBreath(object):
 
     def __init__(self, bridge, reachable_lights,
-                 hue_range=(randint(0, 32766), randint(32767, 65535)),
-                 time_range=(randint(1, 4), randint(5, 8)),
-                 bri_range=(randint(1, 100), randint(101, 255))):
+                 hue_range=None,
+                 time_range=None,
+                 bri_range=None):
 
         self.bridge = bridge
         self.reachable_lights = reachable_lights
@@ -181,10 +181,26 @@ class SceneBreath(object):
         self.bri_range = bri_range
         self._threads = {}
 
+    def _setup(self):
+        if not self.hue_range:
+            self.hue_range = (random.hue(max=32766), random.hue(min=32767))
+
+        if not self.time_range:
+            self.time_range = (
+                randint(1, 4),
+                randint(5, 8),
+            )
+
+        if not self.bri_range:
+            self.bri_range = (
+                random.brightness(max=100),
+                random.brightness(min=100),
+            )
+
     def _set_light(self, light_id):
         while True:
             if self.reachable_lights.is_reachable(light_id):
-                transitiontime = randint(*self.time_range)
+                transitiontime = randint(*self.time_range) * 10
                 data = {
                     'hue': randint(*self.hue_range),
                     'transitiontime': transitiontime * 10,
@@ -197,6 +213,7 @@ class SceneBreath(object):
                 break
 
     def start(self, time_out=None):
+        self._setup()
         while True:
             for light in self.reachable_lights.list():
                 if light.light_id not in self._threads or \
