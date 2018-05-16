@@ -313,8 +313,8 @@ class SceneSequence(object):
     def __init__(self, bridge, reachable_lights, brightness=None,
                  hue_sequence=None,
                  sleep_time=None, transition_time=None):
-        self.bridge = bridge
-        self.reachable_lights = reachable_lights
+        self.bridge = bridge  #: The bridge object
+        self.reachable_lights = reachable_lights  #: All reachable lights
         self.brightness = brightness
         self.hue_sequence = hue_sequence
         self.sleep_time = sleep_time
