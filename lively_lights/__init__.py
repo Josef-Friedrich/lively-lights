@@ -395,13 +395,14 @@ def main():
                     transition_time=args.transition_time,
                 )
 
-            elif args.subsub == 'sequence':
+            elif args.scene == 'sequence':
                 scene = SceneSequence(
                     hue.bridge,
                     hue.reachable_lights,
-                    args.brightness,
-                    args.hue_sequence, args.sleep_time,
-                    args.transition_time
+                    brightness=args.brightness,
+                    hue_sequence=args.hue_sequence,
+                    sleep_time=args.sleep_time,
+                    transition_time=args.transition_time,
                 )
 
         scene.start(time_out=args.time_out)
