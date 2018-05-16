@@ -7,14 +7,38 @@ import unittest
 usage = 'usage: {}'.format(command_name)
 
 
+sys_argv_pendulum = [
+    '.', 'scene', 'pendulum',
+    '--color1', '1', '--color2', '2',
+    '--lights1', '1', '2', '--lights2', '3', '4',
+    '--sleep-time', '1',
+    '--transition-time', '1',
+]
+
+
 class TestCliUnit(unittest.TestCase):
 
-    @mock.patch('sys.argv', ['t', 'info', 'daynight'])
-    @mock.patch('lively_lights.Configuration')
+    @mock.patch('sys.argv', ['.', 'info', 'daynight'])
+    @mock.patch('lively_lights.Configuration', mock.Mock())
     @mock.patch('lively_lights.DayNight')
-    def test_info_daynight(self, day_night, config):
+    def test_info_daynight(self, day_night):
         main()
         day_night.return_value.overview.assert_called_with()
+
+    @mock.patch('sys.argv', sys_argv_pendulum)
+    @mock.patch('lively_lights.Configuration', mock.Mock())
+    @mock.patch('lively_lights.Hue', mock.Mock())
+    @mock.patch('lively_lights.ScenePendulum')
+    def test_scene_pendulum(self, Scene):
+        main()
+        self.assertEqual(Scene.call_args[1], {
+            'color_1': 1,
+            'color_2': 2,
+            'lights_1': ['1', '2'],
+            'lights_2': ['3', '4'],
+            'sleep_time': float(1),
+            'transition_time': float(1),
+        })
 
 
 class TestCli(unittest.TestCase):

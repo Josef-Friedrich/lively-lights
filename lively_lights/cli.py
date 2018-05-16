@@ -146,7 +146,7 @@ def get_parser():
 
     scene_pendulum.add_argument(
         '-c1', '--color1',
-        nargs=1,
+        type=int,
         help='Hue color value (0 - 65535) for lights group 1.',
     )
 
