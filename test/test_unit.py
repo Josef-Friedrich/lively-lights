@@ -54,10 +54,13 @@ class TestClassSceneTimeOuts(unittest.TestCase):
         begin = time.time()
         scene.start(time_out)
         end = time.time()
-        self.assertTrue(end - begin <= time_out)
+        self.assertTrue(end - begin <= time_out,
+                        'time_out not longer (Scene: {})'. format(scene))
+        self.assertTrue(end - begin >= time_out - 3,
+                        'time_out not shorter (Scene: {})'. format(scene))
 
     def test_scene_pendulum(self):
-        self.assertTimeOut('ScenePendulum', 10)
+        self.assertTimeOut('ScenePendulum', 30)
 
-    def test_sequence(self):
-        self.assertTimeOut('SceneSequence', 10)
+    def test_scene_sequence(self):
+        self.assertTimeOut('SceneSequence', 30)

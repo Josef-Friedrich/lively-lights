@@ -302,6 +302,11 @@ class ScenePendulum(object):
             self._set_light_group(self.lights_2, self.color_1)
             time.sleep(self.sleep_time)
 
+        if time_out:
+            time_left = time.time() - begin - time_out
+            if time_left > 0:
+                time.sleep(time_left)
+
 
 class SceneSequence(object):
 
@@ -355,7 +360,10 @@ class SceneSequence(object):
                     time.sleep(self.sleep_time)
 
         except StopIteration:
-            pass
+            if time_out:
+                time_left = time.time() - begin - time_out
+                if time_left > 0:
+                    time.sleep(time_left)
 
 
 def main():
