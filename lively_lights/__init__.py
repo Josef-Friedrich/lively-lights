@@ -292,15 +292,15 @@ class ScenePendulum(object):
         self._setup()
         begin = time.time()
         while True:
+            if time_out and \
+               time.time() - begin + self.sleep_time * 2 >= time_out:
+                break
             self._set_light_group(self.lights_1, self.color_1)
             self._set_light_group(self.lights_2, self.color_2)
             time.sleep(self.sleep_time)
             self._set_light_group(self.lights_1, self.color_2)
             self._set_light_group(self.lights_2, self.color_1)
             time.sleep(self.sleep_time)
-
-            if time_out and time.time() - begin > time_out:
-                break
 
 
 class SceneSequence(object):

@@ -43,14 +43,21 @@ class TestClassDayNight(unittest.TestCase):
         self.assertTrue(day_light)
 
 
-class TestClassSceneSequence(unittest.TestCase):
+class TestClassSceneTimeOuts(unittest.TestCase):
 
     @mock.patch('lively_lights.set_light_multiple', mock.Mock())
-    def test_time_out(self):
+    def assertTimeOut(self, scene, time_out):
         reachable_lights = mock.Mock()
         reachable_lights.list.return_value = [mock.Mock(), mock.Mock()]
-        scene = lively_lights.SceneSequence(mock.Mock(), reachable_lights)
+        Scene = getattr(lively_lights, scene)
+        scene = Scene(mock.Mock(), reachable_lights)
         begin = time.time()
-        scene.start(10)
+        scene.start(time_out)
         end = time.time()
-        self.assertTrue(end - begin <= 10)
+        self.assertTrue(end - begin <= time_out)
+
+    def test_scene_pendulum(self):
+        self.assertTimeOut('ScenePendulum', 10)
+
+    def test_sequence(self):
+        self.assertTimeOut('SceneSequence', 10)
