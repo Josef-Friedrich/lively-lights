@@ -18,7 +18,7 @@ def hue(min=0, max=65535):
     return random.randint(min, max)
 
 
-def time(min, max, is_transition_time=False):
+def time(min, max, is_transition_time=False, decimal_places=1):
     result = _float_range(min, max, decimal_places=1)
     if is_transition_time:
         result = int(round(result * 10))

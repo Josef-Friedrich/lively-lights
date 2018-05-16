@@ -187,8 +187,8 @@ class SceneBreath(object):
 
         if not self.time_range:
             self.time_range = (
-                randint(1, 4),
-                randint(5, 8),
+                random.time(min=1, max=4, decimal_places=1),
+                random.time(min=4, max=8, decimal_places=1),
             )
 
         if not self.bri_range:
@@ -198,17 +198,23 @@ class SceneBreath(object):
             )
 
     def _set_light(self, light_id):
+        print(self.time_range)
+
         while True:
             if self.reachable_lights.is_reachable(light_id):
-                transitiontime = randint(*self.time_range) * 10
+                transitiontime = randint(
+                    self.time_range[0] * 10,
+                    self.time_range[1] * 10
+                )
+                print(transitiontime)
                 data = {
                     'hue': randint(*self.hue_range),
-                    'transitiontime': transitiontime * 10,
+                    'transitiontime': transitiontime,
                     'bri': randint(*self.bri_range),
                     'sat': 254,
                 }
                 set_light_multiple(self.bridge, light_id, data)
-                time.sleep(transitiontime + 0.2)
+                time.sleep(transitiontime / 10 + 0.2)
             else:
                 break
 
@@ -226,6 +232,8 @@ class SceneBreath(object):
                     )
                     t.start()
                     self._threads[light.light_id] = t
+
+            time.sleep(self.reachable_lights.refresh_interval)
 
 
 class ScenePendulum(object):
