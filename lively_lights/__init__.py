@@ -336,21 +336,26 @@ class SceneSequence(object):
     def start(self, time_out=None):
         self._setup()
         begin = time.time()
-        while True:
-            for hue in self.hue_sequence:
-                for light in self.reachable_lights.list():
-                    data = {
-                        'hue': hue,
-                        'bri': self.brightness,
-                        'transitiontime': self.transition_time,
-                        'sat': 255,
-                    }
-                    set_light_multiple(self.bridge, light.light_id, data)
+        try:
+            while True:
+                for hue in self.hue_sequence:
+                    for light in self.reachable_lights.list():
+                        data = {
+                            'hue': hue,
+                            'bri': self.brightness,
+                            'transitiontime': self.transition_time,
+                            'sat': 255,
+                        }
+                        set_light_multiple(self.bridge, light.light_id, data)
 
-                time.sleep(self.sleep_time)
+                    if time_out and \
+                       time.time() - begin + self.sleep_time >= time_out:
+                        raise StopIteration
 
-            if time_out and time.time() - begin > time_out:
-                break
+                    time.sleep(self.sleep_time)
+
+        except StopIteration:
+            pass
 
 
 def main():

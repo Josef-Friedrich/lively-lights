@@ -3,6 +3,7 @@ from unittest import mock
 import lively_lights
 import os
 import unittest
+import time
 
 
 class TestClassHue(unittest.TestCase):
@@ -40,3 +41,16 @@ class TestClassDayNight(unittest.TestCase):
         config = lively_lights.Configuration(config_file_path=config_file)
         day_light = lively_lights.DayNight(config)
         self.assertTrue(day_light)
+
+
+class TestClassSceneSequence(unittest.TestCase):
+
+    @mock.patch('lively_lights.set_light_multiple', mock.Mock())
+    def test_time_out(self):
+        reachable_lights = mock.Mock()
+        reachable_lights.list.return_value = [mock.Mock(), mock.Mock()]
+        scene = lively_lights.SceneSequence(mock.Mock(), reachable_lights)
+        begin = time.time()
+        scene.start(10)
+        end = time.time()
+        self.assertTrue(end - begin <= 10)
