@@ -1,8 +1,20 @@
 from _helper import config_file, command_name
+from lively_lights import main
+from unittest import mock
 import subprocess
 import unittest
 
 usage = 'usage: {}'.format(command_name)
+
+
+class TestCliUnit(unittest.TestCase):
+
+    @mock.patch('sys.argv', ['t', 'info', 'daynight'])
+    @mock.patch('lively_lights.Configuration')
+    @mock.patch('lively_lights.DayNight')
+    def test_info_daynight(self, day_night, config):
+        main()
+        day_night.return_value.overview.assert_called_with()
 
 
 class TestCli(unittest.TestCase):
