@@ -180,6 +180,7 @@ class SceneBreath(object):
         self.time_range = time_range
         self.bri_range = bri_range
         self._threads = {}
+        self._time_to_end = None
 
     def _setup(self):
         if not self.hue_range:
@@ -198,15 +199,15 @@ class SceneBreath(object):
             )
 
     def _set_light(self, light_id):
-        print(self.time_range)
-
         while True:
             if self.reachable_lights.is_reachable(light_id):
                 transitiontime = randint(
                     self.time_range[0] * 10,
                     self.time_range[1] * 10
                 )
-                print(transitiontime)
+                if self._time_to_end and \
+                   time.time() - transitiontime / 10 > self._time_to_end:
+                    break
                 data = {
                     'hue': randint(*self.hue_range),
                     'transitiontime': transitiontime,
@@ -220,7 +221,12 @@ class SceneBreath(object):
 
     def start(self, time_out=None):
         self._setup()
+        if time_out:
+            self._time_to_end = time.time() + time_out
         while True:
+            if self._time_to_end and self._time_to_end <= time.time():
+                break
+
             for light in self.reachable_lights.list():
                 if light.light_id not in self._threads or \
                    not self._threads[light.light_id].is_alive():
