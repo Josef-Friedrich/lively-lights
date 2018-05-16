@@ -2,6 +2,14 @@ from pygments import highlight, lexers, formatters
 import json
 
 
+def set_light_multiple(bridge, light_id, data):
+    return bridge.request(
+        mode='PUT',
+        address='/api/{}/lights/{}/state'.format(bridge.username, light_id),
+        data=data,
+    )
+
+
 class RestDebug(object):
 
     def __init__(self, verbosity_level=0, colorize_output=False):

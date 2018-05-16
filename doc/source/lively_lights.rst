@@ -9,6 +9,15 @@ Module contents
     :undoc-members:
     :show-inheritance:
 
+lively_lights.scenes
+--------------------
+
+.. automodule:: lively_lights.scenes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :private-members:
+
 
 lively_lights.phue
 ------------------
