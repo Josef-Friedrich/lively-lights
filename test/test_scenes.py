@@ -1,8 +1,11 @@
+from lively_lights import scenes
 from lively_lights.scenes import Scene, \
                                  SceneBreath, \
                                  ScenePendulum, \
                                  SceneSequence
 import unittest
+from unittest import mock
+import time
 
 
 class Args(object):
@@ -101,3 +104,26 @@ class TestClassSceneSequence(unittest.TestCase):
         self.assertTrue(scene.hue_sequence)
         self.assertTrue(scene.sleep_time)
         self.assertTrue(scene.transition_time)
+
+
+class TestClassSceneTimeOuts(unittest.TestCase):
+
+    @mock.patch('lively_lights.scenes.set_light_multiple', mock.Mock())
+    def assertTimeOut(self, scene, time_out):
+        reachable_lights = mock.Mock()
+        reachable_lights.list.return_value = [mock.Mock(), mock.Mock()]
+        Scene = getattr(scenes, scene)
+        scene = Scene(mock.Mock(), reachable_lights)
+        begin = time.time()
+        scene.start(time_out)
+        end = time.time()
+        self.assertTrue(end - begin <= time_out,
+                        'time_out not longer (Scene: {})'. format(scene))
+        # self.assertTrue(end - begin >= time_out - 3,
+        #                 'time_out not shorter (Scene: {})'. format(scene))
+
+    def test_scene_pendulum(self):
+        self.assertTimeOut('ScenePendulum', 10)
+
+    def test_scene_sequence(self):
+        self.assertTimeOut('SceneSequence', 10)
