@@ -67,22 +67,22 @@ class TestClassSceneBreath(unittest.TestCase):
 class TestClassScenePendulum(unittest.TestCase):
 
     def test_kwargs(self):
-        scene = ScenePendulum('', '', color_1=1, color_2=2, lights_1=3,
-                              lights_2=4, sleep_time=5, transition_time=6)
-        self.assertEqual(scene.color_1, 1)
-        self.assertEqual(scene.color_2, 2)
-        self.assertEqual(scene.lights_1, 3)
-        self.assertEqual(scene.lights_2, 4)
+        scene = ScenePendulum('', '', color1=1, color2=2, lights1=3,
+                              lights2=4, sleep_time=5, transition_time=6)
+        self.assertEqual(scene.color1, 1)
+        self.assertEqual(scene.color2, 2)
+        self.assertEqual(scene.lights1, 3)
+        self.assertEqual(scene.lights2, 4)
         self.assertEqual(scene.sleep_time, 5)
         self.assertEqual(scene.transition_time, 6)
 
     def test_setup(self):
-        scene = ScenePendulum('', '', lights_1=1, lights_2=2)
+        scene = ScenePendulum('', '', lights1=1, lights2=2)
         scene._setup()
-        self.assertTrue(scene.color_1)
-        self.assertTrue(scene.color_2)
-        self.assertTrue(scene.lights_1)
-        self.assertTrue(scene.lights_2)
+        self.assertTrue(scene.color1)
+        self.assertTrue(scene.color2)
+        self.assertTrue(scene.lights1)
+        self.assertTrue(scene.lights2)
         self.assertTrue(scene.sleep_time)
         self.assertTrue(scene.transition_time)
 

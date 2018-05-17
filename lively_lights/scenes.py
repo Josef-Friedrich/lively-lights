@@ -117,24 +117,24 @@ class SceneBreath(Scene):
 class ScenePendulum(Scene):
 
     properties = [
-        'color_1',
-        'color_2',
-        'lights_1',
-        'lights_2',
+        'color1',
+        'color2',
+        'lights1',
+        'lights2',
         'sleep_time',
         'transition_time',
     ]
 
     def _setup(self):
-        if not self.has_property('color_1'):
-            self.color_1 = random.hue()
+        if not self.has_property('color1'):
+            self.color1 = random.hue()
 
-        if not self.has_property('color_2'):
-            self.color_2 = random.hue()
+        if not self.has_property('color2'):
+            self.color2 = random.hue()
 
-        if not self.has_property('lights_1') or \
-           not self.has_property('lights_2'):
-            self.lights_1, self.lights_2 = self._distribute_lights()
+        if not self.has_property('lights1') or \
+           not self.has_property('lights2'):
+            self.lights1, self.lights2 = self._distribute_lights()
 
         if not self.has_property('sleep_time'):
             self.sleep_time = random.time(4, 8)
@@ -166,11 +166,11 @@ class ScenePendulum(Scene):
             if time_out and \
                time.time() - begin + self.sleep_time * 2 >= time_out:
                 break
-            self._set_light_group(self.lights_1, self.color_1)
-            self._set_light_group(self.lights_2, self.color_2)
+            self._set_light_group(self.lights1, self.color1)
+            self._set_light_group(self.lights2, self.color2)
             time.sleep(self.sleep_time)
-            self._set_light_group(self.lights_1, self.color_2)
-            self._set_light_group(self.lights_2, self.color_1)
+            self._set_light_group(self.lights1, self.color2)
+            self._set_light_group(self.lights2, self.color1)
             time.sleep(self.sleep_time)
 
         if time_out:

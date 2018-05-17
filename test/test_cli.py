@@ -16,45 +16,46 @@ class TestCliUnit(unittest.TestCase):
         main()
         day_night.return_value.overview.assert_called_with()
 
-    # @mock.patch('sys.argv', [
-    #     '.', 'scene', 'pendulum',
-    #     '--color1', '1', '--color2', '2',
-    #     '--lights1', '1', '2', '--lights2', '3', '4',
-    #     '--sleep-time', '1',
-    #     '--transition-time', '1',
-    # ])
-    # @mock.patch('lively_lights.Configuration', mock.Mock())
-    # @mock.patch('lively_lights.Hue', mock.Mock())
-    # @mock.patch('lively_lights.ScenePendulum')
-    # def test_scene_pendulum(self, Scene):
-    #     main()
-    #     self.assertEqual(Scene.call_args[1], {
-    #         'color_1': 1,
-    #         'color_2': 2,
-    #         'lights_1': ['1', '2'],
-    #         'lights_2': ['3', '4'],
-    #         'sleep_time': float(1),
-    #         'transition_time': float(1),
-    #     })
-    #
-    # @mock.patch('sys.argv', [
-    #     '.', 'scene', 'sequence',
-    #     '--brightness', '1',
-    #     '--hue-sequence', '1', '2',
-    #     '--sleep-time', '1',
-    #     '--transition-time', '1',
-    # ])
-    # @mock.patch('lively_lights.Configuration', mock.Mock())
-    # @mock.patch('lively_lights.Hue', mock.Mock())
-    # @mock.patch('lively_lights.SceneSequence')
-    # def test_scene_sequence(self, Scene):
-    #     main()
-    #     self.assertEqual(Scene.call_args[1], {
-    #         'brightness': 1,
-    #         'hue_sequence': ['1', '2'],
-    #         'sleep_time': float(1),
-    #         'transition_time': float(1),
-    #     })
+    @mock.patch('sys.argv', [
+        '.', 'scene', 'pendulum',
+        '--color1', '1', '--color2', '2',
+        '--lights1', '1', '2', '--lights2', '3', '4',
+        '--sleep-time', '1',
+        '--transition-time', '1',
+    ])
+    @mock.patch('lively_lights.Configuration', mock.Mock())
+    @mock.patch('lively_lights.Hue', mock.Mock())
+    @mock.patch('lively_lights.scenes.ScenePendulum')
+    def test_scene_pendulum(self, Scene):
+        main()
+        scene = Scene.return_value
+        args = scene.get_properties_from_args.call_args[0][0]
+        self.assertEqual(args.color1, 1)
+        self.assertEqual(args.color2, 2)
+        self.assertEqual(args.lights1, ['1', '2'])
+        self.assertEqual(args.lights2, ['3', '4'])
+        self.assertEqual(args.sleep_time, float(1))
+        self.assertEqual(args.transition_time, float(1))
+
+    @mock.patch('sys.argv', [
+        '.', 'scene', 'sequence',
+        '--brightness', '1',
+        '--hue-sequence', '1', '2',
+        '--sleep-time', '1',
+        '--transition-time', '1',
+    ])
+    @mock.patch('lively_lights.Configuration', mock.Mock())
+    @mock.patch('lively_lights.Hue', mock.Mock())
+    @mock.patch('lively_lights.scenes.SceneSequence')
+    def test_scene_sequence(self, Scene):
+        main()
+        scene = Scene.return_value
+        args = scene.get_properties_from_args.call_args[0][0]
+
+        self.assertEqual(args.brightness, 1)
+        self.assertEqual(args.hue_sequence, ['1', '2'])
+        self.assertEqual(args.sleep_time, float(1))
+        self.assertEqual(args.transition_time, float(1))
 
 
 class TestCli(unittest.TestCase):
