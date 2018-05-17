@@ -134,7 +134,7 @@ class ScenePendulum(Scene):
 
         if not self.has_property('lights_1') or \
            not self.has_property('lights_2'):
-           self.lights_1, self.lights_2 = self._distribute_lights()
+            self.lights_1, self.lights_2 = self._distribute_lights()
 
         if not self.has_property('sleep_time'):
             self.sleep_time = random.time(4, 8)
