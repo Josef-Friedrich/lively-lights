@@ -28,6 +28,12 @@ class Scene(object):
             if hasattr(args, property):
                 setattr(self, property, getattr(args, property))
 
+    def has_property(self, property):
+        if not hasattr(self, property) or not getattr(self, property):
+            return False
+        else:
+            return True
+
     def _setup(self):
         """Should be overwritten."""
         pass
@@ -37,35 +43,31 @@ class Scene(object):
         pass
 
 
-class SceneBreath(object):
+class SceneBreath(Scene):
 
-    def __init__(self, bridge, reachable_lights,
-                 hue_range=None,
-                 time_range=None,
-                 bri_range=None):
+    properties = [
+        'bri_range',
+        'hue_range',
+        'time_range',
+    ]
 
-        self.bridge = bridge
-        self.reachable_lights = reachable_lights
-        self.hue_range = hue_range
-        self.time_range = time_range
-        self.bri_range = bri_range
+    def _setup(self):
         self._threads = {}
         self._time_to_end = None
 
-    def _setup(self):
-        if not self.hue_range:
-            self.hue_range = (random.hue(max=32766), random.hue(min=32767))
-
-        if not self.time_range:
-            self.time_range = (
-                random.time(min=1, max=4, decimal_places=1),
-                random.time(min=4, max=8, decimal_places=1),
-            )
-
-        if not self.bri_range:
+        if not self.has_property('bri_range'):
             self.bri_range = (
                 random.brightness(max=100),
                 random.brightness(min=100),
+            )
+
+        if not self.has_property('hue_range'):
+            self.hue_range = (random.hue(max=32766), random.hue(min=32767))
+
+        if not self.has_property('time_range'):
+            self.time_range = (
+                random.time(min=1, max=4, decimal_places=1),
+                random.time(min=4, max=8, decimal_places=1),
             )
 
     def _set_light(self, light_id):
@@ -112,19 +114,33 @@ class SceneBreath(object):
             time.sleep(self.reachable_lights.refresh_interval)
 
 
-class ScenePendulum(object):
+class ScenePendulum(Scene):
 
-    def __init__(self, bridge, reachable_lights, color_1=None, color_2=None,
-                 lights_1=None, lights_2=None, sleep_time=None,
-                 transition_time=None):
-        self.bridge = bridge
-        self.reachable_lights = reachable_lights
-        self.color_1 = color_1
-        self.color_2 = color_1
-        self.lights_1 = lights_1
-        self.lights_2 = lights_2
-        self.sleep_time = sleep_time
-        self.transition_time = transition_time
+    properties = [
+        'color_1',
+        'color_2',
+        'lights_1',
+        'lights_2',
+        'sleep_time',
+        'transition_time',
+    ]
+
+    def _setup(self):
+        if not self.has_property('color_1'):
+            self.color_1 = random.hue()
+
+        if not self.has_property('color_2'):
+            self.color_2 = random.hue()
+
+        if not self.has_property('lights_1') or \
+           not self.has_property('lights_2'):
+           self.lights_1, self.lights_2 = self._distribute_lights()
+
+        if not self.has_property('sleep_time'):
+            self.sleep_time = random.time(4, 8)
+
+        if not self.has_property('transition_time'):
+            self.transition_time = random.time(1, 3, is_transition_time=True)
 
     def _distribute_lights(self):
         lights = self.reachable_lights.list()
@@ -132,21 +148,6 @@ class ScenePendulum(object):
         count = len(lights)
         half = int(count / 2)
         return (lights[0:half], lights[half:])
-
-    def _setup(self):
-        if not self.color_1:
-            self.color_1 = random.hue()
-
-        if not self.color_2:
-            self.color_2 = random.hue()
-
-        self.lights_1, self.lights_2 = self._distribute_lights()
-
-        if not self.sleep_time:
-            self.sleep_time = random.time(4, 8)
-
-        if not self.transition_time:
-            self.transition_time = random.time(1, 3, is_transition_time=True)
 
     def _set_light_group(self, lights, hue):
         for light in lights:
@@ -178,23 +179,20 @@ class ScenePendulum(object):
                 time.sleep(time_left)
 
 
-class SceneSequence(object):
+class SceneSequence(Scene):
 
-    def __init__(self, bridge, reachable_lights, brightness=None,
-                 hue_sequence=None,
-                 sleep_time=None, transition_time=None):
-        self.bridge = bridge  #: The bridge object
-        self.reachable_lights = reachable_lights  #: All reachable lights
-        self.brightness = brightness
-        self.hue_sequence = hue_sequence
-        self.sleep_time = sleep_time
-        self.transition_time = transition_time
+    properties = [
+        'brightness',
+        'hue_sequence',
+        'sleep_time',
+        'transition_time',
+    ]
 
     def _setup(self):
-        if not self.brightness:
+        if not self.has_property('brightness'):
             self.brightness = random.brightness(min=100)
 
-        if not self.hue_sequence:
+        if not self.has_property('hue_sequence'):
             self.hue_sequence = (
                 random.hue(),
                 random.hue(),
@@ -202,10 +200,10 @@ class SceneSequence(object):
                 random.hue(),
             )
 
-        if not self.sleep_time:
+        if not self.has_property('sleep_time'):
             self.sleep_time = random.time(4, 8)
 
-        if not self.transition_time:
+        if not self.has_property('transition_time'):
             self.transition_time = random.time(1, 3, is_transition_time=True)
 
     def start(self, time_out=None):
