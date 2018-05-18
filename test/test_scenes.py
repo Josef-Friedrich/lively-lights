@@ -105,6 +105,28 @@ class TestClassSceneSequence(unittest.TestCase):
         self.assertTrue(scene.sleep_time)
         self.assertTrue(scene.transition_time)
 
+    @mock.patch('lively_lights.scenes.set_light_multiple')
+    def test_start(self, set_light_multiple):
+        reachable_lights = mock.Mock()
+        reachable_lights.list.return_value = [mock.Mock()]
+        scene = SceneSequence(
+            mock.Mock(),
+            reachable_lights,
+            brightness=100,
+            hue_sequence=(1, 100),
+            sleep_time=1,
+            transition_time=2,
+        )
+        scene.start(5)
+        call_list = set_light_multiple.call_args_list
+
+        self.assertEqual(call_list[0][0][2]['hue'], 1)
+        self.assertEqual(call_list[1][0][2]['hue'], 100)
+        self.assertEqual(call_list[2][0][2]['hue'], 1)
+
+        self.assertEqual(call_list[0][0][2]['bri'], 100)
+        self.assertEqual(call_list[0][0][2]['transitiontime'], 2)
+
 
 class TestClassSceneTimeOuts(unittest.TestCase):
 
