@@ -87,7 +87,7 @@ class Launcher(object):
             }
 
         """
-        Scene = self._get_scene_class(scene_config['scene'])
+        Scene = self._get_scene_class(scene_config['scene_name'])
         scene = Scene(self.bridge, self.reachable_lights)
         scene.get_properties_from_dict(scene_config['properties'])
         scene.start(scene_config['duration'])

@@ -1,3 +1,4 @@
+from _helper import get_reachable_lights
 from lively_lights import scenes
 from lively_lights.scenes import Launcher, \
                                  Scene, \
@@ -171,15 +172,18 @@ class TestClassLauncher(unittest.TestCase):
         with self.assertRaises(AttributeError):
             Launcher._get_scene_class('xxx')
 
-    # def test_method_launch_scene(self):
-    #     scene_args = {
-    #         'title': 'Rainbow',
-    #         'description': 'Cycle between three colors',
-    #         'scene_name': 'sequence',
-    #         'properties': {
-    #             'brightness': 255,
-    #             'hue_sequence': [0, 40000, 30000],
-    #             'sleep_time': 2,
-    #             'transition_time': 1,
-    #         },
-    #     }
+    def test_method_launch_scene(self):
+        scene_config = {
+            'title': 'Rainbow',
+            'description': 'Cycle between three colors',
+            'scene_name': 'sequence',
+            'duration': 3,
+            'properties': {
+                'brightness': 255,
+                'hue_sequence': [0, 40000, 30000],
+                'sleep_time': 2,
+                'transition_time': 1,
+            },
+        }
+        launcher = Launcher(mock.Mock(), get_reachable_lights([1, 2]))
+        launcher.launch_scene(scene_config)
