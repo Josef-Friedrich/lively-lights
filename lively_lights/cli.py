@@ -112,7 +112,7 @@ def get_parser():
     )
 
     scene_breath.add_argument(
-        '-b', '--brightness-range',
+        '-b', '--bri-range',
         nargs=2,
         help='Two brightness values (e. g. 10 255).'
     )
@@ -121,12 +121,6 @@ def get_parser():
         '-H', '--hue-range',
         nargs=2,
         help='Two hue color values (e. g. 23461 40123).'
-    )
-
-    scene_breath.add_argument(
-        '-l', '--lights',
-        nargs='+',
-        help='Lights (spaces seperated light IDs, e. g.: 1 2 3).',
     )
 
     scene_breath.add_argument(

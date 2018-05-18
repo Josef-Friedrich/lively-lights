@@ -17,6 +17,23 @@ class TestCliUnit(unittest.TestCase):
         day_night.return_value.overview.assert_called_with()
 
     @mock.patch('sys.argv', [
+        '.', 'scene', 'breath',
+        '--bri-range', '1', '2',
+        '--hue-range', '1', '2',
+        '--time-range', '1', '2',
+    ])
+    @mock.patch('lively_lights.Configuration', mock.Mock())
+    @mock.patch('lively_lights.Hue', mock.Mock())
+    @mock.patch('lively_lights.scenes.SceneBreath')
+    def test_scene_breath(self, Scene):
+        main()
+        scene = Scene.return_value
+        args = scene.get_properties_from_args.call_args[0][0]
+        self.assertEqual(args.bri_range, ['1', '2'])
+        self.assertEqual(args.hue_range, ['1', '2'])
+        self.assertEqual(args.time_range, ['1', '2'])
+
+    @mock.patch('sys.argv', [
         '.', 'scene', 'pendulum',
         '--color1', '1', '--color2', '2',
         '--lights1', '1', '2', '--lights2', '3', '4',
