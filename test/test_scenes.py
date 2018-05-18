@@ -1,5 +1,6 @@
 from lively_lights import scenes
-from lively_lights.scenes import Scene, \
+from lively_lights.scenes import Launcher, \
+                                 Scene, \
                                  SceneBreath, \
                                  ScenePendulum, \
                                  SceneSequence
@@ -30,6 +31,15 @@ class TestClassScene(unittest.TestCase):
         scene.properties = ['speed', 'arg2']
         args = Args()
         scene.get_properties_from_args(args)
+        self.assertEqual(scene.speed, 111)
+
+    def test_method_get_properties_from_dict(self):
+        scene = Scene('', '')
+        scene.properties = ['speed', 'arg2']
+        dictionary = {
+            'speed': 111
+        }
+        scene.get_properties_from_dict(dictionary)
         self.assertEqual(scene.speed, 111)
 
 
@@ -149,3 +159,27 @@ class TestClassSceneTimeOuts(unittest.TestCase):
 
     def test_scene_sequence(self):
         self.assertTimeOut('SceneSequence', 10)
+
+
+class TestClassLauncher(unittest.TestCase):
+
+    def test_method_get_scene_class(self):
+        scene = Launcher._get_scene_class('pendulum')
+        self.assertEqual(scene.__name__, 'ScenePendulum')
+
+    def test_method_get_scene_class_exception(self):
+        with self.assertRaises(AttributeError):
+            Launcher._get_scene_class('xxx')
+
+    # def test_method_launch_scene(self):
+    #     scene_args = {
+    #         'title': 'Rainbow',
+    #         'description': 'Cycle between three colors',
+    #         'scene_name': 'sequence',
+    #         'properties': {
+    #             'brightness': 255,
+    #             'hue_sequence': [0, 40000, 30000],
+    #             'sleep_time': 2,
+    #             'transition_time': 1,
+    #         },
+    #     }

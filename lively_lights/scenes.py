@@ -6,14 +6,104 @@ from lively_lights._utils import set_light_multiple
 from random import randint
 import threading
 import time
+import sys
+
+
+class Launcher(object):
+
+    """
+    Launch scenes.
+
+
+
+    :param reachable_lights: An object containing the specified and
+      reachable lights.
+    :type reachable_lights: lively_lights.ReachableLights
+
+    :param list scene_config_list: A list of `scene_config` dictionaries.
+
+
+    .. code-block:: python
+
+        scene_config_list = [
+            {
+                'title': 'Rainbow',
+                'description': 'Cycle between three colors',
+                'scene_name': 'sequence',
+                'duration': 12,
+                'properties': {
+                    'brightness': 255,
+                    'hue_sequence': [0, 40000, 30000],
+                    'sleep_time': 2,
+                    'transition_time': 1,
+                },
+            },
+            {
+                'title': 'Storm',
+                'description': 'Stormy weather',
+                'scene_name': 'sequence',
+                'duration': 13,
+                'properties': {
+                    'brightness': 10,
+                    'hue_sequence': [0, 40000, 30000],
+                    'sleep_time': 1,
+                    'transition_time': 1,
+                },
+            },
+        ]
+
+    """
+
+    def __init__(self, bridge, reachable_lights, scene_config_list=None):
+        self.bridge = bridge
+        self.reachable_lights = reachable_lights
+        self.scene_config_list = scene_config_list
+
+    @staticmethod
+    def _get_scene_class(scene_name):
+        class_name = 'Scene{}'.format(scene_name.title())
+        return getattr(sys.modules[__name__], class_name)
+
+    def launch_scene(self, scene_config):
+        """
+        Launch one scene.
+
+        :param dict scene_config: A dictionary holding the configuration of
+          the desired scene.
+
+        .. code-block:: python
+
+            scene_config = {
+                'title': 'Rainbow',
+                'description': 'Cycle between three colors',
+                'scene_name': 'sequence',
+                'duration': 13,
+                'properties': {
+                    'brightness': 255,
+                    'hue_sequence': [0, 40000, 30000],
+                    'sleep_time': 2,
+                    'transition_time': 1,
+                },
+            }
+
+        """
+        Scene = self._get_scene_class(scene_config['scene'])
+        scene = Scene(self.bridge, self.reachable_lights)
+        scene.get_properties_from_dict(scene_config['properties'])
+        scene.start(scene_config['duration'])
 
 
 class Scene(object):
 
+    """
+    :param reachable_lights: An object containing the specified and
+      reachable lights.
+    :type reachable_lights: lively_lights.ReachableLights
+    """
+
     properties = []
 
     def __init__(self, bridge, reachable_lights, **kwargs):
-
         self.bridge = bridge
         self.reachable_lights = reachable_lights
 
@@ -27,6 +117,11 @@ class Scene(object):
         for property in self.properties:
             if hasattr(args, property):
                 setattr(self, property, getattr(args, property))
+
+    def get_properties_from_dict(self, dictionary):
+        for property in self.properties:
+            if property in dictionary:
+                setattr(self, property, dictionary[property])
 
     def has_property(self, property):
         if not hasattr(self, property) or not getattr(self, property):
