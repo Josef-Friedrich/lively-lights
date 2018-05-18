@@ -38,9 +38,12 @@ class Scene(object):
         """Should be overwritten."""
         pass
 
-    def start(self, time_out=None):
-        """Should be overwritten."""
+    def _run(self, time_out=None):
         pass
+
+    def start(self, time_out=None):
+        self._setup()
+        self._run(time_out)
 
 
 class SceneBreath(Scene):
@@ -91,8 +94,7 @@ class SceneBreath(Scene):
             else:
                 break
 
-    def start(self, time_out=None):
-        self._setup()
+    def _run(self, time_out=None):
         if time_out:
             self._time_to_end = time.time() + time_out
         while True:
@@ -159,8 +161,7 @@ class ScenePendulum(Scene):
             }
             set_light_multiple(self.bridge, light.light_id, data)
 
-    def start(self, time_out=None):
-        self._setup()
+    def _run(self, time_out=None):
         begin = time.time()
         while True:
             if time_out and \
@@ -206,8 +207,7 @@ class SceneSequence(Scene):
         if not self.has_property('transition_time'):
             self.transition_time = random.time(1, 3, is_transition_time=True)
 
-    def start(self, time_out=None):
-        self._setup()
+    def _run(self, time_out=None):
         begin = time.time()
         try:
             while True:
