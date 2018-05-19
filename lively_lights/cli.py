@@ -50,7 +50,7 @@ def get_parser():
 
     parser.add_argument(
         '-t', '--time-out',
-        type=float,
+        type=types.time,
         help='Set time out in seconds.',
     )
 
@@ -165,13 +165,13 @@ def get_parser():
 
     scene_pendulum.add_argument(
         '-s', '--sleep-time',
-        type=float,
+        type=types.time,
         help='Time in seconds to switch between the two lights groups.',
     )
 
     scene_pendulum.add_argument(
         '-t', '--transition-time',
-        type=float,
+        type=types.transition_time,
         help='Transition time for the color change (-t 10 = one second).',
     )
 
@@ -186,7 +186,7 @@ def get_parser():
 
     scene_sequence.add_argument(
         '-b', '--brightness',
-        type=int,
+        type=types.brightness,
         help='Brightness of the lights (0 - 255)',
     )
 
@@ -198,13 +198,13 @@ def get_parser():
 
     scene_sequence.add_argument(
         '-s', '--sleep-time',
-        type=float,
+        type=types.time,
         help='Time between the color changes in seconds.',
     )
 
     scene_sequence.add_argument(
         '-t', '--transition-time',
-        type=float,
+        type=types.transition_time,
         help='Transition time in seconds.',
     )
 

@@ -126,7 +126,7 @@ class TestTime(unittest.TestCase):
     def test_invalid_min(self):
         with self.assertRaises(ValueError):
             time(-1)
-            
+
     def test_invalid_string(self):
         with self.assertRaises(ValueError):
             time('lol')
