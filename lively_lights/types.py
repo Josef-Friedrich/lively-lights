@@ -1,6 +1,20 @@
 """Validate the input values"""
 
 
+def _range(value, inner_type):
+    value = tuple(value)
+    if len(value) != 2:
+        raise ValueError('Range can only contain 2 elements.')
+
+    min = inner_type(value[0])
+    max = inner_type(value[1])
+
+    if min >= max:
+        raise ValueError('max isn’t allowed to be smaller than min.')
+
+    return (min, max)
+
+
 def brightness(value):
     """Brightness of the light. This is a scale from the minimum brightness the
     light is capable of, 1, to the maximum capable brightness, 254."""

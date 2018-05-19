@@ -1,10 +1,36 @@
 import unittest
-from lively_lights.types import brightness, \
+from lively_lights.types import _range, \
+                                brightness, \
                                 hue, \
                                 light_id, \
                                 time, \
                                 transition_time, \
                                 saturation
+
+
+class TestRange(unittest.TestCase):
+
+    def test_list(self):
+        self.assertEqual(_range([1, 2], hue), (1, 2))
+
+    def test_tuple(self):
+        self.assertEqual(_range((1, 2), hue), (1, 2))
+
+    def test_less(self):
+        with self.assertRaises(ValueError):
+            _range((1, ), hue)
+
+    def test_more(self):
+        with self.assertRaises(ValueError):
+            _range((1, 2, 3), hue)
+
+    def test_max_less_than_min(self):
+        with self.assertRaises(ValueError):
+            _range((2, 1), hue)
+
+    def test_wrong_inner_type(self):
+        with self.assertRaises(ValueError):
+            _range(('lol', 2), hue)
 
 
 class TestBrightness(unittest.TestCase):
