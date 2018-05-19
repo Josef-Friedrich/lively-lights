@@ -1,5 +1,9 @@
 import unittest
-from lively_lights.types import brightness, hue, saturation
+from lively_lights.types import brightness, \
+                                hue, \
+                                light_id, \
+                                transition_time, \
+                                saturation
 
 
 class TestBrightness(unittest.TestCase):
@@ -76,6 +80,68 @@ class TestHue(unittest.TestCase):
     def test_invalid_string(self):
         with self.assertRaises(ValueError):
             hue('lol')
+
+
+class TestLightId(unittest.TestCase):
+
+    def test_valid_min(self):
+        self.assertEqual(light_id(1), 1)
+
+    def test_valid_normal(self):
+        self.assertEqual(light_id(100), 100)
+
+    def test_valid_min_string(self):
+        self.assertEqual(light_id('1'), 1)
+
+    def test_valid_float(self):
+        self.assertEqual(light_id(2.3), 2)
+
+    def test_valid_float_cut(self):
+        self.assertEqual(light_id(2.9), 2)
+
+    def test_invalid_min(self):
+        with self.assertRaises(ValueError):
+            light_id(0)
+
+    def test_invalid_string(self):
+        with self.assertRaises(ValueError):
+            light_id('lol')
+
+
+class Testtransition_time(unittest.TestCase):
+
+    def test_valid_min(self):
+        self.assertEqual(transition_time(0), 0)
+
+    def test_valid_normal(self):
+        self.assertEqual(transition_time(10), 100)
+
+    def test_valid_max(self):
+        self.assertEqual(transition_time(6553.5), 65535)
+
+    def test_valid_min_string(self):
+        self.assertEqual(transition_time('0'), 0)
+
+    def test_valid_max_string(self):
+        self.assertEqual(transition_time('6553.5'), 65535)
+
+    def test_valid_float(self):
+        self.assertEqual(transition_time(2.3), 23)
+
+    def test_valid_float_cut(self):
+        self.assertEqual(transition_time(2.9), 29)
+
+    def test_invalid_min(self):
+        with self.assertRaises(ValueError):
+            transition_time(-1)
+
+    def test_invalid_max(self):
+        with self.assertRaises(ValueError):
+            transition_time(6553.6)
+
+    def test_invalid_string(self):
+        with self.assertRaises(ValueError):
+            transition_time('lol')
 
 
 class TestSaturation(unittest.TestCase):
