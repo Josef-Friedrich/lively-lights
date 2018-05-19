@@ -24,12 +24,20 @@ def brightness(value):
     return value
 
 
+def brightness_range(value):
+    return _range(value, brightness)
+
+
 def hue(value):
     """Hue of the light. This is a wrapping value between 0 and 65535."""
     value = int(value)
     if value < 0 or value > 65535:
         raise ValueError('Hue is a value between 0 and 65535')
     return value
+
+
+def hue_range(value):
+    return _range(value, hue)
 
 
 def light_id(value):
@@ -45,6 +53,10 @@ def time(seconds):
     if seconds < 0:
         raise ValueError('Time must be greater or equal than 0')
     return seconds
+
+
+def time_range(value):
+    return _range(value, time)
 
 
 def transition_time(seconds):

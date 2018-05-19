@@ -39,6 +39,7 @@ def get_parser():
     parser.add_argument(
         '-l', '--lights',
         nargs='+',
+        type=types.light_id,
         help='Light ids (e. g: -l 1 2 3)',
     )
 
@@ -115,18 +116,21 @@ def get_parser():
     scene_breath.add_argument(
         '-b', '--brightness-range',
         nargs=2,
+        type=types.brightness,
         help='Two brightness values (e. g. 10 255).'
     )
 
     scene_breath.add_argument(
         '-H', '--hue-range',
         nargs=2,
+        type=types.hue,
         help='Two hue color values (e. g. 23461 40123).'
     )
 
     scene_breath.add_argument(
         '-t', '--time-range',
         nargs=2,
+        type=types.time,
         help='A time range in seconds separated by a space.'
     )
 
@@ -154,12 +158,14 @@ def get_parser():
     scene_pendulum.add_argument(
         '-l1', '--lights1',
         nargs='+',
+        type=types.light_id,
         help='Lights group 1 (spaces seperated numbers, e. g.: 4 5 6).',
     )
 
     scene_pendulum.add_argument(
         '-l2', '--lights2',
         nargs='+',
+        type=types.light_id,
         help='Lights group 2 (spaces seperated numbers, e. g.: 4 5 6).',
     )
 
@@ -193,6 +199,7 @@ def get_parser():
     scene_sequence.add_argument(
         '-H', '--hue-sequence',
         nargs='+',
+        type=types.hue,
         help='A sequence of hue color values (0 - 65535).',
     )
 

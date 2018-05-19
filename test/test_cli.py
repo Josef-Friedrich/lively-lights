@@ -29,9 +29,9 @@ class TestCliUnit(unittest.TestCase):
         main()
         scene = Scene.return_value
         args = scene.get_properties_from_args.call_args[0][0]
-        self.assertEqual(args.brightness_range, ['1', '2'])
-        self.assertEqual(args.hue_range, ['1', '2'])
-        self.assertEqual(args.time_range, ['1', '2'])
+        self.assertEqual(args.brightness_range, [1, 2])
+        self.assertEqual(args.hue_range, [1, 2])
+        self.assertEqual(args.time_range, [1, 2])
 
     @mock.patch('sys.argv', [
         '.', 'scene', 'pendulum',
@@ -49,8 +49,8 @@ class TestCliUnit(unittest.TestCase):
         args = scene.get_properties_from_args.call_args[0][0]
         self.assertEqual(args.color1, 1)
         self.assertEqual(args.color2, 2)
-        self.assertEqual(args.lights1, ['1', '2'])
-        self.assertEqual(args.lights2, ['3', '4'])
+        self.assertEqual(args.lights1, [1, 2])
+        self.assertEqual(args.lights2, [3, 4])
         self.assertEqual(args.sleep_time, float(1))
         self.assertEqual(args.transition_time, int(10))
 
@@ -70,7 +70,7 @@ class TestCliUnit(unittest.TestCase):
         args = scene.get_properties_from_args.call_args[0][0]
 
         self.assertEqual(args.brightness, 1)
-        self.assertEqual(args.hue_sequence, ['1', '2'])
+        self.assertEqual(args.hue_sequence, [1, 2])
         self.assertEqual(args.sleep_time, float(1))
         self.assertEqual(args.transition_time, int(10))
 
