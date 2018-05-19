@@ -1,6 +1,7 @@
 """The command line interface provided by argparse."""
 
 import argparse
+from lively_lights import types
 
 
 def get_parser():
@@ -140,13 +141,13 @@ def get_parser():
 
     scene_pendulum.add_argument(
         '-c1', '--color1',
-        type=int,
+        type=types.hue,
         help='Hue color value (0 - 65535) for lights group 1.',
     )
 
     scene_pendulum.add_argument(
         '-c2', '--color2',
-        type=int,
+        type=types.hue,
         help='Hue color value (0 - 65535) for lights group 2.',
     )
 
