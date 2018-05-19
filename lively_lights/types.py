@@ -26,6 +26,13 @@ def light_id(value):
     return value
 
 
+def time(seconds):
+    seconds = float(seconds)
+    if seconds < 0:
+        raise ValueError('Time must be greater or equal than 0')
+    return seconds
+
+
 def transition_time(seconds):
     transition_time = float(seconds) * 10
     transition_time = int(round(transition_time))

@@ -2,6 +2,7 @@ import unittest
 from lively_lights.types import brightness, \
                                 hue, \
                                 light_id, \
+                                time, \
                                 transition_time, \
                                 saturation
 
@@ -108,7 +109,30 @@ class TestLightId(unittest.TestCase):
             light_id('lol')
 
 
-class Testtransition_time(unittest.TestCase):
+class TestTime(unittest.TestCase):
+
+    def test_valid_min(self):
+        self.assertEqual(time(0), 0)
+
+    def test_valid_normal(self):
+        self.assertEqual(time(10), 10)
+
+    def test_valid_min_string(self):
+        self.assertEqual(time('0'), 0)
+
+    def test_valid_float(self):
+        self.assertEqual(time(2.3), 2.3)
+
+    def test_invalid_min(self):
+        with self.assertRaises(ValueError):
+            time(-1)
+            
+    def test_invalid_string(self):
+        with self.assertRaises(ValueError):
+            time('lol')
+
+
+class TesttTransitionTime(unittest.TestCase):
 
     def test_valid_min(self):
         self.assertEqual(transition_time(0), 0)
