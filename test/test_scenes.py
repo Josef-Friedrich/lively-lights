@@ -62,15 +62,16 @@ class TestClassSceneInheritage(unittest.TestCase):
 class TestClassSceneBreath(unittest.TestCase):
 
     def test_kwargs(self):
-        scene = SceneBreath('', '', bri_range=1, hue_range=2, time_range=3)
-        self.assertEqual(scene.bri_range, 1)
+        scene = SceneBreath('', '', brightness_range=1, hue_range=2,
+                            time_range=3)
+        self.assertEqual(scene.brightness_range, 1)
         self.assertEqual(scene.hue_range, 2)
         self.assertEqual(scene.time_range, 3)
 
     def test_setup(self):
         scene = SceneBreath('', '')
         scene._setup()
-        self.assertTrue(scene.bri_range)
+        self.assertTrue(scene.brightness_range)
         self.assertTrue(scene.hue_range)
         self.assertTrue(scene.time_range)
 

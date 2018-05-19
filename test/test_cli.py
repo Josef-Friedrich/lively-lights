@@ -18,7 +18,7 @@ class TestCliUnit(unittest.TestCase):
 
     @mock.patch('sys.argv', [
         '.', 'scene', 'breath',
-        '--bri-range', '1', '2',
+        '--brightness-range', '1', '2',
         '--hue-range', '1', '2',
         '--time-range', '1', '2',
     ])
@@ -29,7 +29,7 @@ class TestCliUnit(unittest.TestCase):
         main()
         scene = Scene.return_value
         args = scene.get_properties_from_args.call_args[0][0]
-        self.assertEqual(args.bri_range, ['1', '2'])
+        self.assertEqual(args.brightness_range, ['1', '2'])
         self.assertEqual(args.hue_range, ['1', '2'])
         self.assertEqual(args.time_range, ['1', '2'])
 

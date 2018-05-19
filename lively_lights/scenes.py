@@ -144,7 +144,7 @@ class Scene(object):
 class SceneBreath(Scene):
 
     properties = [
-        'bri_range',
+        'brightness_range',
         'hue_range',
         'time_range',
     ]
@@ -153,8 +153,8 @@ class SceneBreath(Scene):
         self._threads = {}
         self._time_to_end = None
 
-        if not self.has_property('bri_range'):
-            self.bri_range = (
+        if not self.has_property('brightness_range'):
+            self.brightness_range = (
                 random.brightness(max=100),
                 random.brightness(min=100),
             )
@@ -181,7 +181,7 @@ class SceneBreath(Scene):
                 data = {
                     'hue': randint(*self.hue_range),
                     'transitiontime': transitiontime,
-                    'bri': randint(*self.bri_range),
+                    'bri': randint(*self.brightness_range),
                     'sat': 254,
                 }
                 set_light_multiple(self.bridge, light_id, data)

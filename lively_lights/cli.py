@@ -113,7 +113,7 @@ def get_parser():
     )
 
     scene_breath.add_argument(
-        '-b', '--bri-range',
+        '-b', '--brightness-range',
         nargs=2,
         help='Two brightness values (e. g. 10 255).'
     )
