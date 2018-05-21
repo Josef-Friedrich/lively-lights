@@ -165,8 +165,8 @@ class TestClassSceneTimeOuts(unittest.TestCase):
 
     @mock.patch('lively_lights.scenes.set_light_multiple', mock.Mock())
     def assertTimeOut(self, scene, time_out):
-        reachable_lights = mock.Mock()
-        reachable_lights.list.return_value = [mock.Mock(), mock.Mock()]
+        get_reachable_lights([1, 2])
+        reachable_lights = get_reachable_lights([1, 2])
         Scene = getattr(scenes, scene)
         scene = Scene(mock.Mock(), reachable_lights)
         begin = time.time()
@@ -201,7 +201,7 @@ class TestClassLauncher(unittest.TestCase):
             'scene_name': 'sequence',
             'duration': 3,
             'properties': {
-                'brightness': 255,
+                'brightness': 254,
                 'hue_sequence': [0, 40000, 30000],
                 'sleep_time': 2,
                 'transition_time': 1,

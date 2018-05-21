@@ -134,11 +134,17 @@ class Scene(object):
         """Should be overwritten."""
         pass
 
+    def _validate(self):
+        for property, config in self.properties.items():
+            setattr(self, property, config['type'](getattr(self, property)))
+
     def _run(self, time_out=None):
+        """Should be overwritten."""
         pass
 
     def start(self, time_out=None):
         self._setup()
+        self._validate()
         self._run(time_out)
 
 
@@ -228,10 +234,10 @@ class ScenePendulum(Scene):
             'type': types.hue,
         },
         'lights1': {
-            'type': types.light_id,
+            'type': types.light_id_list,
         },
         'lights2': {
-            'type': types.light_id,
+            'type': types.light_id_list,
         },
         'sleep_time': {
             'type': types.time,

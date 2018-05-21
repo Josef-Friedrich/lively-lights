@@ -62,6 +62,10 @@ def light_id(value):
     return value
 
 
+def light_id_list(value):
+    return _list(value, light_id)
+
+
 def time(seconds):
     seconds = float(seconds)
     if seconds < 0:
