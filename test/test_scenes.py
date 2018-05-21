@@ -1,5 +1,5 @@
 from _helper import get_reachable_lights
-from lively_lights import scenes
+from lively_lights import scenes, types
 from lively_lights.scenes import Launcher, \
                                  Scene, \
                                  SceneBreath, \
@@ -18,7 +18,14 @@ class Args(object):
 
 class SceneTest(Scene):
 
-    properties = ['speed', 'color']
+    properties = {
+        'speed': {
+            'type': types.time,
+        },
+        'color': {
+            'type': types.hue,
+        },
+    }
 
 
 class TestClassScene(unittest.TestCase):
@@ -29,14 +36,28 @@ class TestClassScene(unittest.TestCase):
 
     def test_method_get_properties_from_args(self):
         scene = Scene('', '')
-        scene.properties = ['speed', 'arg2']
+        scene.properties = {
+            'speed': {
+                'type': types.time,
+            },
+            'arg2': {
+                'type': types.hue,
+            },
+        }
         args = Args()
         scene.get_properties_from_args(args)
         self.assertEqual(scene.speed, 111)
 
     def test_method_get_properties_from_dict(self):
         scene = Scene('', '')
-        scene.properties = ['speed', 'arg2']
+        scene.properties = {
+            'speed': {
+                'type': types.time,
+            },
+            'arg2': {
+                'type': types.hue,
+            },
+        }
         dictionary = {
             'speed': 111
         }

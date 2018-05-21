@@ -15,6 +15,16 @@ def _range(value, inner_type):
     return (min, max)
 
 
+def _list(value, inner_type):
+    value = list(value)
+    out = []
+
+    for entry in value:
+        out.append(inner_type(entry))
+
+    return out
+
+
 def brightness(value):
     """Brightness of the light. This is a scale from the minimum brightness the
     light is capable of, 1, to the maximum capable brightness, 254."""
@@ -38,6 +48,10 @@ def hue(value):
 
 def hue_range(value):
     return _range(value, hue)
+
+
+def hue_list(value):
+    return _list(value, hue)
 
 
 def light_id(value):

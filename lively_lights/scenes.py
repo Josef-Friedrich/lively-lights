@@ -3,6 +3,7 @@
 
 from lively_lights import _random as random
 from lively_lights._utils import set_light_multiple
+from lively_lights import types
 from random import randint
 import threading
 import time
@@ -101,7 +102,7 @@ class Scene(object):
     :type reachable_lights: lively_lights.ReachableLights
     """
 
-    properties = []
+    properties = {}
 
     def __init__(self, bridge, reachable_lights, **kwargs):
         self.bridge = bridge
@@ -114,12 +115,12 @@ class Scene(object):
                 raise ValueError('Property “{}” is not allowed.'.format(key))
 
     def get_properties_from_args(self, args):
-        for property in self.properties:
+        for property, value in self.properties.items():
             if hasattr(args, property):
                 setattr(self, property, getattr(args, property))
 
     def get_properties_from_dict(self, dictionary):
-        for property in self.properties:
+        for property, value in self.properties.items():
             if property in dictionary:
                 setattr(self, property, dictionary[property])
 
@@ -143,11 +144,17 @@ class Scene(object):
 
 class SceneBreath(Scene):
 
-    properties = [
-        'brightness_range',
-        'hue_range',
-        'time_range',
-    ]
+    properties = {
+        'brightness_range': {
+            'type': types.brightness_range,
+        },
+        'hue_range': {
+            'type': types.hue_range,
+        },
+        'time_range': {
+            'type': types.time_range,
+        },
+    }
 
     def _setup(self):
         self._threads = {}
@@ -213,14 +220,26 @@ class SceneBreath(Scene):
 
 class ScenePendulum(Scene):
 
-    properties = [
-        'color1',
-        'color2',
-        'lights1',
-        'lights2',
-        'sleep_time',
-        'transition_time',
-    ]
+    properties = {
+        'color1': {
+            'type': types.hue,
+        },
+        'color2': {
+            'type': types.hue,
+        },
+        'lights1': {
+            'type': types.light_id,
+        },
+        'lights2': {
+            'type': types.light_id,
+        },
+        'sleep_time': {
+            'type': types.time,
+        },
+        'transition_time': {
+            'type': types.time,
+        },
+    }
 
     def _setup(self):
         if not self.has_property('color1'):
@@ -277,12 +296,20 @@ class ScenePendulum(Scene):
 
 class SceneSequence(Scene):
 
-    properties = [
-        'brightness',
-        'hue_sequence',
-        'sleep_time',
-        'transition_time',
-    ]
+    properties = {
+        'brightness': {
+            'type': types.brightness,
+        },
+        'hue_sequence': {
+            'type': types.hue_list,
+        },
+        'sleep_time': {
+            'type': types.time,
+        },
+        'transition_time': {
+            'type': types.time,
+        },
+    }
 
     def _setup(self):
         if not self.has_property('brightness'):
