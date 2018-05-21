@@ -130,7 +130,7 @@ class Scene(object):
         else:
             return True
 
-    def _setup(self):
+    def _set_defaults(self):
         """Should be overwritten."""
         pass
 
@@ -143,7 +143,7 @@ class Scene(object):
         pass
 
     def start(self, time_out=None):
-        self._setup()
+        self._set_defaults()
         self._validate()
         self._run(time_out)
 
@@ -162,7 +162,7 @@ class SceneBreath(Scene):
         },
     }
 
-    def _setup(self):
+    def _set_defaults(self):
         self._threads = {}
         self._time_to_end = None
 
@@ -247,7 +247,7 @@ class ScenePendulum(Scene):
         },
     }
 
-    def _setup(self):
+    def _set_defaults(self):
         if not self.has_property('color1'):
             self.color1 = random.hue()
 
@@ -317,7 +317,7 @@ class SceneSequence(Scene):
         },
     }
 
-    def _setup(self):
+    def _set_defaults(self):
         if not self.has_property('brightness'):
             self.brightness = random.brightness(min=100)
 

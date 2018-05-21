@@ -89,9 +89,9 @@ class TestClassSceneBreath(unittest.TestCase):
         self.assertEqual(scene.hue_range, 2)
         self.assertEqual(scene.time_range, 3)
 
-    def test_setup(self):
+    def test_set_defaults(self):
         scene = SceneBreath('', '')
-        scene._setup()
+        scene._set_defaults()
         self.assertTrue(scene.brightness_range)
         self.assertTrue(scene.hue_range)
         self.assertTrue(scene.time_range)
@@ -109,9 +109,9 @@ class TestClassScenePendulum(unittest.TestCase):
         self.assertEqual(scene.sleep_time, 5)
         self.assertEqual(scene.transition_time, 6)
 
-    def test_setup(self):
+    def test_set_defaults(self):
         scene = ScenePendulum('', '', lights1=1, lights2=2)
-        scene._setup()
+        scene._set_defaults()
         self.assertTrue(scene.color1)
         self.assertTrue(scene.color2)
         self.assertTrue(scene.lights1)
@@ -130,9 +130,9 @@ class TestClassSceneSequence(unittest.TestCase):
         self.assertEqual(scene.sleep_time, 3)
         self.assertEqual(scene.transition_time, 4)
 
-    def test_setup(self):
+    def test_set_defaults(self):
         scene = SceneSequence('', '')
-        scene._setup()
+        scene._set_defaults()
         self.assertTrue(scene.brightness)
         self.assertTrue(scene.hue_sequence)
         self.assertTrue(scene.sleep_time)
