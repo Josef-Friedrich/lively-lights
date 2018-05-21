@@ -1,5 +1,6 @@
 import unittest
 from lively_lights.types import _range, \
+                                _list, \
                                 brightness, \
                                 hue, \
                                 light_id, \
@@ -8,7 +9,26 @@ from lively_lights.types import _range, \
                                 saturation
 
 
-class TestRange(unittest.TestCase):
+class TestPrivateRange(unittest.TestCase):
+
+    def test_list(self):
+        self.assertEqual(_list([1, 2], hue), [1, 2])
+
+    def test_tuple(self):
+        self.assertEqual(_list((1, 2), hue), [1, 2])
+
+    def test_one(self):
+        self.assertEqual(_list((1, ), hue), [1])
+
+    def test_three(self):
+        self.assertEqual(_list((1, 2, 3), hue), [1, 2, 3])
+
+    def test_wrong_inner_type(self):
+        with self.assertRaises(ValueError):
+            _list(('lol', 2), hue)
+
+
+class TestPrivateList(unittest.TestCase):
 
     def test_list(self):
         self.assertEqual(_range([1, 2], hue), (1, 2))
