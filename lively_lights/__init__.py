@@ -157,6 +157,12 @@ class ReachableLights(object):
         else:
             return self._get_reachable()
 
+    def list_light_ids(self):
+        out = []
+        for light in self.list():
+            out.append(light.light_id)
+        return(out)
+
 
 def main():
     global args

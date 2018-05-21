@@ -265,21 +265,21 @@ class ScenePendulum(Scene):
             self.transition_time = random.time(1, 3, is_transition_time=True)
 
     def _distribute_lights(self):
-        lights = self.reachable_lights.list()
-        random.shuffle(lights)
-        count = len(lights)
+        light_ids = self.reachable_lights.list_light_ids()
+        random.shuffle(light_ids)
+        count = len(light_ids)
         half = int(count / 2)
-        return (lights[0:half], lights[half:])
+        return (light_ids[0:half], light_ids[half:])
 
-    def _set_light_group(self, lights, hue):
-        for light in lights:
+    def _set_light_group(self, light_ids, hue):
+        for light_id in light_ids:
             data = {
                 'hue': hue,
                 'bri': 254,
                 'transitiontime': self.transition_time,
                 'sat': 254,
             }
-            set_light_multiple(self.bridge, light.light_id, data)
+            set_light_multiple(self.bridge, light_id, data)
 
     def _run(self, time_out=None):
         begin = time.time()
