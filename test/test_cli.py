@@ -52,7 +52,7 @@ class TestCliUnit(unittest.TestCase):
         self.assertEqual(args.lights1, [1, 2])
         self.assertEqual(args.lights2, [3, 4])
         self.assertEqual(args.sleep_time, float(1))
-        self.assertEqual(args.transition_time, int(10))
+        self.assertEqual(args.transition_time, float(1))
 
     @mock.patch('sys.argv', [
         '.', 'scene', 'sequence',
@@ -72,7 +72,7 @@ class TestCliUnit(unittest.TestCase):
         self.assertEqual(args.brightness, 1)
         self.assertEqual(args.hue_sequence, [1, 2])
         self.assertEqual(args.sleep_time, float(1))
-        self.assertEqual(args.transition_time, int(10))
+        self.assertEqual(args.transition_time, int(1))
 
 
 class TestCli(unittest.TestCase):

@@ -177,7 +177,7 @@ def get_parser():
 
     scene_pendulum.add_argument(
         '-t', '--transition-time',
-        type=types.transition_time,
+        type=types.time,
         help='Transition time for the color change (-t 10 = one second).',
     )
 
@@ -211,7 +211,7 @@ def get_parser():
 
     scene_sequence.add_argument(
         '-t', '--transition-time',
-        type=types.transition_time,
+        type=types.time,
         help='Transition time in seconds.',
     )
 
