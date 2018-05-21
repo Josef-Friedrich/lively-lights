@@ -95,6 +95,11 @@ def get_parser():
         help='Print the current sunset and sunrise times.'
     )
 
+    info.add_parser(
+        'lights',
+        help='Print informations about all lights.'
+    )
+
     ###########################################################################
     # scene
     ###########################################################################

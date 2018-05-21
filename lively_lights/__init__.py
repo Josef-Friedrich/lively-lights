@@ -57,16 +57,10 @@ class DayNight(object):
         print('Dusk:    {}'.format(sun['dusk']))
 
 
-def light_info(light, attr):
-    attr_strings = []
-    for a in attr:
-        attr_strings.append('{}: {}'.format(a, getattr(light, a)))
-
-    info = '{}: {} ({})'.format(light.light_id,
-                                light.name,
-                                '; '.join(attr_strings))
-
-    print(info)
+def lights_info(bridge):
+    for light in bridge.lights:
+        info = '{}: {}'.format(light.light_id, light.name)
+        print(info)
 
 
 class Configuration(object):
@@ -169,15 +163,18 @@ def main():
     args = get_parser().parse_args()
 
     config = Configuration(config_file_path=args.config_file)
-    if args.subcommand == 'info':
-        if args.info == 'daynight':
-            day_night = DayNight(config)
-            day_night.overview()
-            return
+    if args.subcommand == 'info' and args.info == 'daynight':
+        day_night = DayNight(config)
+        day_night.overview()
+        return
 
     hue = Hue(ip=args.ip, username=args.username,
               config_file_path=args.config_file, verbosity_level=args.verbose,
               colorize_output=args.colorize)
+
+    if args.subcommand == 'info' and args.info == 'lights':
+        lights_info(hue.bridge)
+        return
 
     if args.daemonize:
         ctx_mgr = daemon.DaemonContext(
