@@ -184,21 +184,23 @@ class SceneBreath(Scene):
     def _set_light(self, light_id):
         while True:
             if self.reachable_lights.is_reachable(light_id):
-                transitiontime = randint(
-                    self.time_range[0] * 10,
-                    self.time_range[1] * 10
+                time_span = random.time(
+                    self.time_range[0],
+                    self.time_range[1],
+                    decimal_places=1
                 )
+
                 if self._time_to_end and \
-                   time.time() - transitiontime / 10 > self._time_to_end:
+                   time.time() - time_span > self._time_to_end:
                     break
                 data = {
                     'hue': randint(*self.hue_range),
-                    'transitiontime': transitiontime,
+                    'transitiontime': types.transition_time(time_span),
                     'bri': randint(*self.brightness_range),
                     'sat': 254,
                 }
                 set_light_multiple(self.bridge, light_id, data)
-                time.sleep(transitiontime / 10 + 0.2)
+                time.sleep(time_span + 0.2)
             else:
                 break
 
@@ -262,7 +264,7 @@ class ScenePendulum(Scene):
             self.sleep_time = random.time(4, 8)
 
         if not self.has_property('transition_time'):
-            self.transition_time = random.time(1, 3, is_transition_time=True)
+            self.transition_time = random.time(1, 3, decimal_places=1)
 
     def _distribute_lights(self):
         light_ids = self.reachable_lights.list_light_ids()
@@ -276,7 +278,7 @@ class ScenePendulum(Scene):
             data = {
                 'hue': hue,
                 'bri': 254,
-                'transitiontime': self.transition_time,
+                'transitiontime': types.transition_time(self.transition_time),
                 'sat': 254,
             }
             set_light_multiple(self.bridge, light_id, data)
@@ -333,7 +335,7 @@ class SceneSequence(Scene):
             self.sleep_time = random.time(4, 8)
 
         if not self.has_property('transition_time'):
-            self.transition_time = random.time(1, 3, is_transition_time=True)
+            self.transition_time = random.time(1, 3, decimal_places=1)
 
     def _run(self, time_out=None):
         begin = time.time()
@@ -344,7 +346,9 @@ class SceneSequence(Scene):
                         data = {
                             'hue': hue,
                             'bri': self.brightness,
-                            'transitiontime': self.transition_time,
+                            'transitiontime': types.transition_time(
+                                self.transition_time
+                            ),
                             'sat': 255,
                         }
                         set_light_multiple(self.bridge, light.light_id, data)

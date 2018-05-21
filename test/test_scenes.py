@@ -158,7 +158,7 @@ class TestClassSceneSequence(unittest.TestCase):
         self.assertEqual(call_list[2][0][2]['hue'], 1)
 
         self.assertEqual(call_list[0][0][2]['bri'], 100)
-        self.assertEqual(call_list[0][0][2]['transitiontime'], 2)
+        self.assertEqual(call_list[0][0][2]['transitiontime'], 20)
 
 
 class TestClassSceneTimeOuts(unittest.TestCase):
