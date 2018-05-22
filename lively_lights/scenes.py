@@ -119,13 +119,17 @@ class Scene(object):
 
     def get_properties_from_args(self, args):
         for property, value in self.properties.items():
-            if hasattr(args, property):
+            if hasattr(args, property) and getattr(args, property):
                 setattr(self, property, getattr(args, property))
+        self._set_defaults()
+        self._validate()
 
     def get_properties_from_dict(self, dictionary):
         for property, value in self.properties.items():
             if property in dictionary:
                 setattr(self, property, dictionary[property])
+        self._set_defaults()
+        self._validate()
 
     def has_property(self, property):
         if not hasattr(self, property) or not getattr(self, property):

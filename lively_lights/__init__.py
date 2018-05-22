@@ -199,6 +199,9 @@ def main():
             scene.get_properties_from_args(args)
             scenes.scene_reporter(scene, args.verbose)
             scene.start(time_out=args.time_out)
+            if args.verbose > 0 and args.time_out and scene.actual_duration:
+                print('time_out: {}'.format(scene.time_out))
+                print('actual_duration: {}'.format(scene.actual_duration))
 
 
 if __name__ == '__main__':

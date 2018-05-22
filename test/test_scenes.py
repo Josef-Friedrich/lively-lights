@@ -42,9 +42,10 @@ class TestClassScene(unittest.TestCase):
     def test_method_get_properties_from_args(self):
         scene = SceneTest('', '', speed=1, color=2)
         args = Args()
+        args.color = None
         scene.get_properties_from_args(args)
         self.assertEqual(scene.speed, 111)
-        self.assertEqual(scene.color, 222)
+        self.assertEqual(scene.color, 2)
 
     def test_method_get_properties_from_dict(self):
         scene = SceneTest('', '', speed=1, color=2)
@@ -66,7 +67,6 @@ class TestClassSceneBreath(unittest.TestCase):
 
     def test_set_defaults(self):
         scene = SceneBreath('', '')
-        scene._set_defaults()
         self.assertTrue(scene.brightness_range)
         self.assertTrue(scene.hue_range)
         self.assertTrue(scene.time_range)
@@ -86,7 +86,6 @@ class TestClassScenePendulum(unittest.TestCase):
 
     def test_set_defaults(self):
         scene = ScenePendulum('', '', lights1=(1, ), lights2=(2, ))
-        scene._set_defaults()
         self.assertTrue(scene.color1)
         self.assertTrue(scene.color2)
         self.assertTrue(scene.lights1)
@@ -107,7 +106,6 @@ class TestClassSceneSequence(unittest.TestCase):
 
     def test_set_defaults(self):
         scene = SceneSequence('', '')
-        scene._set_defaults()
         self.assertTrue(scene.brightness)
         self.assertTrue(scene.hue_sequence)
         self.assertTrue(scene.sleep_time)
