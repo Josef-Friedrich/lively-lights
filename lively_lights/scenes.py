@@ -280,6 +280,9 @@ class ScenePendulum(Scene):
         if not self.has_property('transition_time'):
             self.transition_time = random.time(1, 3, decimal_places=1)
 
+        if self.transition_time > self.sleep_time:
+            raise ValueError('transition_time should be less than sleep_time')
+
     def _distribute_lights(self):
         light_ids = self.reachable_lights.list_light_ids()
         random.shuffle(light_ids)
@@ -299,19 +302,28 @@ class ScenePendulum(Scene):
 
     def _run(self, time_out=None):
         begin = time.time()
+
+        if time_out and time_out <= self.sleep_time:
+            self.sleep_time = time_out / 2
+            self.transition_time = self.sleep_time * 0.2
+
         while True:
-            if time_out and \
-               time.time() - begin + self.sleep_time * 2 >= time_out:
-                break
             self._set_light_group(self.lights1, self.color1)
             self._set_light_group(self.lights2, self.color2)
+            if time_out and \
+               time.time() - begin + self.sleep_time >= time_out:
+                break
             time.sleep(self.sleep_time)
             self._set_light_group(self.lights1, self.color2)
             self._set_light_group(self.lights2, self.color1)
+            if time_out and \
+               time.time() - begin + self.sleep_time >= time_out:
+                break
             time.sleep(self.sleep_time)
 
         if time_out:
-            time_left = time.time() - begin - time_out
+            duration = time.time() - begin
+            time_left = time_out - duration
             if time_left > 0:
                 time.sleep(time_left)
 
@@ -353,8 +365,15 @@ class SceneSequence(Scene):
         if not self.has_property('transition_time'):
             self.transition_time = random.time(1, 3, decimal_places=1)
 
+        if self.transition_time > self.sleep_time:
+            raise ValueError('transition_time should be less than sleep_time')
+
     def _run(self, time_out=None):
         begin = time.time()
+
+        if time_out and time_out <= self.sleep_time:
+            self.sleep_time = time_out / 2
+            self.transition_time = self.sleep_time * 0.2
         try:
             while True:
                 for hue in self.hue_sequence:
@@ -369,15 +388,16 @@ class SceneSequence(Scene):
                         }
                         set_light_multiple(self.bridge, light.light_id, data)
 
-                    if time_out and \
-                       time.time() - begin + self.sleep_time >= time_out:
-                        raise StopIteration
+                        if time_out and \
+                           time.time() - begin + self.sleep_time >= time_out:
+                            raise StopIteration
 
                     time.sleep(self.sleep_time)
 
         except StopIteration:
             if time_out:
-                time_left = time.time() - begin - time_out
+                duration = time.time() - begin
+                time_left = time_out - duration
                 if time_left > 0:
                     time.sleep(time_left)
 

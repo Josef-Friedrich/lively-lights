@@ -76,13 +76,13 @@ class TestClassScenePendulum(unittest.TestCase):
 
     def test_kwargs(self):
         scene = ScenePendulum('', '', color1=1, color2=2, lights1=(3, ),
-                              lights2=(4, ), sleep_time=5, transition_time=6)
+                              lights2=(4, ), sleep_time=5, transition_time=4)
         self.assertEqual(scene.color1, 1)
         self.assertEqual(scene.color2, 2)
         self.assertEqual(scene.lights1, [3])
         self.assertEqual(scene.lights2, [4])
         self.assertEqual(scene.sleep_time, 5)
-        self.assertEqual(scene.transition_time, 6)
+        self.assertEqual(scene.transition_time, 4)
 
     def test_set_defaults(self):
         scene = ScenePendulum('', '', lights1=(1, ), lights2=(2, ))
@@ -98,11 +98,11 @@ class TestClassSceneSequence(unittest.TestCase):
 
     def test_kwargs(self):
         scene = SceneSequence('', '', brightness=1, hue_sequence=(2, ),
-                              sleep_time=3, transition_time=4)
+                              sleep_time=3, transition_time=2)
         self.assertEqual(scene.brightness, 1)
         self.assertEqual(scene.hue_sequence, [2])
         self.assertEqual(scene.sleep_time, 3)
-        self.assertEqual(scene.transition_time, 4)
+        self.assertEqual(scene.transition_time, 2)
 
     def test_set_defaults(self):
         scene = SceneSequence('', '')
@@ -121,7 +121,7 @@ class TestClassSceneSequence(unittest.TestCase):
             brightness=100,
             hue_sequence=(1, 100),
             sleep_time=1,
-            transition_time=2,
+            transition_time=0.5,
         )
         scene.start(5)
         call_list = set_light_multiple.call_args_list
@@ -131,7 +131,7 @@ class TestClassSceneSequence(unittest.TestCase):
         self.assertEqual(call_list[2][0][2]['hue'], 1)
 
         self.assertEqual(call_list[0][0][2]['bri'], 100)
-        self.assertEqual(call_list[0][0][2]['transitiontime'], 20)
+        self.assertEqual(call_list[0][0][2]['transitiontime'], 5)
 
 
 class TestClassSceneTimeOuts(unittest.TestCase):
@@ -147,7 +147,7 @@ class TestClassSceneTimeOuts(unittest.TestCase):
         end = time.time()
         self.assertTrue(scene.time_out)
         self.assertTrue(scene.actual_duration)
-        self.assertTrue(end - begin <= time_out,
+        self.assertTrue(end - begin <= time_out + 2,
                         'time_out not longer (Scene: {})'. format(scene))
         # self.assertTrue(end - begin >= time_out - 3,
         #                 'time_out not shorter (Scene: {})'. format(scene))
