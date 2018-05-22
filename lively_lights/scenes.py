@@ -150,6 +150,8 @@ class Scene(object):
 
 class SceneBreath(Scene):
 
+    name = 'breath'
+
     properties = {
         'brightness_range': {
             'type': types.brightness_range,
@@ -228,6 +230,8 @@ class SceneBreath(Scene):
 
 class ScenePendulum(Scene):
 
+    name = 'pendulum'
+
     properties = {
         'color1': {
             'type': types.hue,
@@ -304,6 +308,8 @@ class ScenePendulum(Scene):
 
 class SceneSequence(Scene):
 
+    name = 'sequence'
+
     properties = {
         'brightness': {
             'type': types.brightness,
@@ -364,3 +370,13 @@ class SceneSequence(Scene):
                 time_left = time.time() - begin - time_out
                 if time_left > 0:
                     time.sleep(time_left)
+
+
+def scene_reporter(scene, verbosity_level):
+    if verbosity_level > 0:
+        out = []
+        out.append('name: {}'.format(scene.name))
+        for property, _ in scene.properties.items():
+            out.append('{}: {}'.format(property, getattr(scene, property)))
+
+        print('\n'.join(out))

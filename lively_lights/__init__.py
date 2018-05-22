@@ -197,6 +197,7 @@ def main():
                 hue.reachable_lights,
             )
             scene.get_properties_from_args(args)
+            scenes.scene_reporter(scene, args.verbose)
             scene.start(time_out=args.time_out)
 
 
