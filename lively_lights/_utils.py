@@ -17,7 +17,7 @@ class RestDebug(object):
         self.colorize_output = colorize_output
 
     def _format_json(self, data):
-        if self.verbosity_level == 1:
+        if self.verbosity_level == 2:
             formatted_json = json.dumps(data)
         else:
             formatted_json = json.dumps(data, sort_keys=True, indent=4)
@@ -32,15 +32,15 @@ class RestDebug(object):
             return formatted_json
 
     def print_json(self, data):
-        if not self.verbosity_level:
+        if self.verbosity_level < 2:
             return
         print(self._format_json(data))
 
     def print_request(self, mode, address, data):
-        if not self.verbosity_level:
+        if self.verbosity_level < 2:
             return
 
-        if self.verbosity_level >= 2:
+        if self.verbosity_level >= 3:
             join_phrase = '\n'
         else:
             join_phrase = ' '
