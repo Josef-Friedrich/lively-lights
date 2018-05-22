@@ -146,7 +146,12 @@ class Scene(object):
         pass
 
     def start(self, time_out=None):
+        if time_out:
+            self.time_out = time_out
+        begin = time.time()
         self._run(time_out)
+        end = time.time()
+        self.actual_duration = end - begin
 
 
 class SceneBreath(Scene):

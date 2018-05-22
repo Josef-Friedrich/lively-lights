@@ -147,6 +147,8 @@ class TestClassSceneTimeOuts(unittest.TestCase):
         begin = time.time()
         scene.start(time_out)
         end = time.time()
+        self.assertTrue(scene.time_out)
+        self.assertTrue(scene.actual_duration)
         self.assertTrue(end - begin <= time_out,
                         'time_out not longer (Scene: {})'. format(scene))
         # self.assertTrue(end - begin >= time_out - 3,
