@@ -24,6 +24,7 @@ setup(
     },
     keywords='hue philips',
     install_requires = [
+        'ansicolors',
         'astral',
         'flask',
         'phue',
