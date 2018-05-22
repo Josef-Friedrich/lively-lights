@@ -29,5 +29,6 @@ def get_reachable_lights(light_ids, reachable_light_ids=None):
         return_list = mock_light_list(light_ids)
 
     reachable_lights.list = mock.Mock(return_value=return_list)
+    reachable_lights.is_reachable = mock.Mock(return_value=True)
 
     return reachable_lights

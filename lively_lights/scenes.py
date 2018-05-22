@@ -203,24 +203,27 @@ class SceneBreath(Scene):
                 )
 
                 if self._time_to_end and \
-                   time.time() - time_span > self._time_to_end:
+                   time.time() + time_span > self._time_to_end:
+                    print('Break light_id: {}'.format(light_id))
                     break
                 data = {
                     'hue': randint(*self.hue_range),
-                    'transitiontime': types.transition_time(time_span),
+                    'transitiontime': types.transition_time(time_span - 0.2),
                     'bri': randint(*self.brightness_range),
                     'sat': 254,
                 }
                 set_light_multiple(self.bridge, light_id, data)
-                time.sleep(time_span + 0.2)
+                time.sleep(time_span)
             else:
                 break
 
     def _run(self, time_out=None):
+        refresh_interval = self.reachable_lights.refresh_interval
         if time_out:
             self._time_to_end = time.time() + time_out
         while True:
             if self._time_to_end and self._time_to_end <= time.time():
+                print('Break main run')
                 break
 
             for light in self.reachable_lights.list():
@@ -235,7 +238,11 @@ class SceneBreath(Scene):
                     t.start()
                     self._threads[light.light_id] = t
 
-            time.sleep(self.reachable_lights.refresh_interval)
+            if time.time() + refresh_interval > self._time_to_end:
+                sleep_time = self._time_to_end - time.time()
+            else:
+                sleep_time = self.reachable_lights.refresh_interval
+            time.sleep(sleep_time)
 
 
 class ScenePendulum(Scene):
