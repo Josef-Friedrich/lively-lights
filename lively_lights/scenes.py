@@ -114,6 +114,9 @@ class Scene(object):
             else:
                 raise ValueError('Property “{}” is not allowed.'.format(key))
 
+        self._set_defaults()
+        self._validate()
+
     def get_properties_from_args(self, args):
         for property, value in self.properties.items():
             if hasattr(args, property):
@@ -143,8 +146,6 @@ class Scene(object):
         pass
 
     def start(self, time_out=None):
-        self._set_defaults()
-        self._validate()
         self._run(time_out)
 
 

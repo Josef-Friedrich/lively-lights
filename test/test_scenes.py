@@ -30,42 +30,9 @@ class SceneTest(Scene):
 
 class TestClassScene(unittest.TestCase):
 
-    def test_kwargs(self):
+    def test_kwargs_error(self):
         with self.assertRaises(ValueError):
             Scene('', '', arg1=1)
-
-    def test_method_get_properties_from_args(self):
-        scene = Scene('', '')
-        scene.properties = {
-            'speed': {
-                'type': types.time,
-            },
-            'arg2': {
-                'type': types.hue,
-            },
-        }
-        args = Args()
-        scene.get_properties_from_args(args)
-        self.assertEqual(scene.speed, 111)
-
-    def test_method_get_properties_from_dict(self):
-        scene = Scene('', '')
-        scene.properties = {
-            'speed': {
-                'type': types.time,
-            },
-            'arg2': {
-                'type': types.hue,
-            },
-        }
-        dictionary = {
-            'speed': 111
-        }
-        scene.get_properties_from_dict(dictionary)
-        self.assertEqual(scene.speed, 111)
-
-
-class TestClassSceneInheritage(unittest.TestCase):
 
     def test_kwargs(self):
         scene = SceneTest('', '', speed=1, color=2)
@@ -73,21 +40,29 @@ class TestClassSceneInheritage(unittest.TestCase):
         self.assertEqual(scene.color, 2)
 
     def test_method_get_properties_from_args(self):
-        scene = SceneTest('', '')
+        scene = SceneTest('', '', speed=1, color=2)
         args = Args()
         scene.get_properties_from_args(args)
         self.assertEqual(scene.speed, 111)
         self.assertEqual(scene.color, 222)
 
+    def test_method_get_properties_from_dict(self):
+        scene = SceneTest('', '', speed=1, color=2)
+        dictionary = {
+            'speed': 111
+        }
+        scene.get_properties_from_dict(dictionary)
+        self.assertEqual(scene.speed, 111)
+
 
 class TestClassSceneBreath(unittest.TestCase):
 
     def test_kwargs(self):
-        scene = SceneBreath('', '', brightness_range=1, hue_range=2,
-                            time_range=3)
-        self.assertEqual(scene.brightness_range, 1)
-        self.assertEqual(scene.hue_range, 2)
-        self.assertEqual(scene.time_range, 3)
+        scene = SceneBreath('', '', brightness_range=(1, 2), hue_range=(3, 4),
+                            time_range=(5, 6))
+        self.assertEqual(scene.brightness_range, (1, 2))
+        self.assertEqual(scene.hue_range, (3, 4))
+        self.assertEqual(scene.time_range, (5, 6))
 
     def test_set_defaults(self):
         scene = SceneBreath('', '')
@@ -100,17 +75,17 @@ class TestClassSceneBreath(unittest.TestCase):
 class TestClassScenePendulum(unittest.TestCase):
 
     def test_kwargs(self):
-        scene = ScenePendulum('', '', color1=1, color2=2, lights1=3,
-                              lights2=4, sleep_time=5, transition_time=6)
+        scene = ScenePendulum('', '', color1=1, color2=2, lights1=(3, ),
+                              lights2=(4, ), sleep_time=5, transition_time=6)
         self.assertEqual(scene.color1, 1)
         self.assertEqual(scene.color2, 2)
-        self.assertEqual(scene.lights1, 3)
-        self.assertEqual(scene.lights2, 4)
+        self.assertEqual(scene.lights1, [3])
+        self.assertEqual(scene.lights2, [4])
         self.assertEqual(scene.sleep_time, 5)
         self.assertEqual(scene.transition_time, 6)
 
     def test_set_defaults(self):
-        scene = ScenePendulum('', '', lights1=1, lights2=2)
+        scene = ScenePendulum('', '', lights1=(1, ), lights2=(2, ))
         scene._set_defaults()
         self.assertTrue(scene.color1)
         self.assertTrue(scene.color2)
@@ -123,10 +98,10 @@ class TestClassScenePendulum(unittest.TestCase):
 class TestClassSceneSequence(unittest.TestCase):
 
     def test_kwargs(self):
-        scene = SceneSequence('', '', brightness=1, hue_sequence=2,
+        scene = SceneSequence('', '', brightness=1, hue_sequence=(2, ),
                               sleep_time=3, transition_time=4)
         self.assertEqual(scene.brightness, 1)
-        self.assertEqual(scene.hue_sequence, 2)
+        self.assertEqual(scene.hue_sequence, [2])
         self.assertEqual(scene.sleep_time, 3)
         self.assertEqual(scene.transition_time, 4)
 
