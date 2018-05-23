@@ -15,8 +15,6 @@ class Launcher(object):
     """
     Launch scenes.
 
-
-
     :param reachable_lights: An object containing the specified and
       reachable lights.
     :type reachable_lights: lively_lights.ReachableLights
@@ -59,11 +57,27 @@ class Launcher(object):
         self.bridge = bridge
         self.reachable_lights = reachable_lights
         self.scene_config_list = scene_config_list
+        if self.scene_config_list:
+            self.scenes = {}
+            for scene_config in scene_config_list:
+                print(scene_config)
+                self.scenes[scene_config['title']] = \
+                    self._init_scene(scene_config)
 
     @staticmethod
     def _get_scene_class(scene_name):
         class_name = 'Scene{}'.format(scene_name.title())
         return getattr(sys.modules[__name__], class_name)
+
+    def _init_scene(self, scene_config):
+        Scene = self._get_scene_class(scene_config['scene_name'])
+        scene = Scene(self.bridge, self.reachable_lights)
+        print(scene.name)
+        # try:
+        scene.get_properties_from_dict(scene_config['properties'])
+        return scene
+        # except ValueError:
+        #     raise ValueError('Invalid scene config: {}'.format(scene_config))
 
     def launch_scene(self, scene_config):
         """

@@ -161,6 +161,39 @@ class TestClassSceneTimeOuts(unittest.TestCase):
 
 class TestClassLauncher(unittest.TestCase):
 
+    _sc_rainbow = {
+        'title': 'Rainbow',
+        'description': 'Cycle between three colors',
+        'scene_name': 'sequence',
+        'duration': 3,
+        'properties': {
+            'brightness': 254,
+            'hue_sequence': [0, 40000, 30000],
+            'sleep_time': 2,
+            'transition_time': 1,
+        },
+    }
+
+    _sc_breath = {
+        'title': 'Breath',
+        'description': 'Breathing colors',
+        'scene_name': 'breath',
+        'duration': 3,
+        'properties': {
+            'time_range': (1, 2),
+        },
+    }
+
+    _sc_invalid_breath = {
+        'title': 'Invalid breath',
+        'description': 'scene has not property time',
+        'scene_name': 'breath',
+        'duration': 3,
+        'properties': {
+            'time': 1,
+        },
+    }
+
     def test_method_get_scene_class(self):
         scene = Launcher._get_scene_class('pendulum')
         self.assertEqual(scene.__name__, 'ScenePendulum')
@@ -169,18 +202,14 @@ class TestClassLauncher(unittest.TestCase):
         with self.assertRaises(AttributeError):
             Launcher._get_scene_class('xxx')
 
+    def test_method_init(self):
+        Launcher(mock.Mock(), get_reachable_lights([1, 2]),
+                 [self._sc_breath, self._sc_rainbow])
+
+    def test_method_init_invalid(self):
+        Launcher(mock.Mock(), get_reachable_lights([1, 2]),
+                 [self._sc_invalid_breath, self._sc_rainbow])
+
     def test_method_launch_scene(self):
-        scene_config = {
-            'title': 'Rainbow',
-            'description': 'Cycle between three colors',
-            'scene_name': 'sequence',
-            'duration': 3,
-            'properties': {
-                'brightness': 254,
-                'hue_sequence': [0, 40000, 30000],
-                'sleep_time': 2,
-                'transition_time': 1,
-            },
-        }
         launcher = Launcher(mock.Mock(), get_reachable_lights([1, 2]))
-        launcher.launch_scene(scene_config)
+        launcher.launch_scene(self._sc_rainbow)
