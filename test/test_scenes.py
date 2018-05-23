@@ -42,9 +42,10 @@ class TestClassScene(unittest.TestCase):
     def test_method_get_properties_from_args(self):
         scene = SceneTest('', '', speed=1, color=2)
         args = Args()
+        args.color = None
         scene.get_properties_from_args(args)
         self.assertEqual(scene.speed, 111)
-        self.assertEqual(scene.color, 222)
+        self.assertEqual(scene.color, 2)
 
     def test_method_get_properties_from_dict(self):
         scene = SceneTest('', '', speed=1, color=2)
@@ -66,7 +67,6 @@ class TestClassSceneBreath(unittest.TestCase):
 
     def test_set_defaults(self):
         scene = SceneBreath('', '')
-        scene._set_defaults()
         self.assertTrue(scene.brightness_range)
         self.assertTrue(scene.hue_range)
         self.assertTrue(scene.time_range)
@@ -76,17 +76,16 @@ class TestClassScenePendulum(unittest.TestCase):
 
     def test_kwargs(self):
         scene = ScenePendulum('', '', color1=1, color2=2, lights1=(3, ),
-                              lights2=(4, ), sleep_time=5, transition_time=6)
+                              lights2=(4, ), sleep_time=5, transition_time=4)
         self.assertEqual(scene.color1, 1)
         self.assertEqual(scene.color2, 2)
         self.assertEqual(scene.lights1, [3])
         self.assertEqual(scene.lights2, [4])
         self.assertEqual(scene.sleep_time, 5)
-        self.assertEqual(scene.transition_time, 6)
+        self.assertEqual(scene.transition_time, 4)
 
     def test_set_defaults(self):
         scene = ScenePendulum('', '', lights1=(1, ), lights2=(2, ))
-        scene._set_defaults()
         self.assertTrue(scene.color1)
         self.assertTrue(scene.color2)
         self.assertTrue(scene.lights1)
@@ -99,15 +98,14 @@ class TestClassSceneSequence(unittest.TestCase):
 
     def test_kwargs(self):
         scene = SceneSequence('', '', brightness=1, hue_sequence=(2, ),
-                              sleep_time=3, transition_time=4)
+                              sleep_time=3, transition_time=2)
         self.assertEqual(scene.brightness, 1)
         self.assertEqual(scene.hue_sequence, [2])
         self.assertEqual(scene.sleep_time, 3)
-        self.assertEqual(scene.transition_time, 4)
+        self.assertEqual(scene.transition_time, 2)
 
     def test_set_defaults(self):
         scene = SceneSequence('', '')
-        scene._set_defaults()
         self.assertTrue(scene.brightness)
         self.assertTrue(scene.hue_sequence)
         self.assertTrue(scene.sleep_time)
@@ -123,7 +121,7 @@ class TestClassSceneSequence(unittest.TestCase):
             brightness=100,
             hue_sequence=(1, 100),
             sleep_time=1,
-            transition_time=2,
+            transition_time=0.5,
         )
         scene.start(5)
         call_list = set_light_multiple.call_args_list
@@ -133,7 +131,7 @@ class TestClassSceneSequence(unittest.TestCase):
         self.assertEqual(call_list[2][0][2]['hue'], 1)
 
         self.assertEqual(call_list[0][0][2]['bri'], 100)
-        self.assertEqual(call_list[0][0][2]['transitiontime'], 20)
+        self.assertEqual(call_list[0][0][2]['transitiontime'], 5)
 
 
 class TestClassSceneTimeOuts(unittest.TestCase):
@@ -147,16 +145,21 @@ class TestClassSceneTimeOuts(unittest.TestCase):
         begin = time.time()
         scene.start(time_out)
         end = time.time()
-        self.assertTrue(end - begin <= time_out,
+        self.assertTrue(scene.time_out)
+        self.assertTrue(scene.actual_duration)
+        self.assertTrue(end - begin <= time_out + 1,
                         'time_out not longer (Scene: {})'. format(scene))
-        # self.assertTrue(end - begin >= time_out - 3,
-        #                 'time_out not shorter (Scene: {})'. format(scene))
+        self.assertTrue(end - begin >= time_out - 1,
+                        'time_out not shorter (Scene: {})'. format(scene))
+
+    def test_scene_breath(self):
+        self.assertTimeOut('SceneBreath', 5)
 
     def test_scene_pendulum(self):
-        self.assertTimeOut('ScenePendulum', 10)
+        self.assertTimeOut('ScenePendulum', 5)
 
     def test_scene_sequence(self):
-        self.assertTimeOut('SceneSequence', 10)
+        self.assertTimeOut('SceneSequence', 5)
 
 
 class TestClassLauncher(unittest.TestCase):

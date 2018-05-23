@@ -1,5 +1,7 @@
+from colors import colors as ansicolors
 from pygments import highlight, lexers, formatters
 import json
+import re
 
 
 def set_light_multiple(bridge, light_id, data):
@@ -17,7 +19,7 @@ class RestDebug(object):
         self.colorize_output = colorize_output
 
     def _format_json(self, data):
-        if self.verbosity_level == 1:
+        if self.verbosity_level == 2:
             formatted_json = json.dumps(data)
         else:
             formatted_json = json.dumps(data, sort_keys=True, indent=4)
@@ -32,15 +34,33 @@ class RestDebug(object):
             return formatted_json
 
     def print_json(self, data):
-        if not self.verbosity_level:
+        if self.verbosity_level < 2:
             return
         print(self._format_json(data))
 
+    @staticmethod
+    def _colorize_rest_mode(mode):
+        if mode == 'GET':
+            color = 'Crimson'
+        elif mode == 'PUT':
+            color = 'DarkOrchid'
+        elif mode == 'POST':
+            color = 'Fuchsia'
+        else:
+            color = 'GreenYellow'
+        return ansicolors.color(mode, color)
+
     def print_request(self, mode, address, data):
-        if not self.verbosity_level:
+        if self.verbosity_level < 2:
             return
 
-        if self.verbosity_level >= 2:
+        if self.colorize_output:
+            mode = self._colorize_rest_mode(mode)
+
+        if self.verbosity_level == 2:
+            address = re.sub(r'/api/[^/]+/', '', address)
+
+        if self.verbosity_level >= 3:
             join_phrase = '\n'
         else:
             join_phrase = ' '
