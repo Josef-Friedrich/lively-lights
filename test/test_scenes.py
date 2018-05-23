@@ -55,6 +55,14 @@ class TestClassScene(unittest.TestCase):
         scene.get_properties_from_dict(dictionary)
         self.assertEqual(scene.speed, 111)
 
+    def test_method_get_properties_from_dict_invalid(self):
+        scene = SceneTest('', '', speed=1, color=2)
+        dictionary = {
+            'xxx': 111
+        }
+        with self.assertRaises(ValueError):
+            scene.get_properties_from_dict(dictionary)
+
 
 class TestClassSceneBreath(unittest.TestCase):
 
@@ -210,8 +218,9 @@ class TestClassLauncher(unittest.TestCase):
                  [self._sc_breath, self._sc_rainbow])
 
     def test_method_init_invalid(self):
-        Launcher(mock.Mock(), get_reachable_lights([1, 2]),
-                 [self._sc_invalid_breath, self._sc_rainbow])
+        with self.assertRaises(ValueError):
+            Launcher(mock.Mock(), get_reachable_lights([1, 2]),
+                     [self._sc_invalid_breath, self._sc_rainbow])
 
     def test_method_launch_scene(self):
         launcher = Launcher(mock.Mock(), get_reachable_lights([1, 2]))

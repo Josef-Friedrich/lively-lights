@@ -73,11 +73,11 @@ class Launcher(object):
         Scene = self._get_scene_class(scene_config['scene_name'])
         scene = Scene(self.bridge, self.reachable_lights)
         print(scene.name)
-        # try:
-        scene.get_properties_from_dict(scene_config['properties'])
-        return scene
-        # except ValueError:
-        #     raise ValueError('Invalid scene config: {}'.format(scene_config))
+        try:
+            scene.get_properties_from_dict(scene_config['properties'])
+            return scene
+        except ValueError:
+            raise ValueError('Invalid scene config: {}'.format(scene_config))
 
     def launch_scene(self, scene_config):
         """
@@ -139,6 +139,9 @@ class Scene(object):
         self._validate()
 
     def get_properties_from_dict(self, dictionary):
+        for key, value in dictionary.items():
+            if key not in self.properties:
+                raise ValueError('Property “{}” is not allowed.'.format(key))
         for property, value in self.properties.items():
             if property in dictionary:
                 setattr(self, property, dictionary[property])

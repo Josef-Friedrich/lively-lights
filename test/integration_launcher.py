@@ -38,4 +38,5 @@ _invalid_breath = {
 }
 
 hue = Hue()
-lauchner = Launcher(hue.bridge, hue.reachable_lights, [_rainbow, _invalid_breath])
+lauchner = Launcher(hue.bridge, hue.reachable_lights,
+                    [_rainbow, _invalid_breath])
