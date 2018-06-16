@@ -22,6 +22,7 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 
+autodoc_default_flags = ['members', 'undoc-members', 'private-members', 'show-inheritance']
 
 [extensions]
 todo_include_todos = True

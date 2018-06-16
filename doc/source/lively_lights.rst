@@ -5,24 +5,42 @@ Module contents
 ---------------
 
 .. automodule:: lively_lights
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
-lively_lights.scenes
+lively_lights._random
+---------------------
+
+.. automodule:: lively_lights._random
+
+lively_lights._utils
+---------------------
+
+.. automodule:: lively_lights._utils
+
+lively_lights.bridge
 --------------------
 
-.. automodule:: lively_lights.scenes
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :private-members:
+.. automodule:: lively_lights.bridge
+
+
+lively_lights.cli
+-----------------
+
+.. automodule:: lively_lights.cli
 
 
 lively_lights.phue
 ------------------
 
 .. automodule:: lively_lights.phue
-    :members:
-    :undoc-members:
-    :show-inheritance:
+
+
+lively_lights.scenes
+--------------------
+
+.. automodule:: lively_lights.scenes
+
+
+lively_lights.types
+-------------------
+
+.. automodule:: lively_lights.types
