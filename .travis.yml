@@ -1,27 +1,22 @@
----
 language: python
 python: 3.6
-
 env:
-  - TOXENV=py3
-  - TOXENV=docs
-  - TOXENV=flake8
-
+- TOXENV=py3
+- TOXENV=docs
+- TOXENV=flake8
 install:
-    - pip install tox
-
+- pip install tox
 script: tox
-
 jobs:
-    include:
-        - stage: deploy
-          script: echo "Deploying on PyPi ..."
-          env:
-          install:
-          deploy:
-              provider: pypi
-              user: JosefFriedrich
-              password:
-                  secure: JLvS6oWOmCMwyrfRxNrlusdyuVjw9H7bt723kNCPEam9zqLmqiYP1AhEa8Qd7atIiM9KKAj9E4LfUKciI1ZBmdqpFOJuVacjhU9C/X1pz4R3hz0ZKGALoHzMUPcOeVSi4N2e5kopXFgDngKokj3u0vCOh9y0Gc2FaShX1hI0+ejiwKonfvfMX/I/AaL098VtFFGE0YHLMEJsmHvk62mqcyxRCHL02S0koSWJbwUltGUihtigW0k6ytVhuXPjD7xM7gZ5enjtPoBNWK6LGnp8vYGIGmLfBHepnfQccztUTXoz8/WyHi7W3aJr3rpoA/yMSD+sR72vsibqg8oITogonnYo89pshKobP+ji9ExIJ+Y/3bGESIPfnEWXgI6o6M463Ot3EP6bTAqAgfUv/Kc4Kxbal7gQDwAFZCsbrrkVgP41Qbl9yeruI8AW4KjDwCHIIS/XdWPWI1nHxtCi1NkzLfc7zfQGMxNrfeLXIzYu/cS/89jMNGkNRjgVfl4/+JUMFbZFOXzm+CIdRtsaVvnwaqvotuiCfGyBmTQ2l3wkQyssGiBqFAeV940lZGJbPaYsHI/9rTAxvNqv1E9OL5H2UOUSqfJLO+XRZNFxuDCFaBvJVlkaUhcJTS9oJvCjA8U42zfPAwmEpydHKFrkxleMJlr2ZjUflh9jQ4rj4g6RoJM=
-              on:
-                  tags: true
+  include:
+  - stage: deploy
+    script: echo "Deploying on PyPi ..."
+    env:
+    install: 
+    deploy:
+      provider: pypi
+      user: JosefFriedrich
+      password:
+        secure: iCbsT8YZDa96g2IBDIYKV918lDJOnO4WIqxdoDPh9Z7H7aq9EoAD00r6dTfyi8p/F/e+QCflB5BsG3w9DgVEydzz63qDMpOA5cFoHtkwnl1zRrVdR3ER5eoS37QrrHwZowFLEKbbOVv2KSYk387Ovg+92w1nEziv6GHr0ZnzuNxoO2uUEERA40skW7cZFBq0renhFI8a/l0U3jmwtprxsSeuYGWUk59NiTC3tOfW3/i+WzZdQlUFl+WEZtN7IM2KLGM7hM3vWeC5OPoQdLMZiJG/HtzacGPDETcKPkqEbgDpv65INAhEeCy4Ypwkue4V/irbraTpjVVCh0ARZT8WyX7nm8K+oKPgMvFpHXFP8Fccyq/Ni0Fw2tJWXp+Xmw1Fo1yC6GxWAEX9zJ5hZ3RMQOHX+yqzl8qJJrwxYncGQgIS43UkpcdChtE7gFeaRONhlRkpXKrHU2zh0lckZqE/DQz+O1RYVXGJYNvHxT5gMPKU/mOmwKNfmQfI/HfVwtzPgiSnEvddSYIRe2K6fndp6EWEiCViTEP1/l+S1licKcnf1SAYllisxW7ghDWgEN/736gu1Qg+yb6tRyYxy59imG513XdULbHCX+Aswvq3VztnXHxceAYXTmifozOITgx8Uh+dqNfRvPMafTWD6bIWSw73xf/AjsMqNDjF0RH5p10=
+      on:
+        tags: true
