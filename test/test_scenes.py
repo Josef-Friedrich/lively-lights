@@ -215,12 +215,13 @@ class TestClassLauncher(unittest.TestCase):
 
     def test_method_init(self):
         Launcher(mock.Mock(), get_reachable_lights([1, 2]),
-                 [self._sc_breath, self._sc_rainbow])
+                 {'breath': self._sc_breath, 'rainbow': self._sc_rainbow})
 
     def test_method_init_invalid(self):
         with self.assertRaises(ValueError):
             Launcher(mock.Mock(), get_reachable_lights([1, 2]),
-                     [self._sc_invalid_breath, self._sc_rainbow])
+                     {'invalid_breath': self._sc_invalid_breath,
+                      'rainbow': self._sc_rainbow})
 
     def test_method_launch_scene(self):
         launcher = Launcher(mock.Mock(), get_reachable_lights([1, 2]))
