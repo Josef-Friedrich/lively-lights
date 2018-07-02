@@ -255,7 +255,8 @@ class SceneBreath(Scene):
                     t.start()
                     self._threads[light.light_id] = t
 
-            if time.time() + refresh_interval > self._time_to_end:
+            if self._time_to_end and \
+               time.time() + refresh_interval > self._time_to_end:
                 sleep_time = self._time_to_end - time.time()
             else:
                 sleep_time = self.reachable_lights.refresh_interval
