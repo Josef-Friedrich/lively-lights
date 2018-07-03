@@ -20,12 +20,12 @@ class Launcher(object):
       reachable lights.
     :type reachable_lights: lively_lights.ReachableLights
 
-    :param list scene_config_list: A list of `scene_config` dictionaries.
+    :param list scene_configs: A list of `scene_config` dictionaries.
 
 
     .. code-block:: python
 
-        scene_config_list = [
+        scene_configs = [
             {
                 'title': 'Rainbow',
                 'description': 'Cycle between three colors',
@@ -54,14 +54,14 @@ class Launcher(object):
 
     """
 
-    def __init__(self, bridge, reachable_lights, scene_config_list=None,
+    def __init__(self, bridge, reachable_lights, scene_configs=None,
                  scene_config_file=None):
         self.bridge = bridge
         self.reachable_lights = reachable_lights
-        self.scene_config_list = scene_config_list
-        if self.scene_config_list:
+        self.scene_configs = scene_configs
+        if self.scene_configs:
             self.scenes = {}
-            for scene_config in scene_config_list:
+            for scene_config in scene_configs:
                 print(scene_config)
                 self.scenes[scene_config['title']] = \
                     self._init_scene(scene_config)
