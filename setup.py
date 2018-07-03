@@ -30,6 +30,7 @@ setup(
         'phue',
         'Pygments',
         'python-daemon',
+        'PyYaml',
         'sphinx-argparse',
     ],
     long_description=read('README.rst'),

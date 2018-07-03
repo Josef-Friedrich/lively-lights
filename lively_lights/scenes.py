@@ -8,6 +8,7 @@ from random import randint
 import threading
 import time
 import sys
+import yaml
 
 
 class Launcher(object):
@@ -53,7 +54,8 @@ class Launcher(object):
 
     """
 
-    def __init__(self, bridge, reachable_lights, scene_config_list=None):
+    def __init__(self, bridge, reachable_lights, scene_config_list=None,
+                 scene_config_file=None):
         self.bridge = bridge
         self.reachable_lights = reachable_lights
         self.scene_config_list = scene_config_list
@@ -63,6 +65,11 @@ class Launcher(object):
                 print(scene_config)
                 self.scenes[scene_config['title']] = \
                     self._init_scene(scene_config)
+
+    @staticmethod
+    def _read_yaml(yaml_file):
+        with open(yaml_file, 'r') as stream:
+            return yaml.load(stream)
 
     @staticmethod
     def _get_scene_class(scene_name):

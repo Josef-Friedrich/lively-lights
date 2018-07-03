@@ -8,6 +8,7 @@ from lively_lights.scenes import Launcher, \
 import unittest
 from unittest import mock
 import time
+import os
 
 
 class Args(object):
@@ -208,6 +209,11 @@ class TestClassLauncher(unittest.TestCase):
     def test_method_get_scene_class(self):
         scene = Launcher._get_scene_class('pendulum')
         self.assertEqual(scene.__name__, 'ScenePendulum')
+
+    def test_method_read_yaml(self):
+        yaml_file = os.path.join(os.path.dirname(__file__), 'scenes.yml')
+        scene_configs = Launcher._read_yaml(yaml_file)
+        self.assertEqual(scene_configs[0]['title'], 'Rainbow')
 
     def test_method_get_scene_class_exception(self):
         with self.assertRaises(AttributeError):
