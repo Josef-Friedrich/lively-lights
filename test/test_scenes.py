@@ -206,6 +206,8 @@ class TestClassLauncher(unittest.TestCase):
         },
     }
 
+    yaml_file = os.path.join(os.path.dirname(__file__), 'scenes.yml')
+
     def test_method_get_scene_class(self):
         scene = Launcher._get_scene_class('pendulum')
         self.assertEqual(scene.__name__, 'ScenePendulum')
@@ -222,6 +224,15 @@ class TestClassLauncher(unittest.TestCase):
     def test_method_init(self):
         Launcher(mock.Mock(), get_reachable_lights([1, 2]),
                  [self._sc_breath, self._sc_rainbow])
+
+    def test_init_scene_configs_and_yaml(self):
+        launcher = Launcher(
+            mock.Mock(),
+            get_reachable_lights([1, 2]),
+            [self._sc_breath, self._sc_rainbow],
+            scene_configs_file=self.yaml_file,
+        )
+        self.assertEqual(len(launcher.scenes), 4)
 
     def test_method_init_invalid(self):
         with self.assertRaises(ValueError):

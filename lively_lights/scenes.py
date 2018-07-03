@@ -55,15 +55,15 @@ class Launcher(object):
     """
 
     def __init__(self, bridge, reachable_lights, scene_configs=None,
-                 scene_config_file=None):
+                 scene_configs_file=None):
         self.bridge = bridge
         self.reachable_lights = reachable_lights
         self.scenes = []
         if scene_configs:
             for scene_config in scene_configs:
                 self.scenes.append(self._init_scene(scene_config))
-        if scene_config_file:
-            scene_configs = self._read_yaml(scene_config_file)
+        if scene_configs_file:
+            scene_configs = self._read_yaml(scene_configs_file)
             for scene_config in scene_configs:
                 self.scenes.append(self._init_scene(scene_config))
 
