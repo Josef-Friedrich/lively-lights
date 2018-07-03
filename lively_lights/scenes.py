@@ -58,13 +58,14 @@ class Launcher(object):
                  scene_config_file=None):
         self.bridge = bridge
         self.reachable_lights = reachable_lights
-        self.scene_configs = scene_configs
-        if self.scene_configs:
-            self.scenes = {}
+        self.scenes = []
+        if scene_configs:
             for scene_config in scene_configs:
-                print(scene_config)
-                self.scenes[scene_config['title']] = \
-                    self._init_scene(scene_config)
+                self.scenes.append(self._init_scene(scene_config))
+        if scene_config_file:
+            scene_configs = self._read_yaml(scene_config_file)
+            for scene_config in scene_configs:
+                self.scenes.append(self._init_scene(scene_config))
 
     @staticmethod
     def _read_yaml(yaml_file):
