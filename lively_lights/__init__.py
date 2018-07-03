@@ -203,6 +203,13 @@ def main():
                 print('time_out: {}'.format(scene.time_out))
                 print('actual_duration: {0:.2f}'.format(scene.actual_duration))
 
+        elif args.subcommand == 'launch':
+            scenes.Launcher(
+                hue.bridge,
+                hue.reachable_lights,
+                scene_configs_file=args.yaml_file,
+            )
+
 
 if __name__ == '__main__':
     main()
