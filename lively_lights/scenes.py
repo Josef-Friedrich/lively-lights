@@ -16,12 +16,14 @@ class Launcher(object):
     """
     Launch scenes.
 
+    :param bridge: The bridge object
+    :type bridge: lively_lights.phue.Bridge
+
     :param reachable_lights: An object containing the specified and
       reachable lights.
     :type reachable_lights: lively_lights.ReachableLights
 
-    :param list scene_configs: A list of `scene_config` dictionaries.
-
+    :param list scene_configs: A list of `scene_config` lists.
 
     .. code-block:: python
 
@@ -52,13 +54,43 @@ class Launcher(object):
             },
         ]
 
+    :param string scene_configs_file: The file path of a yaml file containing
+      the scene configurations.
+
+    .. code-block:: yaml
+
+        - title: Rainbow
+          description: Cycle between three colors
+          scene_name: sequence
+          duration: 3
+          properties:
+            brightness: 254
+            hue_sequence:
+            - 0
+            - 40000
+            - 30000
+            sleep_time: 2
+            transition_time: 1
+
+        - title: Breath
+          description: Breathing colors
+          scene_name: breath
+          duration: 3
+          properties:
+              time_range:
+              - 1
+              - 2
+
     """
 
     def __init__(self, bridge, reachable_lights, scene_configs=None,
                  scene_configs_file=None):
         self.bridge = bridge
+        """The bridge object: :class:`lively_lights.phue.Bridge`"""
         self.reachable_lights = reachable_lights
+        """A reachable lights object :class:`lively_lights.ReachableLights`:"""
         self.scenes = []
+        """A list of scenes :class:`lively_lights.scenes.Scene`"""
         if scene_configs:
             for scene_config in scene_configs:
                 self.scenes.append(self._init_scene(scene_config))
