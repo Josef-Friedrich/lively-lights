@@ -227,21 +227,28 @@ def get_parser():
     launch = subcommand.add_parser('launch')
 
     launch.add_argument(
-        'yaml-file',
+        'yamlfile',
         help='A yaml file containing the scene configurations.',
-    )
-
-    launch.add_argument(
-        '-r', '--randomize',
-        action='store_true',
-        help='Launch the scenes in a random order.',
     )
 
     launch.add_argument(
         '-d', '--duration',
         type=float,
-        help='Override timeouts. Play each scene as long as specified '
+        default=0,
+        help='Override durations. Play each scene as long as specified '
         '(in seconds).',
+    )
+
+    launch.add_argument(
+        '-e', '--endless',
+        action='store_true',
+        help='Play the given senes in a endless loop.',
+    )
+
+    launch.add_argument(
+        '-r', '--randomized',
+        action='store_true',
+        help='Launch the scenes in a random order.',
     )
 
     return parser

@@ -204,10 +204,15 @@ def main():
                 print('actual_duration: {0:.2f}'.format(scene.actual_duration))
 
         elif args.subcommand == 'launch':
-            scenes.Launcher(
+            launcher = scenes.Launcher(
                 hue.bridge,
                 hue.reachable_lights,
-                scene_configs_file=args.yaml_file,
+                scene_configs_file=args.yamlfile,
+            )
+            launcher.launch(
+                randomized=args.randomized,
+                endless=args.endless,
+                duration=args.duration,
             )
 
 
