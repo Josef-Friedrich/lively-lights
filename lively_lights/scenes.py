@@ -212,6 +212,15 @@ class Scene(object):
         end = time.time()
         self.actual_duration = end - begin
 
+    def scene_reporter(self, verbosity_level):
+        if verbosity_level > 0:
+            out = []
+            out.append('name: {}'.format(self.name))
+            for property, _ in self.properties.items():
+                out.append('{}: {}'.format(property, getattr(self, property)))
+
+            print('\n'.join(out))
+
 
 class SceneBreath(Scene):
 
@@ -463,13 +472,3 @@ class SceneSequence(Scene):
                 time_left = time_out - duration
                 if time_left > 0:
                     time.sleep(time_left)
-
-
-def scene_reporter(scene, verbosity_level):
-    if verbosity_level > 0:
-        out = []
-        out.append('name: {}'.format(scene.name))
-        for property, _ in scene.properties.items():
-            out.append('{}: {}'.format(property, getattr(scene, property)))
-
-        print('\n'.join(out))

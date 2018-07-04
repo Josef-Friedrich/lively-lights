@@ -197,7 +197,7 @@ def main():
                 hue.reachable_lights,
             )
             scene.get_properties_from_args(args)
-            scenes.scene_reporter(scene, args.verbose)
+            scene.scene_reporter(args.verbose)
             scene.start(time_out=args.time_out)
             if args.verbose > 0 and args.time_out and scene.actual_duration:
                 print('time_out: {}'.format(scene.time_out))
