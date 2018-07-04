@@ -334,7 +334,6 @@ class SceneBreath(Scene):
 
                 if self._time_to_end and \
                    time.time() + time_span > self._time_to_end:
-                    print('Break light_id: {}'.format(light_id))
                     break
                 data = {
                     'hue': randint(*self.hue_range),
@@ -353,7 +352,6 @@ class SceneBreath(Scene):
             self._time_to_end = time.time() + duration
         while True:
             if self._time_to_end and self._time_to_end <= time.time():
-                print('Break main run')
                 break
 
             for light in self.reachable_lights.list():
