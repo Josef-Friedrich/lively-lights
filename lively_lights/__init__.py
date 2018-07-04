@@ -208,6 +208,7 @@ def main():
                 hue.bridge,
                 hue.reachable_lights,
                 scene_configs_file=args.yamlfile,
+                verbosity_level=args.verbose
             )
             launcher.launch(
                 randomized=args.randomized,

@@ -84,11 +84,13 @@ class Launcher(object):
     """
 
     def __init__(self, bridge, reachable_lights, scene_configs=None,
-                 scene_configs_file=None):
+                 scene_configs_file=None, verbosity_level=0):
         self.bridge = bridge
         """The bridge object: :class:`lively_lights.phue.Bridge`"""
         self.reachable_lights = reachable_lights
         """A reachable lights object :class:`lively_lights.ReachableLights`:"""
+        self.verbosity_level = verbosity_level
+        """The verbosity level."""
         self.scenes = []
         """A list of scenes :class:`lively_lights.scenes.Scene`"""
         if scene_configs:
@@ -150,15 +152,19 @@ class Launcher(object):
         scene = self._init_scene(scene_config)
         scene.start(scene_config['duration'])
 
+    def _start_scene(self, scene, duration=None):
+        scene.scene_reporter(self.verbosity_level)
+        scene.start(duration)
+
     def _launch_randomized(self, duration=None):
         scenes_indexes = list(range(len(self.scenes)))
         shuffle(scenes_indexes)
         for index in scenes_indexes:
-            self.scenes[index].start(duration)
+            self._start_scene(self.scenes[index], duration)
 
     def _launch_sorted(self, duration=None):
         for scene in self.scenes:
-            scene.start(duration)
+            self._start_scene(scene, duration)
 
     def _launch(self, randomized=False, duration=None):
         if randomized:
