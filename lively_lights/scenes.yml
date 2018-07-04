@@ -1,0 +1,86 @@
+##
+# Sequence
+##
+
+- title: Smooth color changes between red and orange
+  description: Smooth color changes between red and orange.
+  scene_name: sequence
+  duration: 60
+  properties:
+    brightness: 254
+    hue_sequence: [4000, 12750, 6000, 14500]
+    sleep_time: 6
+    transition_time: 3
+
+##
+# Breath
+##
+
+- title: Saturated red
+  description: Saturated red, fairly gentle changes.
+  scene_name: breath
+  duration: 60
+  properties:
+    brightness_range: [50, 254]
+    hue_range: [1, 8000]
+    time_range: [4, 8]
+
+- title: White, bluish.
+  description: White, bluish.
+  scene_name: breath
+  duration: 60
+  properties:
+    brightness_range: [50, 254]
+    hue_range: [30000, 50000]
+    time_range: [4, 8]
+
+- title: Yellow; deep breaths
+  description: Yellow; deep breaths.
+  scene_name: breath
+  duration: 60
+  properties:
+    brightness_range: [12, 234]
+    hue_range: [12345, 23456]
+    time_range: [4, 6]
+
+- title: Colorful, rapid changes
+  description: Colorful, rapid changes.
+  scene_name: breath
+  duration: 60
+  properties:
+    brightness_range: [150, 254]
+    hue_range: [0, 65000]
+    time_range: [1, 2]
+
+- title: Blue, very dark
+  description: Blue, very dark.
+  scene_name: breath
+  duration: 60
+  properties:
+    brightness_range: [1, 254]
+    hue_range: [46000, 48000]
+    time_range: [15, 20]
+
+##
+# pendulum
+##
+
+- title: Red and green
+  description: Soft changes between red and light green.
+  scene_name: pendulum
+  duration: 60
+  properties:
+    color1: 5404
+    color2: 26831
+    sleep_time: 6
+    transition_time: 5
+
+- title: Red and blue
+  description: Gradual change between red and blue.
+  scene_name: pendulum
+  duration: 60
+  properties:
+    color1: 65000
+    color2: 45831
+    sleep_time: 8
+    transition_time: 6
