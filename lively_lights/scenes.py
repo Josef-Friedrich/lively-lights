@@ -4,7 +4,7 @@
 from lively_lights import _random as random
 from lively_lights._utils import set_light_multiple
 from lively_lights import types
-from random import randint
+from random import randint, shuffle
 import threading
 import time
 import sys
@@ -145,6 +145,29 @@ class Launcher(object):
         scene = self._init_scene(scene_config)
         scene.start(scene_config['duration'])
 
+    def _launch_randomized(self, duration=None):
+        scenes_indexes = list(range(len(self.scenes)))
+        shuffle(scenes_indexes)
+        for index in scenes_indexes:
+            self.scenes[index].start(duration)
+
+    def _launch_sorted(self, duration=None):
+        for scene in self.scenes:
+            scene.start(duration)
+
+    def _launch(self, randomized=False, duration=None):
+        if randomized:
+            self._launch_randomized(duration)
+        else:
+            self._launch_sorted(duration)
+
+    def launch(self, randomized=False, endless=False, duration=None):
+        if endless:
+            while True:
+                self._launch(randomized, duration)
+        else:
+            self._launch(randomized, duration)
+
 
 class Scene(object):
 
@@ -154,7 +177,31 @@ class Scene(object):
     :type reachable_lights: lively_lights.ReachableLights
     """
 
+    name = None
+    """The name of the scene."""
+
     properties = {}
+    """
+    A dictonary of properties. Property names are the keys.
+
+    .. code-block:: python
+
+        properties = {
+            'brightness_range': {
+                'type': types.brightness_range,
+            },
+            'hue_range': {
+                'type': types.hue_range,
+            },
+            'time_range': {
+                'type': types.time_range,
+            },
+        }
+    """
+
+    duration = None
+    """Default duration of the scene. This value is used in the
+    method :class:`lively_lights.scenes.Scene.start`."""
 
     def __init__(self, bridge, reachable_lights, **kwargs):
         self.bridge = bridge
