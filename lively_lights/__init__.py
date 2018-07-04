@@ -198,9 +198,9 @@ def main():
             )
             scene.get_properties_from_args(args)
             scene.scene_reporter(args.verbose)
-            scene.start(time_out=args.time_out)
-            if args.verbose > 0 and args.time_out and scene.actual_duration:
-                print('time_out: {}'.format(scene.time_out))
+            scene.start(duration=args.duration)
+            if args.verbose > 0 and args.duration and scene.actual_duration:
+                print('duration: {}'.format(scene.duration))
                 print('actual_duration: {0:.2f}'.format(scene.actual_duration))
 
         elif args.subcommand == 'launch':

@@ -203,6 +203,10 @@ class Scene(object):
     """Default duration of the scene. This value is used in the
     method :class:`lively_lights.scenes.Scene.start`."""
 
+    actual_duration = None
+    """The method :class:`lively_lights.scenes.Scene.start` measures the
+    actual time taken and stores the result in this attribute."""
+
     def __init__(self, bridge, reachable_lights, **kwargs):
         self.bridge = bridge
         self.reachable_lights = reachable_lights
@@ -247,15 +251,19 @@ class Scene(object):
         for property, config in self.properties.items():
             setattr(self, property, config['type'](getattr(self, property)))
 
-    def _run(self, time_out=None):
+    def _run(self, duration=None):
         """Should be overwritten."""
         pass
 
-    def start(self, time_out=None):
-        if time_out:
-            self.time_out = time_out
+    def start(self, duration=None):
+        if duration:
+            _duration = duration
+        elif self.duration:
+            _duration = self.duration
+        else:
+            _duration = None
         begin = time.time()
-        self._run(time_out)
+        self._run(duration=_duration)
         end = time.time()
         self.actual_duration = end - begin
 
@@ -328,10 +336,10 @@ class SceneBreath(Scene):
             else:
                 break
 
-    def _run(self, time_out=None):
+    def _run(self, duration=None):
         refresh_interval = self.reachable_lights.refresh_interval
-        if time_out:
-            self._time_to_end = time.time() + time_out
+        if duration:
+            self._time_to_end = time.time() + duration
         while True:
             if self._time_to_end and self._time_to_end <= time.time():
                 print('Break main run')
@@ -419,30 +427,29 @@ class ScenePendulum(Scene):
             }
             set_light_multiple(self.bridge, light_id, data)
 
-    def _run(self, time_out=None):
+    def _run(self, duration=None):
         begin = time.time()
 
-        if time_out and time_out <= self.sleep_time:
-            self.sleep_time = time_out / 2
+        if duration and duration <= self.sleep_time:
+            self.sleep_time = duration / 2
             self.transition_time = self.sleep_time * 0.2
 
         while True:
             self._set_light_group(self.lights1, self.color1)
             self._set_light_group(self.lights2, self.color2)
-            if time_out and \
-               time.time() - begin + self.sleep_time >= time_out:
+            if duration and \
+               time.time() - begin + self.sleep_time >= duration:
                 break
             time.sleep(self.sleep_time)
             self._set_light_group(self.lights1, self.color2)
             self._set_light_group(self.lights2, self.color1)
-            if time_out and \
-               time.time() - begin + self.sleep_time >= time_out:
+            if duration and \
+               time.time() - begin + self.sleep_time >= duration:
                 break
             time.sleep(self.sleep_time)
 
-        if time_out:
-            duration = time.time() - begin
-            time_left = time_out - duration
+        if duration:
+            time_left = duration - (time.time() - begin)
             if time_left > 0:
                 time.sleep(time_left)
 
@@ -487,11 +494,11 @@ class SceneSequence(Scene):
         if self.transition_time > self.sleep_time:
             raise ValueError('transition_time should be less than sleep_time')
 
-    def _run(self, time_out=None):
+    def _run(self, duration=None):
         begin = time.time()
 
-        if time_out and time_out <= self.sleep_time:
-            self.sleep_time = time_out / 2
+        if duration and duration <= self.sleep_time:
+            self.sleep_time = duration / 2
             self.transition_time = self.sleep_time * 0.2
         try:
             while True:
@@ -507,15 +514,14 @@ class SceneSequence(Scene):
                         }
                         set_light_multiple(self.bridge, light.light_id, data)
 
-                        if time_out and \
-                           time.time() - begin + self.sleep_time >= time_out:
+                        if duration and \
+                           time.time() - begin + self.sleep_time >= duration:
                             raise StopIteration
 
                     time.sleep(self.sleep_time)
 
         except StopIteration:
-            if time_out:
-                duration = time.time() - begin
-                time_left = time_out - duration
+            if duration:
+                time_left = duration - (time.time() - begin)
                 if time_left > 0:
                     time.sleep(time_left)

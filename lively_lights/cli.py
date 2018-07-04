@@ -50,9 +50,9 @@ def get_parser():
     )
 
     parser.add_argument(
-        '-t', '--time-out',
+        '-D', '--duration',
         type=types.time,
-        help='Set time out in seconds.',
+        help='Set the duration of the scene in seconds.',
     )
 
     parser.add_argument(
