@@ -174,9 +174,9 @@ class TestClassLauncher(unittest.TestCase):
 
     _sc_rainbow = {
         'title': 'Rainbow',
-        'description': 'Cycle between three colors',
+        'description': 'Cycle between three colors.',
         'scene_name': 'sequence',
-        'duration': 3,
+        'duration': 1,
         'properties': {
             'brightness': 254,
             'hue_sequence': [0, 40000, 30000],
@@ -187,9 +187,9 @@ class TestClassLauncher(unittest.TestCase):
 
     _sc_breath = {
         'title': 'Breath',
-        'description': 'Breathing colors',
+        'description': 'Breathing colors.',
         'scene_name': 'breath',
-        'duration': 3,
+        'duration': 2,
         'properties': {
             'time_range': (1, 2),
         },
@@ -197,7 +197,7 @@ class TestClassLauncher(unittest.TestCase):
 
     _sc_invalid_breath = {
         'title': 'Invalid breath',
-        'description': 'scene has not property time',
+        'description': 'The scene has no property “time”.',
         'scene_name': 'breath',
         'duration': 3,
         'properties': {
@@ -221,8 +221,18 @@ class TestClassLauncher(unittest.TestCase):
             Launcher._get_scene_class('xxx')
 
     def test_method_init(self):
-        Launcher(mock.Mock(), get_reachable_lights([1, 2]),
-                 [self._sc_breath, self._sc_rainbow])
+        launcher = Launcher(mock.Mock(), get_reachable_lights([1, 2]),
+                            [self._sc_rainbow, self._sc_breath])
+
+        self.assertEqual(launcher.scenes[0].title, 'Rainbow')
+        self.assertEqual(launcher.scenes[0].description,
+                         'Cycle between three colors.')
+        self.assertEqual(launcher.scenes[0].duration, 1)
+
+        self.assertEqual(launcher.scenes[1].title, 'Breath')
+        self.assertEqual(launcher.scenes[1].description,
+                         'Breathing colors.')
+        self.assertEqual(launcher.scenes[1].duration, 2)
 
     def test_init_scene_configs_and_yaml(self):
         launcher = Launcher(

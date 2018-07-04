@@ -112,7 +112,12 @@ class Launcher(object):
     def _init_scene(self, scene_config):
         Scene = self._get_scene_class(scene_config['scene_name'])
         scene = Scene(self.bridge, self.reachable_lights)
-        print(scene.name)
+        if 'title' in scene_config:
+            scene.title = scene_config['title']
+        if 'description' in scene_config:
+            scene.description = scene_config['description']
+        if 'duration' in scene_config:
+            scene.duration = scene_config['duration']
         try:
             scene.get_properties_from_dict(scene_config['properties'])
             return scene
@@ -178,7 +183,7 @@ class Scene(object):
     """
 
     name = None
-    """The name of the scene."""
+    """The name of the scene class."""
 
     properties = {}
     """
@@ -199,8 +204,14 @@ class Scene(object):
         }
     """
 
+    title = None
+    """The title of the scene instance."""
+
+    description = None
+    """The description of the scene instance."""
+
     duration = None
-    """Default duration of the scene. This value is used in the
+    """Default duration of the scene instance. This value is used in the
     method :class:`lively_lights.scenes.Scene.start`."""
 
     actual_duration = None
