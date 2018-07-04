@@ -169,7 +169,8 @@ def main():
         return
 
     hue = Hue(ip=args.ip, username=args.username,
-              config_file_path=args.config_file, verbosity_level=args.verbose,
+              config_file_path=args.config_file,
+              verbosity_level=args.verbosity_level,
               colorize_output=args.colorize)
 
     if args.subcommand == 'info' and args.info == 'lights':
@@ -197,9 +198,10 @@ def main():
                 hue.reachable_lights,
             )
             scene.get_properties_from_args(args)
-            scene.scene_reporter(args.verbose)
+            scene.scene_reporter(args.verbosity_level)
             scene.start(duration=args.duration)
-            if args.verbose > 0 and args.duration and scene.actual_duration:
+            if args.verbosity_level > 0 and args.duration and \
+               scene.actual_duration:
                 print('duration: {}'.format(scene.duration))
                 print('actual_duration: {0:.2f}'.format(scene.actual_duration))
 
@@ -208,7 +210,7 @@ def main():
                 hue.bridge,
                 hue.reachable_lights,
                 scene_configs_file=args.yamlfile,
-                verbosity_level=args.verbose
+                verbosity_level=args.verbosity_level
             )
             launcher.launch(
                 randomized=args.randomized,

@@ -56,7 +56,7 @@ def get_parser():
     )
 
     parser.add_argument(
-        '-v', '--verbose',
+        '-v', '--verbosity-level',
         default=0,
         action='count',
         help='Make output more verbose.',
