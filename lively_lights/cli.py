@@ -38,9 +38,8 @@ def get_parser():
 
     parser.add_argument(
         '-l', '--lights',
-        nargs='+',
-        type=types.light_id,
-        help='Light ids (e. g: -l 1 2 3)',
+        type=types.light_id_comma,
+        help='Comma separated list of light ids (e. g: -l 1,2,3)',
     )
 
     parser.add_argument(

@@ -88,8 +88,8 @@ class TestClassScenePendulum(unittest.TestCase):
                               lights2=(4, ), sleep_time=5, transition_time=4)
         self.assertEqual(scene.color1, 1)
         self.assertEqual(scene.color2, 2)
-        self.assertEqual(scene.lights1, [3])
-        self.assertEqual(scene.lights2, [4])
+        self.assertEqual(scene.lights1, (3,))
+        self.assertEqual(scene.lights2, (4,))
         self.assertEqual(scene.sleep_time, 5)
         self.assertEqual(scene.transition_time, 4)
 
@@ -109,7 +109,7 @@ class TestClassSceneSequence(unittest.TestCase):
         scene = SceneSequence('', '', brightness=1, hue_sequence=(2, ),
                               sleep_time=3, transition_time=2)
         self.assertEqual(scene.brightness, 1)
-        self.assertEqual(scene.hue_sequence, [2])
+        self.assertEqual(scene.hue_sequence, (2,))
         self.assertEqual(scene.sleep_time, 3)
         self.assertEqual(scene.transition_time, 2)
 

@@ -114,7 +114,7 @@ class ReachableLights(object):
 
     def __init__(self, bridge, light_ids=None, refresh_interval=60):
         """
-        :param int interval: Search every n seconds for new lights
+        :param int refresh_interval: Search every n seconds for new lights
         """
         self.bridge = bridge
         self.light_ids = light_ids
@@ -172,6 +172,10 @@ def main():
               config_file_path=args.config_file,
               verbosity_level=args.verbosity_level,
               colorize_output=args.colorize)
+
+    if args.lights:
+        hue.reachable_lights = ReachableLights(hue.bridge,
+                                               light_ids=args.lights)
 
     if args.subcommand == 'info' and args.info == 'lights':
         lights_info(hue.bridge)

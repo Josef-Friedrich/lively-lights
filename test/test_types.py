@@ -1,6 +1,7 @@
 import unittest
 from lively_lights.types import _range, \
                                 _list, \
+                                _comma, \
                                 brightness, \
                                 hue, \
                                 light_id, \
@@ -9,26 +10,26 @@ from lively_lights.types import _range, \
                                 saturation
 
 
-class TestPrivateRange(unittest.TestCase):
+class TestPrivateList(unittest.TestCase):
 
     def test_list(self):
-        self.assertEqual(_list([1, 2], hue), [1, 2])
+        self.assertEqual(_list([1, 2], hue), (1, 2))
 
     def test_tuple(self):
-        self.assertEqual(_list((1, 2), hue), [1, 2])
+        self.assertEqual(_list((1, 2), hue), (1, 2))
 
     def test_one(self):
-        self.assertEqual(_list((1, ), hue), [1])
+        self.assertEqual(_list((1, ), hue), (1,))
 
     def test_three(self):
-        self.assertEqual(_list((1, 2, 3), hue), [1, 2, 3])
+        self.assertEqual(_list((1, 2, 3), hue), (1, 2, 3))
 
     def test_wrong_inner_type(self):
         with self.assertRaises(ValueError):
             _list(('lol', 2), hue)
 
 
-class TestPrivateList(unittest.TestCase):
+class TestPrivateRange(unittest.TestCase):
 
     def test_list(self):
         self.assertEqual(_range([1, 2], hue), (1, 2))
@@ -51,6 +52,12 @@ class TestPrivateList(unittest.TestCase):
     def test_wrong_inner_type(self):
         with self.assertRaises(ValueError):
             _range(('lol', 2), hue)
+
+
+class TestPrivateListComma(unittest.TestCase):
+
+    def test_list(self):
+        self.assertEqual(_comma('1,2', light_id), (1, 2))
 
 
 class TestBrightness(unittest.TestCase):

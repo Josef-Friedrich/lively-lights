@@ -16,13 +16,24 @@ def _range(value, inner_type):
 
 
 def _list(value, inner_type):
-    value = list(value)
+    value = tuple(value)
     out = []
 
     for entry in value:
         out.append(inner_type(entry))
 
-    return out
+    return tuple(out)
+
+
+def _comma(value, inner_type):
+    value = str(value)
+    value = value.split(',')
+    out = []
+
+    for entry in value:
+        out.append(inner_type(entry))
+
+    return tuple(out)
 
 
 def brightness(value):
@@ -64,6 +75,10 @@ def light_id(value):
 
 def light_id_list(value):
     return _list(value, light_id)
+
+
+def light_id_comma(value):
+    return _comma(value, light_id)
 
 
 def time(seconds):
