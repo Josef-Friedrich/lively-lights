@@ -117,8 +117,11 @@ class ReachableLights(object):
         :param int refresh_interval: Search every n seconds for new lights
         """
         self.bridge = bridge
+        """The bridge object :class:`lively_lights.phue.Bridge`"""
         self.light_ids = light_ids
+        """A list of light IDS. """
         self.refresh_interval = refresh_interval
+        """Search every n seconds for new lights."""
         self._lights_refresh_state = {}
 
     def _get_reachable(self, light_ids=None):
@@ -174,8 +177,7 @@ def main():
               colorize_output=args.colorize)
 
     if args.lights:
-        hue.reachable_lights = ReachableLights(hue.bridge,
-                                               light_ids=args.lights)
+        hue.reachable_lights.light_ids = args.lights
 
     if args.subcommand == 'info' and args.info == 'lights':
         lights_info(hue.bridge)
