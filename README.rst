@@ -18,7 +18,7 @@ INI file
 
 `~/.lively-lights.ini`
 
-..code-block:: ini
+.. code-block:: ini
 
     [bridge]
     ip = 192.168.3.60
@@ -34,7 +34,7 @@ INI file
 Envrionment variables
 """""""""""""""""""""
 
-..code-block:: shell
+.. code-block:: shell
 
     LIVELY_LIGHTS_BRIDGE_IP=192.168.3.60
     LIVELY_LIGHTS_BRIDGE_USERNAME=joseffriedrich
