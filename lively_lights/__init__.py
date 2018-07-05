@@ -167,7 +167,7 @@ class ReachableLightsFactory(object):
         self.bridge = bridge
         self.refresh_interval = refresh_interval
 
-    def get(self, light_ids):
+    def get_lights(self, *light_ids):
         return ReachableLights(self.bridge, light_ids, self.refresh_interval)
 
 
