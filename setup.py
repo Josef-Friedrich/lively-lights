@@ -26,7 +26,6 @@ setup(
     install_requires = [
         'ansicolors',
         'astral',
-        'flask',
         'phue',
         'Pygments',
         'python-daemon',

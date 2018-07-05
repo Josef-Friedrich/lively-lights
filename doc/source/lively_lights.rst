@@ -16,29 +16,20 @@ lively_lights._utils
 
 .. automodule:: lively_lights._utils
 
-lively_lights.bridge
---------------------
-
-.. automodule:: lively_lights.bridge
-
-
 lively_lights.cli
 -----------------
 
 .. automodule:: lively_lights.cli
-
 
 lively_lights.phue
 ------------------
 
 .. automodule:: lively_lights.phue
 
-
 lively_lights.scenes
 --------------------
 
 .. automodule:: lively_lights.scenes
-
 
 lively_lights.types
 -------------------
