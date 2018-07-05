@@ -161,6 +161,16 @@ class ReachableLights(object):
         return(out)
 
 
+class ReachableLightsFactory(object):
+
+    def __init__(self, bridge, refresh_interval=60):
+        self.bridge = bridge
+        self.refresh_interval = refresh_interval
+
+    def get(self, light_ids):
+        return ReachableLights(self.bridge, light_ids, self.refresh_interval)
+
+
 def main():
     global args
     args = get_parser().parse_args()
