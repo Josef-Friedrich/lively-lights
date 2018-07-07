@@ -28,6 +28,7 @@ setup(
         'astral',
         'phue',
         'Pygments',
+        'pyowm',
         'python-daemon',
         'PyYaml',
         'sphinx-argparse',
