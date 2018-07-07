@@ -11,7 +11,7 @@ class TestCliUnit(unittest.TestCase):
 
     @mock.patch('sys.argv', ['.', 'info', 'daynight'])
     @mock.patch('lively_lights.Configuration', mock.Mock())
-    @mock.patch('lively_lights.DayNight')
+    @mock.patch('lively_lights.environment.DayNight')
     def test_info_daynight(self, day_night):
         main()
         day_night.return_value.overview.assert_called_with()

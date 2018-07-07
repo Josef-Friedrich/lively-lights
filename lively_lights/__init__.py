@@ -3,18 +3,17 @@
 """Control the hue lamps from Philips using Python."""
 
 
+from lively_lights import environment
 from lively_lights import scenes
 from lively_lights.cli import get_parser
 from lively_lights.phue import Bridge
-import astral
 import configparser
 import contextlib
 import daemon
-import datetime
 import lockfile
 import os
-import time
 import socket
+import time
 
 
 from ._version import get_versions
@@ -37,40 +36,6 @@ def host_is_reachable(host, port, timeout=3):
         return True
     except Exception:
         return False
-
-
-class DayNight(object):
-
-    def __init__(self, config):
-        self.location = astral.Location((
-            'name',
-            'region',
-            float(config.get('location', 'latitude')),
-            float(config.get('location', 'longitude')),
-            config.get('location', 'timezone'),
-            float(config.get('location', 'elevation')),
-        ))
-
-    def sunrise(self):
-        return self.location.sunrise()
-
-    def sunset(self):
-        return self.location.sunset()
-
-    def is_day(self):
-        sunrise = self.sunrise()
-        return sunrise < datetime.datetime.now(sunrise.tzinfo) < self.sunset()
-
-    def is_night(self):
-        return not self.is_day()
-
-    def overview(self):
-        sun = self.location.sun()
-        print('Dawn:    {}'.format(sun['dawn']))
-        print('Sunrise: {}'.format(sun['sunrise']))
-        print('Noon:    {}'.format(sun['noon']))
-        print('Sunset:  {}'.format(sun['sunset']))
-        print('Dusk:    {}'.format(sun['dusk']))
 
 
 def lights_info(bridge):
@@ -200,7 +165,7 @@ def main():
 
     config = Configuration(config_file_path=args.config_file)
     if args.subcommand == 'info' and args.info == 'daynight':
-        day_night = DayNight(config)
+        day_night = environment.DayNight(config)
         day_night.overview()
         return
 

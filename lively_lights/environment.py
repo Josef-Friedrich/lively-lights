@@ -1,6 +1,42 @@
 """Gather informations about the environment lively lights is running in."""
 
+import astral
+import datetime
 import pyowm
+
+
+class DayNight(object):
+
+    def __init__(self, config):
+        self.location = astral.Location((
+            'name',
+            'region',
+            float(config.get('location', 'latitude')),
+            float(config.get('location', 'longitude')),
+            config.get('location', 'timezone'),
+            float(config.get('location', 'elevation')),
+        ))
+
+    def sunrise(self):
+        return self.location.sunrise()
+
+    def sunset(self):
+        return self.location.sunset()
+
+    def is_day(self):
+        sunrise = self.sunrise()
+        return sunrise < datetime.datetime.now(sunrise.tzinfo) < self.sunset()
+
+    def is_night(self):
+        return not self.is_day()
+
+    def overview(self):
+        sun = self.location.sun()
+        print('Dawn:    {}'.format(sun['dawn']))
+        print('Sunrise: {}'.format(sun['sunrise']))
+        print('Noon:    {}'.format(sun['noon']))
+        print('Sunset:  {}'.format(sun['sunset']))
+        print('Dusk:    {}'.format(sun['dusk']))
 
 
 class Weather(object):
