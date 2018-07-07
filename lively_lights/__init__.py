@@ -91,12 +91,11 @@ class ReachableLights(object):
         """
         :param int refresh_interval: Search every n seconds for new lights
         """
-        self.bridge = bridge
-        """The bridge object :class:`lively_lights.phue.Bridge`"""
         self.light_ids = light_ids
         """A list of light IDS. """
         self.refresh_interval = refresh_interval
         """Search every n seconds for new lights."""
+        self._bridge = bridge
         self._lights_refresh_state = {}
 
     def _get_reachable(self, light_ids=None):
@@ -105,9 +104,9 @@ class ReachableLights(object):
         if light_ids:
             for light_id in light_ids:
                 if self.is_reachable(light_id):
-                    lights.append(self.bridge[light_id])
+                    lights.append(self._bridge[light_id])
         else:
-            for light in self.bridge.lights:
+            for light in self._bridge.lights:
                 if self.is_reachable(light.light_id):
                     lights.append(light)
 
@@ -119,7 +118,7 @@ class ReachableLights(object):
            time.time() - state[light_id][0] < self.refresh_interval:
             return state[light_id][1]
         else:
-            reachable = self.bridge[light_id].reachable
+            reachable = self._bridge[light_id].reachable
             state[light_id] = (time.time(), reachable)
             return reachable
 

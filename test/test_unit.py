@@ -3,6 +3,7 @@ from unittest import mock
 import lively_lights
 import os
 import unittest
+from lively_lights import ReachableLights
 
 
 class TestClassHue(unittest.TestCase):
@@ -42,3 +43,14 @@ class TestClassConfiguration(unittest.TestCase):
             'Configuration value could not be found (section “lol” key '
             '“lol”).',
         )
+
+
+class TestClassReachableLights(unittest.TestCase):
+
+    def test_init(self):
+        ReachableLights(mock.MagicMock())
+
+    def test_method_list(self):
+        bridge = mock.MagicMock()
+        lights = ReachableLights(bridge)
+        lights.list()
