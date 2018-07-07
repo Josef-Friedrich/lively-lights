@@ -84,19 +84,54 @@ class Hue(object):
 
 
 class ReachableLights(object):
+    """
+    :param bridge: The bridge object
+    :type bridge: lively_lights.phue.Bridge
 
+    :param list light_ids: Light IDs to filter the output of the methods
+      :class:`lively_lights.ReachableLights.list` and
+      :class:`lively_lights.ReachableLights.list_light_ids`
+
+    :param int refresh_interval: Search every n seconds for new lights
+
+    :param bool at_night: Return lights IDs only at night.
+
+    :param bool at_day: Return lights IDs only at day.
+
+    :param string check_open_port: e. g. 192.168.3.11:22
+
+    :param bool on_open_port: This parameter only takes effect if the parameter
+      `check_open_port` is not empty.
+
+    :param string check_ping: e. g. 192.168.3.11
+
+    :param bool on_ping: This parameter only takes effect if the parameter
+      `check_ping` is not empty.
+
+
+    """
     def __init__(self, bridge, light_ids=None, refresh_interval=60,
-                 on_at_night=True, on_at_day=False, check_open_port=None,
+                 at_night=True, at_day=True, check_open_port=None,
                  on_open_port=True, check_ping=None, on_ping=True):
-        """
-        :param int refresh_interval: Search every n seconds for new lights
-        """
+
         self.light_ids = light_ids
         """A list of light IDS. """
         self.refresh_interval = refresh_interval
         """Search every n seconds for new lights."""
         self._bridge = bridge
+        """The bridge object :class:`lively_lights.phue.Bridge`"""
         self._lights_refresh_state = {}
+        """Cache for light states. To avoid querying for reachable lights every
+        time.
+
+        .. code-block:: python
+
+            self._lights_refresh_state = {
+                1: (1530997150.9431288, True),
+                2: (1530997179.6412678, False),
+            }
+
+        """
 
     def _get_reachable(self, light_ids=None):
         lights = []
