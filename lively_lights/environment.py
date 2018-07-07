@@ -4,6 +4,18 @@ import astral
 import datetime
 import pyowm
 import socket
+from ping3 import ping
+
+
+def is_host_pingable(host, timeout=3):
+    try:
+        result = ping(host, timeout=3)
+    except PermissionError:
+        return None
+    if result:
+        return True
+    else:
+        return False
 
 
 def is_host_reachable(host, port, timeout=3):

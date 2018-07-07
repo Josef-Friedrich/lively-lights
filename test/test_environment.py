@@ -1,14 +1,34 @@
 import unittest
-from lively_lights.environment import Weather, DayNight, is_host_reachable
+from lively_lights.environment import \
+    DayNight, \
+    is_host_pingable, \
+    is_host_reachable, \
+    Weather
 from _helper import config_file
 from lively_lights import Configuration
-
+import os
+import pwd
 
 INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
 
 
+def get_username():
+    return pwd.getpwuid(os.getuid()).pw_name
+
+
+@unittest.skipIf(not INTERNET_CONNECTIFITY or get_username() != 'root',
+                 'No internet connectifity')
+class TestFunctionIsHostPingable(unittest.TestCase):
+
+    def test_is_pingable(self):
+        self.assertTrue(is_host_pingable('8.8.8.8'))
+
+    def test_is_not_pingable(self):
+        self.assertFalse(is_host_pingable('192.0.0.1'))
+
+
 @unittest.skipIf(not INTERNET_CONNECTIFITY, 'No internet connectifity')
-class TestFunctionHostIsReachable(unittest.TestCase):
+class TestFunctionIsHostReachable(unittest.TestCase):
 
     def test_is_reachable(self):
         self.assertTrue(is_host_reachable('8.8.8.8', 53))

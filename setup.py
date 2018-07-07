@@ -27,6 +27,7 @@ setup(
         'ansicolors',
         'astral',
         'phue',
+        'ping3',
         'Pygments',
         'pyowm',
         'python-daemon',

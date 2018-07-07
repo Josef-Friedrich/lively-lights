@@ -53,7 +53,8 @@ class Configuration(object):
         envrion_key = self._envrion_key(section, key)
         if envrion_key in os.environ:
             value = os.environ[envrion_key]
-        elif section in self.config and key in self.config[section]:
+        elif hasattr(self, 'config') and section in self.config and \
+                key in self.config[section]:
             value = self.config[section][key]
 
         if value:
