@@ -10,7 +10,7 @@ def _range(value, inner_type):
     max = inner_type(value[1])
 
     if min >= max:
-        raise ValueError('max isn’t allowed to be smaller than min.')
+        raise ValueError('max isn’t allowed to be smaller or equal than min.')
 
     return (min, max)
 

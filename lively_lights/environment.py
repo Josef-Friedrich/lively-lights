@@ -3,6 +3,22 @@
 import astral
 import datetime
 import pyowm
+import socket
+
+
+def host_is_reachable(host, port, timeout=3):
+    """
+    https://stackoverflow.com/a/33117579
+    :param string host: ipv4 address
+    :param int port: open port
+    :param in timeout: Timeout in seconds
+    """
+    try:
+        socket.setdefaulttimeout(timeout)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+        return True
+    except Exception:
+        return False
 
 
 class DayNight(object):

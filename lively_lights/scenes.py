@@ -316,7 +316,7 @@ class SceneBreath(Scene):
 
         if not self.has_property('brightness_range'):
             self.brightness_range = (
-                random.brightness(max=100),
+                random.brightness(max=99),
                 random.brightness(min=100),
             )
 
