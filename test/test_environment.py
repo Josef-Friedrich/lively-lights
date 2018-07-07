@@ -1,7 +1,20 @@
 import unittest
-from lively_lights.environment import Weather, DayNight
+from lively_lights.environment import Weather, DayNight, is_host_reachable
 from _helper import config_file
 from lively_lights import Configuration
+
+
+INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
+
+
+@unittest.skipIf(not INTERNET_CONNECTIFITY, 'No internet connectifity')
+class TestFunctionHostIsReachable(unittest.TestCase):
+
+    def test_is_reachable(self):
+        self.assertTrue(is_host_reachable('8.8.8.8', 53))
+
+    def test_is_not_reachable(self):
+        self.assertFalse(is_host_reachable('8.8.8.8', 52))
 
 
 class TestClassDayNight(unittest.TestCase):
@@ -28,6 +41,7 @@ class TestClassDayNight(unittest.TestCase):
                         self.day_light.is_night())
 
 
+@unittest.skipIf(not INTERNET_CONNECTIFITY, 'No internet connectifity')
 class TestClassWeather(unittest.TestCase):
 
     def setUp(self):

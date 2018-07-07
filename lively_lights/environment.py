@@ -6,7 +6,7 @@ import pyowm
 import socket
 
 
-def host_is_reachable(host, port, timeout=3):
+def is_host_reachable(host, port, timeout=3):
     """
     https://stackoverflow.com/a/33117579
     :param string host: ipv4 address
