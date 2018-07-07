@@ -33,6 +33,16 @@ class TestClassConfiguration(unittest.TestCase):
         self.assertEqual(config.get('bridge', 'ip'), '1.2.3.4')
         self.assertEqual(config.get('bridge', 'username'), 'test')
 
+    def test_exception(self):
+        config = lively_lights.Configuration(config_environ_prefix='AAA')
+        with self.assertRaises(ValueError) as cm:
+            config.get('lol', 'lol')
+        self.assertEqual(
+            str(cm.exception),
+            'Configuration value could not be found (section “lol” key '
+            '“lol”).',
+        )
+
 
 class TestClassDayNight(unittest.TestCase):
 

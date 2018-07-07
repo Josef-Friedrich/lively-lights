@@ -100,11 +100,18 @@ class Configuration(object):
                                  key.upper())
 
     def get(self, section, key):
+        value = None
         envrion_key = self._envrion_key(section, key)
         if envrion_key in os.environ:
-            return os.environ[envrion_key]
+            value = os.environ[envrion_key]
         elif section in self.config and key in self.config[section]:
-            return self.config[section][key]
+            value = self.config[section][key]
+
+        if value:
+            return value
+        else:
+            raise ValueError('Configuration value could not be found '
+                             '(section “{}” key “{}”).'.format(section, key))
 
 
 class Hue(object):
