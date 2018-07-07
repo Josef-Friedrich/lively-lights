@@ -85,7 +85,9 @@ class Hue(object):
 
 class ReachableLights(object):
 
-    def __init__(self, bridge, light_ids=None, refresh_interval=60):
+    def __init__(self, bridge, light_ids=None, refresh_interval=60,
+                 on_at_night=True, on_at_day=False, check_open_port=None,
+                 on_open_port=True, check_ping=None, on_ping=True):
         """
         :param int refresh_interval: Search every n seconds for new lights
         """
