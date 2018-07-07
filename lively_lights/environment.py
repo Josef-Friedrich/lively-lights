@@ -33,15 +33,15 @@ class DayNight(object):
             float(config.get('location', 'elevation')),
         ))
 
-    def sunrise(self):
+    def _sunrise(self):
         return self.location.sunrise()
 
-    def sunset(self):
+    def _sunset(self):
         return self.location.sunset()
 
     def is_day(self):
-        sunrise = self.sunrise()
-        return sunrise < datetime.datetime.now(sunrise.tzinfo) < self.sunset()
+        sunrise = self._sunrise()
+        return sunrise < datetime.datetime.now(sunrise.tzinfo) < self._sunset()
 
     def is_night(self):
         return not self.is_day()
