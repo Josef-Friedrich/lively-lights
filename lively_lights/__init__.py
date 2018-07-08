@@ -89,17 +89,17 @@ class Hue(object):
 
 class ReachableLights(object):
     """
-    :param bridge: The bridge object
+    :param bridge: The bridge object.
     :type bridge: lively_lights.phue.Bridge
 
-    :param day_night: A DayNight object
+    :param day_night: A DayNight object.
     :type day_night: lively_lights.DayNight
 
     :param list light_ids: Light IDs to filter the output of the methods
       :class:`lively_lights.ReachableLights.list` and
-      :class:`lively_lights.ReachableLights.list_light_ids`
+      :class:`lively_lights.ReachableLights.list_light_ids`.
 
-    :param int refresh_interval: Search every n seconds for new lights
+    :param int refresh_interval: Search every n seconds for new lights.
 
     :param bool at_night: Return light IDs only at night.
 
@@ -224,12 +224,32 @@ class ReachableLights(object):
 
 class ReachableLightsFactory(object):
 
-    def __init__(self, bridge, refresh_interval=60):
-        self.bridge = bridge
-        self.refresh_interval = refresh_interval
+    """Helper class to generate multiple reachable light objects. Useful in
+    scripts which control different rooms.
+
+    :param bridge: The bridge object.
+    :type bridge: lively_lights.phue.Bridge
+
+    :param day_night: A DayNight object.
+    :type day_night: lively_lights.DayNight
+
+    :param int refresh_interval: Search every n seconds for new lights.
+
+    """
+
+    def __init__(self, bridge, day_night, refresh_interval=60):
+        self._bridge = bridge
+        self._day_night = day_night
+        self._refresh_interval = refresh_interval
 
     def get_lights(self, *light_ids):
-        return ReachableLights(self.bridge, light_ids, self.refresh_interval)
+        """
+        :param list light_ids: Light IDs to filter the output of the methods
+          :class:`lively_lights.ReachableLights.list` and
+          :class:`lively_lights.ReachableLights.list_light_ids`.
+        """
+        return ReachableLights(self._bridge, self._day_night, light_ids,
+                               self._refresh_interval)
 
 
 def main():

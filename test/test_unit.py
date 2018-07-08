@@ -3,7 +3,7 @@ from unittest import mock
 import lively_lights
 import os
 import unittest
-from lively_lights import ReachableLights
+from lively_lights import ReachableLights, ReachableLightsFactory
 
 
 class TestClassHue(unittest.TestCase):
@@ -44,6 +44,10 @@ class TestClassConfiguration(unittest.TestCase):
             '“lol”).',
         )
 
+    def test_float_conversion(self):
+        config = lively_lights.Configuration(config_file_path=config_file)
+        self.assertEqual(config.get('location', 'latitude'), 49.455556)
+
 
 class TestClassReachableLights(unittest.TestCase):
 
@@ -74,3 +78,21 @@ class TestClassReachableLights(unittest.TestCase):
         for light in lights:
             result.append(light.light_id)
         self.assertEqual(result, [2])
+
+
+class TestClassReachableLightsFactory(unittest.TestCase):
+
+    def setUp(self):
+        self.factory = ReachableLightsFactory(mock_bridge([[1, True]]),
+                                              get_day_night())
+
+    def test_init(self):
+        self.assertTrue(self.factory._bridge)
+        self.assertTrue(self.factory._day_night)
+        self.assertEqual(self.factory._refresh_interval, 60)
+
+    def test_get_lights(self):
+        reachable_lights = self.factory.get_lights(1)
+        self.assertTrue(reachable_lights)
+        self.assertEqual(reachable_lights.__class__.__name__,
+                         'ReachableLights')
