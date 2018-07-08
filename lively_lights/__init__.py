@@ -80,7 +80,6 @@ class Hue(object):
 
         self.bridge = Bridge(ip, username, verbosity_level=verbosity_level,
                              colorize_output=colorize_output)
-        self.reachable_lights = ReachableLights(self.bridge)
 
 
 class ReachableLights(object):
@@ -242,8 +241,9 @@ def main():
               verbosity_level=args.verbosity_level,
               colorize_output=args.colorize)
 
+    reachable_lights = ReachableLights(hue.bridge)
     if args.lights:
-        hue.reachable_lights.light_ids = args.lights
+        reachable_lights.light_ids = args.lights
 
     if args.subcommand == 'info' and args.info == 'lights':
         lights_info(hue.bridge)
@@ -280,7 +280,7 @@ def main():
         elif args.subcommand == 'launch':
             launcher = scenes.Launcher(
                 hue.bridge,
-                hue.reachable_lights,
+                reachable_lights,
                 scene_configs_file=args.yamlfile,
                 verbosity_level=args.verbosity_level
             )
