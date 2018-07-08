@@ -98,17 +98,17 @@ class ReachableLights(object):
 
     :param bool at_day: Return light IDs only at day.
 
-    :param string check_open_port: e. g. 192.168.3.11:22
+    :param string check_open_port: Check if a host has an open TCP port:
+      e. g. 192.168.3.11:22
 
     :param bool on_open_port: This parameter only takes effect if the parameter
       `check_open_port` is not empty.
 
-    :param string check_ping: e. g. 192.168.3.11
+    :param string check_ping: Check if a host is pingable. You have to be root
+       e. g. 192.168.3.11
 
     :param bool on_ping: This parameter only takes effect if the parameter
       `check_ping` is not empty.
-
-
     """
     def __init__(self, bridge, light_ids=None, refresh_interval=60,
                  at_night=True, at_day=True, check_open_port=None,
@@ -116,10 +116,33 @@ class ReachableLights(object):
 
         self.light_ids = light_ids
         """A list of light IDS. """
+
         self.refresh_interval = refresh_interval
         """Search every n seconds for new lights."""
+
+        self.at_night = at_night
+        """Return light IDs only at night."""
+
+        self.at_day = at_day
+        """Return light IDs only at day."""
+
+        self.check_open_port = check_open_port
+        """Check if a host has an open TCP port: e. g. 192.168.3.11:22"""
+
+        self.on_open_port = on_open_port
+        """This parameter only takes effect if the parameter `check_open_port`
+        is not empty."""
+
+        self.check_ping = on_ping
+        """Check if a host is pingable. You have to be root e. g.
+          192.168.3.11"""
+
+        self._current_light_index = 0
+        """Needed for the foor loop iteration."""
+
         self._bridge = bridge
         """The bridge object :class:`lively_lights.phue.Bridge`"""
+
         self._lights_refresh_state = {}
         """Cache for light states. To avoid querying for reachable lights every
         time.
@@ -132,6 +155,12 @@ class ReachableLights(object):
             }
 
         """
+
+        self._lights = []
+        """A list of light objects. Needed for the for loop iteration."""
+
+        self._lights_count = 0
+        """Count of reachable lights."""
 
     def __iter__(self):
         self._lights = self.list()
