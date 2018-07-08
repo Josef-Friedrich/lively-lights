@@ -34,6 +34,9 @@ setup(
         'PyYaml',
         'sphinx-argparse',
     ],
+    tests_requires = [
+        'freezegun',
+    ],
     long_description=read('README.rst'),
     classifiers=[
         'Development Status :: 3 - Alpha',

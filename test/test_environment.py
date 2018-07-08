@@ -1,4 +1,3 @@
-import unittest
 from lively_lights.environment import \
     DayNight, \
     DayNightNG, \
@@ -6,22 +5,25 @@ from lively_lights.environment import \
     is_host_reachable, \
     Weather
 from _helper import config_file
+from freezegun import freeze_time
 from lively_lights import Configuration
 import os
 import pwd
-import datetime
+import unittest
 
 INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
 
 
-# https://stackoverflow.com/a/4482067
-class NewDate(datetime.date):
-    @classmethod
-    def today(cls):
-        return cls(2000, 1, 1)
-
-
-datetime.date = NewDate
+# # https://stackoverflow.com/a/4482067
+# class NewDate(datetime.date):
+#     @classmethod
+#     def today(cls):
+#         return cls(2000, 1, 1)
+#
+# # today = datetime.date(2000, 1, 1)
+# # now = datetime.datetime(2000, 1, 1, 23, 0, 0)
+#
+# datetime.date = NewDate
 
 
 def get_username():
@@ -86,6 +88,15 @@ class TestClassDayNightNG(unittest.TestCase):
     def test_init(self):
         self.assertTrue(self.day_night)
 
+    @freeze_time('2000-01-01 23:00:00')
+    def test_is_night(self):
+        self.assertTrue(self.day_night.is_night())
+
+    @freeze_time('2000-01-01 12:00:00')
+    def test_is_day(self):
+        self.assertTrue(self.day_night.is_day())
+
+    @freeze_time('2000-01-01 23:00:00')
     def test_overview(self):
         self.assertEqual(
             self.day_night.overview(),
