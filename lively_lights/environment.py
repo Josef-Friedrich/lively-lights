@@ -103,7 +103,8 @@ class DayNightNG(object):
 class Weather(object):
     """Gather weather informations about a given coordinate.
 
-    :param string openweathermap_api_key: https://home.openweathermap.org/api_keys
+    :param string openweathermap_api_key:
+      https://home.openweathermap.org/api_keys
     :param float latitude: e. g. 49.455556
     :param float longitude: e. g. 11.078611
     """

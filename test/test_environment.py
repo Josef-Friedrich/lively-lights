@@ -10,7 +10,6 @@ from lively_lights import Configuration
 import os
 import pwd
 import datetime
-from unittest import mock
 
 INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
 
@@ -21,7 +20,9 @@ class NewDate(datetime.date):
     def today(cls):
         return cls(2000, 1, 1)
 
+
 datetime.date = NewDate
+
 
 def get_username():
     return pwd.getpwuid(os.getuid()).pw_name
