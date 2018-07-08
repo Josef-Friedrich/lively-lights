@@ -45,12 +45,56 @@ class TestClassConfiguration(unittest.TestCase):
         )
 
 
+def mock_light(light_id, reachable=True):
+    light = mock.MagicMock()
+    light.light_id = light_id
+    light.reachable = reachable
+    return light
+
+
+def mock_get_item(self, key):
+    for light in self.lights:
+        if light.light_id == key:
+            return light
+
+
+def mock_bridge(light_configs):
+    lights = []
+    for light_config in light_configs:
+        lights.append(mock_light(light_config[0], light_config[1]))
+    bridge = mock.MagicMock()
+    bridge.lights = lights
+    bridge.__getitem__ = mock_get_item
+    return bridge
+
+
 class TestClassReachableLights(unittest.TestCase):
 
     def test_init(self):
         ReachableLights(mock.MagicMock())
 
     def test_method_list(self):
-        bridge = mock.MagicMock()
+        bridge = mock_bridge([[1, True], [2, True]])
         lights = ReachableLights(bridge)
-        lights.list()
+        self.assertEqual(lights.list_light_ids(), [1, 2])
+
+    def test_iterator_all_reachable(self):
+        lights = ReachableLights(mock_bridge([[1, True], [2, True]]))
+        result = []
+        for light in lights:
+            result.append(light.light_id)
+        self.assertEqual(result, [1, 2])
+
+    def test_iterator_all_unreachable(self):
+        lights = ReachableLights(mock_bridge([[1, False], [2, False]]))
+        result = []
+        for light in lights:
+            result.append(light.light_id)
+        self.assertEqual(result, [])
+
+    def test_iterator_last_reachable(self):
+        lights = ReachableLights(mock_bridge([[3, False], [2, True]]))
+        result = []
+        for light in lights:
+            result.append(light.light_id)
+        self.assertEqual(result, [2])

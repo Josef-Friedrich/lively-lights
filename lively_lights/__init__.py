@@ -94,9 +94,9 @@ class ReachableLights(object):
 
     :param int refresh_interval: Search every n seconds for new lights
 
-    :param bool at_night: Return lights IDs only at night.
+    :param bool at_night: Return light IDs only at night.
 
-    :param bool at_day: Return lights IDs only at day.
+    :param bool at_day: Return light IDs only at day.
 
     :param string check_open_port: e. g. 192.168.3.11:22
 
@@ -132,6 +132,19 @@ class ReachableLights(object):
             }
 
         """
+
+    def __iter__(self):
+        self._lights = self.list()
+        self._lights_count = len(self._lights)
+        self._current_light_index = 0
+        return self
+
+    def __next__(self):
+        current = self._current_light_index
+        self._current_light_index += 1
+        if current >= self._lights_count:
+            raise StopIteration
+        return self._lights[current]
 
     def _get_reachable(self, light_ids=None):
         lights = []
