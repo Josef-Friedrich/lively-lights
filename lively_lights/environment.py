@@ -63,13 +63,56 @@ class DayNight(object):
         print('Dusk:    {}'.format(sun['dusk']))
 
 
-class Weather(object):
+class DayNightNG(object):
 
-    def __init__(self, config):
-        owm = pyowm.OWM(config.get('weather', 'openweathermap_api_key'))
+    def __init__(self, latitude, longitude, timezone, elevation):
+        self._location = astral.Location((
+            'name',
+            'region',
+            latitude,
+            longitude,
+            timezone,
+            elevation,
+        ))
+
+    def _sunrise(self):
+        return self._location.sunrise()
+
+    def _sunset(self):
+        return self._location.sunset()
+
+    def is_day(self):
+        sunrise = self._sunrise()
+        return sunrise < datetime.datetime.now(sunrise.tzinfo) < self._sunset()
+
+    def is_night(self):
+        return not self.is_day()
+
+    def overview(self):
+        sun = self._location.sun()
+        out = 'Dawn:    {}\n' + \
+              'Sunrise: {}\n' + \
+              'Noon:    {}\n' + \
+              'Sunset:  {}\n' + \
+              'Dusk:    {}'
+
+        return out.format(sun['dawn'], sun['sunrise'], sun['noon'],
+                          sun['sunset'], sun['dusk'])
+
+
+class Weather(object):
+    """Gather weather informations about a given coordinate.
+
+    :param string openweathermap_api_key: https://home.openweathermap.org/api_keys
+    :param float latitude: e. g. 49.455556
+    :param float longitude: e. g. 11.078611
+    """
+
+    def __init__(self, openweathermap_api_key, latitude, longitude):
+        owm = pyowm.OWM(openweathermap_api_key)
         observation_list = owm.weather_around_coords(
-            float(config.get('location', 'latitude')),
-            float(config.get('location', 'longitude')),
+            latitude,
+            longitude,
         )
         observation = observation_list[0]
         self._location = observation.get_location()

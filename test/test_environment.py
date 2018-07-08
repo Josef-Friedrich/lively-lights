@@ -1,6 +1,7 @@
 import unittest
 from lively_lights.environment import \
     DayNight, \
+    DayNightNG, \
     is_host_pingable, \
     is_host_reachable, \
     Weather
@@ -8,9 +9,19 @@ from _helper import config_file
 from lively_lights import Configuration
 import os
 import pwd
+import datetime
+from unittest import mock
 
 INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
 
+
+# https://stackoverflow.com/a/4482067
+class NewDate(datetime.date):
+    @classmethod
+    def today(cls):
+        return cls(2000, 1, 1)
+
+datetime.date = NewDate
 
 def get_username():
     return pwd.getpwuid(os.getuid()).pw_name
@@ -61,16 +72,43 @@ class TestClassDayNight(unittest.TestCase):
                         self.day_light.is_night())
 
 
+class TestClassDayNightNG(unittest.TestCase):
+
+    def setUp(self):
+        self.day_night = DayNightNG(
+            49.455556,
+            11.078611,
+            'Europe/Berlin',
+            309,
+        )
+
+    def test_init(self):
+        self.assertTrue(self.day_night)
+
+    def test_overview(self):
+        self.assertEqual(
+            self.day_night.overview(),
+            'Dawn:    2000-01-01 07:34:09+01:00\n'
+            'Sunrise: 2000-01-01 08:11:49+01:00\n'
+            'Noon:    2000-01-01 12:18:44+01:00\n'
+            'Sunset:  2000-01-01 16:25:40+01:00\n'
+            'Dusk:    2000-01-01 17:03:20+01:00'
+        )
+
+
 @unittest.skipIf(not INTERNET_CONNECTIFITY, 'No internet connectifity')
 class TestClassWeather(unittest.TestCase):
 
     def setUp(self):
-        config = Configuration(config_file_path=config_file)
-        self.weather = Weather(config)
+
+        self.weather = Weather(
+            openweathermap_api_key='8a32360f1f4d8c729b64d344c53a0b92',
+            latitude=49.455556,
+            longitude=11.078611,
+        )
 
     def test_init(self):
-        config = Configuration(config_file_path=config_file)
-        self.assertTrue(Weather(config))
+        self.assertTrue(self.weather)
 
     def test_method_get_wind(self):
         self.assertTrue(self.weather.get_wind())
