@@ -1,29 +1,14 @@
 from lively_lights.environment import \
     DayNight, \
-    DayNightNG, \
     is_host_pingable, \
     is_host_reachable, \
     Weather
-from _helper import config_file
 from freezegun import freeze_time
-from lively_lights import Configuration
 import os
 import pwd
 import unittest
 
 INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
-
-
-# # https://stackoverflow.com/a/4482067
-# class NewDate(datetime.date):
-#     @classmethod
-#     def today(cls):
-#         return cls(2000, 1, 1)
-#
-# # today = datetime.date(2000, 1, 1)
-# # now = datetime.datetime(2000, 1, 1, 23, 0, 0)
-#
-# datetime.date = NewDate
 
 
 def get_username():
@@ -54,39 +39,12 @@ class TestFunctionIsHostReachable(unittest.TestCase):
 class TestClassDayNight(unittest.TestCase):
 
     def setUp(self):
-        config = Configuration(config_file_path=config_file)
-        self.day_light = DayNight(config)
-
-    def test_init(self):
-        self.assertTrue(self.day_light)
-
-    def test_sunrise(self):
-        self.assertTrue(int(self.day_light._sunrise().year))
-
-    def test_sunset(self):
-        self.assertTrue(int(self.day_light._sunset().year))
-
-    def test_is_day(self):
-        self.assertTrue(bool(self.day_light.is_day()) ==
-                        self.day_light.is_day())
-
-    def test_is_night(self):
-        self.assertTrue(bool(self.day_light.is_night()) ==
-                        self.day_light.is_night())
-
-
-class TestClassDayNightNG(unittest.TestCase):
-
-    def setUp(self):
-        self.day_night = DayNightNG(
+        self.day_night = DayNight(
             49.455556,
             11.078611,
             'Europe/Berlin',
             309,
         )
-
-    def test_init(self):
-        self.assertTrue(self.day_night)
 
     @freeze_time('2000-01-01 23:00:00')
     def test_is_night(self):
@@ -94,6 +52,14 @@ class TestClassDayNightNG(unittest.TestCase):
 
     @freeze_time('2000-01-01 12:00:00')
     def test_is_day(self):
+        self.assertTrue(self.day_night.is_day())
+
+    @freeze_time('2000-01-01 08:11:49+01')
+    def test_is_night_close(self):
+        self.assertTrue(self.day_night.is_night())
+
+    @freeze_time('2000-01-01 08:11:50+01')
+    def test_is_day_close(self):
         self.assertTrue(self.day_night.is_day())
 
     @freeze_time('2000-01-01 23:00:00')

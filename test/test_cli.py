@@ -9,8 +9,8 @@ usage = 'usage: {}'.format(command_name)
 
 class TestCliUnit(unittest.TestCase):
 
-    @mock.patch('sys.argv', ['.', 'info', 'daynight'])
-    @mock.patch('lively_lights.Configuration', mock.Mock())
+    @mock.patch('sys.argv', ['.', '--config-file', config_file, 'info',
+                                  'daynight'])
     @mock.patch('lively_lights.environment.DayNight')
     def test_info_daynight(self, day_night):
         main()

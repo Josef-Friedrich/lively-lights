@@ -31,40 +31,6 @@ def is_host_reachable(host, port, timeout=3):
 
 class DayNight(object):
 
-    def __init__(self, config):
-        self.location = astral.Location((
-            'name',
-            'region',
-            float(config.get('location', 'latitude')),
-            float(config.get('location', 'longitude')),
-            config.get('location', 'timezone'),
-            float(config.get('location', 'elevation')),
-        ))
-
-    def _sunrise(self):
-        return self.location.sunrise()
-
-    def _sunset(self):
-        return self.location.sunset()
-
-    def is_day(self):
-        sunrise = self._sunrise()
-        return sunrise < datetime.datetime.now(sunrise.tzinfo) < self._sunset()
-
-    def is_night(self):
-        return not self.is_day()
-
-    def overview(self):
-        sun = self.location.sun()
-        print('Dawn:    {}'.format(sun['dawn']))
-        print('Sunrise: {}'.format(sun['sunrise']))
-        print('Noon:    {}'.format(sun['noon']))
-        print('Sunset:  {}'.format(sun['sunset']))
-        print('Dusk:    {}'.format(sun['dusk']))
-
-
-class DayNightNG(object):
-
     def __init__(self, latitude, longitude, timezone, elevation):
         self._location = astral.Location((
             'name',

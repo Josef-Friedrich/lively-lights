@@ -228,8 +228,13 @@ def main():
 
     config = Configuration(config_file_path=args.config_file)
     if args.subcommand == 'info' and args.info == 'daynight':
-        day_night = environment.DayNight(config)
-        day_night.overview()
+        day_night = environment.DayNight(
+            float(config.get('location', 'latitude')),
+            float(config.get('location', 'longitude')),
+            config.get('location', 'timezone'),
+            float(config.get('location', 'elevation')),
+        )
+        print(day_night.overview())
         return
 
     hue = Hue(ip=args.ip, username=args.username,
