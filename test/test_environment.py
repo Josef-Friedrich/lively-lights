@@ -103,8 +103,9 @@ class TestClassWeather(unittest.TestCase):
 
 class TestClassReachableLights(unittest.TestCase):
 
-    def get_reachable_lights(self, *light_configs):
-        return ReachableLights(mock_bridge(light_configs), get_day_night())
+    def get_reachable_lights(self, *light_configs, **kwargs):
+        return ReachableLights(mock_bridge(light_configs), get_day_night(),
+                               **kwargs)
 
     def test_method_list(self):
         lights = self.get_reachable_lights([1, True], [2, True])
@@ -130,6 +131,26 @@ class TestClassReachableLights(unittest.TestCase):
         for light in lights:
             result.append(light.light_id)
         self.assertEqual(result, [2])
+
+    @freeze_time('2000-01-01 23:00:00')
+    def test_parameter_at_night_false_by_night(self):
+        lights = self.get_reachable_lights([1, True], at_night=False)
+        self.assertEqual(lights.list_light_ids(), [])
+
+    @freeze_time('2000-01-01 23:00:00')
+    def test_parameter_at_night_true_by_night(self):
+        lights = self.get_reachable_lights([1, True], at_night=True)
+        self.assertEqual(lights.list_light_ids(), [1])
+
+    @freeze_time('2000-01-01 12:00:00')
+    def test_parameter_at_night_false_by_day(self):
+        lights = self.get_reachable_lights([1, True], at_night=False)
+        self.assertEqual(lights.list_light_ids(), [1])
+
+    @freeze_time('2000-01-01 12:00:00')
+    def test_parameter_at_night_true_by_day(self):
+        lights = self.get_reachable_lights([1, True], at_night=True)
+        self.assertEqual(lights.list_light_ids(), [1])
 
 
 class TestClassReachableLightsFactory(unittest.TestCase):

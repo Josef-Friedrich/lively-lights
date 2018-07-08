@@ -195,8 +195,20 @@ class ReachableLights(object):
             raise StopIteration
         return self._lights[current]
 
+    def _turn_off(self):
+        if self.light_ids:
+            for light_id in self.light_ids:
+                self._bridge[light_id].on = False
+        else:
+            for light in self._bridge.lights:
+                light.on = False
+
     def _get_reachable(self, light_ids=None):
         lights = []
+
+        if (not self.at_night and self._day_night.is_night()) or \
+           (not self.at_day and self._day_night.is_day()):
+            return lights
 
         if light_ids:
             for light_id in light_ids:
