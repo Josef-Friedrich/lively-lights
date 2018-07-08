@@ -2,7 +2,10 @@ from lively_lights.environment import \
     DayNight, \
     is_host_pingable, \
     is_host_reachable, \
+    ReachableLights, \
+    ReachableLightsFactory, \
     Weather
+from _helper import mock_bridge, get_day_night
 from freezegun import freeze_time
 import os
 import pwd
@@ -96,3 +99,52 @@ class TestClassWeather(unittest.TestCase):
 
     def test_location(self):
         self.assertEqual(self.weather._location.get_name(), 'Nuremberg')
+
+
+class TestClassReachableLights(unittest.TestCase):
+
+    def get_reachable_lights(self, *light_configs):
+        return ReachableLights(mock_bridge(light_configs), get_day_night())
+
+    def test_method_list(self):
+        lights = self.get_reachable_lights([1, True], [2, True])
+        self.assertEqual(lights.list_light_ids(), [1, 2])
+
+    def test_iterator_all_reachable(self):
+        lights = self.get_reachable_lights([1, True], [2, True])
+        result = []
+        for light in lights:
+            result.append(light.light_id)
+        self.assertEqual(result, [1, 2])
+
+    def test_iterator_all_unreachable(self):
+        lights = self.get_reachable_lights([1, False], [2, False])
+        result = []
+        for light in lights:
+            result.append(light.light_id)
+        self.assertEqual(result, [])
+
+    def test_iterator_last_reachable(self):
+        lights = self.get_reachable_lights([3, False], [2, True])
+        result = []
+        for light in lights:
+            result.append(light.light_id)
+        self.assertEqual(result, [2])
+
+
+class TestClassReachableLightsFactory(unittest.TestCase):
+
+    def setUp(self):
+        self.factory = ReachableLightsFactory(mock_bridge([[1, True]]),
+                                              get_day_night())
+
+    def test_init(self):
+        self.assertTrue(self.factory._bridge)
+        self.assertTrue(self.factory._day_night)
+        self.assertEqual(self.factory._refresh_interval, 60)
+
+    def test_get_lights(self):
+        reachable_lights = self.factory.get_lights(1)
+        self.assertTrue(reachable_lights)
+        self.assertEqual(reachable_lights.__class__.__name__,
+                         'ReachableLights')

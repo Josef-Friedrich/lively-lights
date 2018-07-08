@@ -1,4 +1,3 @@
-
 """A collection of scenes."""
 
 from lively_lights import _random as random
