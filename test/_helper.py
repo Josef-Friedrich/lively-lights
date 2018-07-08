@@ -32,3 +32,26 @@ def get_reachable_lights(light_ids, reachable_light_ids=None):
     reachable_lights.is_reachable = mock.Mock(return_value=True)
 
     return reachable_lights
+
+
+def mock_light(light_id, reachable=True):
+    light = mock.MagicMock()
+    light.light_id = light_id
+    light.reachable = reachable
+    return light
+
+
+def mock_get_item(self, key):
+    for light in self.lights:
+        if light.light_id == key:
+            return light
+
+
+def mock_bridge(light_configs):
+    lights = []
+    for light_config in light_configs:
+        lights.append(mock_light(light_config[0], light_config[1]))
+    bridge = mock.MagicMock()
+    bridge.lights = lights
+    bridge.__getitem__ = mock_get_item
+    return bridge
