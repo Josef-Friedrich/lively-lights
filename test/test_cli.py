@@ -24,6 +24,7 @@ class TestCliUnit(unittest.TestCase):
     ])
     @mock.patch('lively_lights.Configuration', mock.Mock())
     @mock.patch('lively_lights.Hue', mock.Mock())
+    @mock.patch('lively_lights.environment.DayNight', mock.Mock())
     @mock.patch('lively_lights.scenes.SceneBreath')
     def test_scene_breath(self, Scene):
         main()
@@ -42,6 +43,7 @@ class TestCliUnit(unittest.TestCase):
     ])
     @mock.patch('lively_lights.Configuration', mock.Mock())
     @mock.patch('lively_lights.Hue', mock.Mock())
+    @mock.patch('lively_lights.environment.DayNight', mock.Mock())
     @mock.patch('lively_lights.scenes.ScenePendulum')
     def test_scene_pendulum(self, Scene):
         main()
@@ -63,6 +65,7 @@ class TestCliUnit(unittest.TestCase):
     ])
     @mock.patch('lively_lights.Configuration', mock.Mock())
     @mock.patch('lively_lights.Hue', mock.Mock())
+    @mock.patch('lively_lights.environment.DayNight', mock.Mock())
     @mock.patch('lively_lights.scenes.SceneSequence')
     def test_scene_sequence(self, Scene):
         main()

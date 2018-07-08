@@ -58,7 +58,12 @@ class Configuration(object):
             value = self.config[section][key]
 
         if value:
-            return value
+            try:
+                converted_value = float(value)
+                return converted_value
+            except ValueError:
+                return value
+
         else:
             raise ValueError('Configuration value could not be found '
                              '(section “{}” key “{}”).'.format(section, key))
@@ -87,6 +92,9 @@ class ReachableLights(object):
     :param bridge: The bridge object
     :type bridge: lively_lights.phue.Bridge
 
+    :param day_night: A DayNight object
+    :type day_night: lively_lights.DayNight
+
     :param list light_ids: Light IDs to filter the output of the methods
       :class:`lively_lights.ReachableLights.list` and
       :class:`lively_lights.ReachableLights.list_light_ids`
@@ -109,7 +117,7 @@ class ReachableLights(object):
     :param bool on_ping: This parameter only takes effect if the parameter
       `check_ping` is not empty.
     """
-    def __init__(self, bridge, light_ids=None, refresh_interval=60,
+    def __init__(self, bridge, day_night, light_ids=None, refresh_interval=60,
                  at_night=True, at_day=True, check_open_port=None,
                  on_open_port=True, check_ping=None, on_ping=True):
 
@@ -138,6 +146,9 @@ class ReachableLights(object):
 
         self._current_light_index = 0
         """Needed for the foor loop iteration."""
+
+        self._day_night = day_night
+        """A DayNight object :class:`lively_lights.DayNight`"""
 
         self._bridge = bridge
         """The bridge object :class:`lively_lights.phue.Bridge`"""
@@ -226,13 +237,13 @@ def main():
     args = get_parser().parse_args()
 
     config = Configuration(config_file_path=args.config_file)
+    day_night = environment.DayNight(
+        config.get('location', 'latitude'),
+        config.get('location', 'longitude'),
+        config.get('location', 'timezone'),
+        config.get('location', 'elevation'),
+    )
     if args.subcommand == 'info' and args.info == 'daynight':
-        day_night = environment.DayNight(
-            float(config.get('location', 'latitude')),
-            float(config.get('location', 'longitude')),
-            config.get('location', 'timezone'),
-            float(config.get('location', 'elevation')),
-        )
         print(day_night.overview())
         return
 
@@ -241,7 +252,7 @@ def main():
               verbosity_level=args.verbosity_level,
               colorize_output=args.colorize)
 
-    reachable_lights = ReachableLights(hue.bridge)
+    reachable_lights = ReachableLights(hue.bridge, day_night)
     if args.lights:
         reachable_lights.light_ids = args.lights
 

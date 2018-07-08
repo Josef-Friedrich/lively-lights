@@ -1,6 +1,7 @@
 import os
 from unittest import mock
 import lively_lights
+from lively_lights.environment import DayNight
 
 command_name = 'lively-lights.py'
 
@@ -32,6 +33,10 @@ def get_reachable_lights(light_ids, reachable_light_ids=None):
     reachable_lights.is_reachable = mock.Mock(return_value=True)
 
     return reachable_lights
+
+
+def get_day_night():
+    return DayNight(49.455556, 11.078611, 'Europe/Berlin', 309)
 
 
 def mock_light(light_id, reachable=True):
