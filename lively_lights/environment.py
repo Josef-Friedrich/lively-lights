@@ -195,29 +195,31 @@ class ReachableLights(object):
             raise StopIteration
         return self._lights[current]
 
-    def _turn_off(self):
+    def _list_light_ids(self):
+        """Build a list of light ids. If light_ids is set, return light_ids,
+        else return all light ids from the bridge."""
         if self.light_ids:
-            for light_id in self.light_ids:
-                self._bridge[light_id].on = False
+            return self.light_ids
         else:
+            light_ids = []
             for light in self._bridge.lights:
-                light.on = False
+                light_ids.append(light.light_id)
+            return light_ids
 
-    def _get_reachable(self, light_ids=None):
+    def _turn_off(self):
+        for light_id in self._list_light_ids():
+            self._bridge[light_id].on = False
+
+    def _get_reachable(self):
         lights = []
 
         if (not self.at_night and self._day_night.is_night()) or \
            (not self.at_day and self._day_night.is_day()):
             return lights
 
-        if light_ids:
-            for light_id in light_ids:
-                if self.is_reachable(light_id):
-                    lights.append(self._bridge[light_id])
-        else:
-            for light in self._bridge.lights:
-                if self.is_reachable(light.light_id):
-                    lights.append(light)
+        for light_id in self._list_light_ids():
+            if self.is_reachable(light_id):
+                lights.append(self._bridge[light_id])
 
         return lights
 
@@ -232,10 +234,7 @@ class ReachableLights(object):
             return reachable
 
     def list(self):
-        if self.light_ids:
-            return self._get_reachable(self.light_ids)
-        else:
-            return self._get_reachable()
+        return self._get_reachable()
 
     def list_light_ids(self):
         out = []
