@@ -8,11 +8,7 @@ from ping3 import ping
 
 
 def is_host_pingable(host, timeout=3):
-    try:
-        result = ping(host, timeout=3)
-    except PermissionError:
-        return None
-    if result:
+    if ping(host, timeout=3):
         return True
     else:
         return False
