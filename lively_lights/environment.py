@@ -129,7 +129,8 @@ class ReachableLights(object):
     """
     def __init__(self, bridge, day_night, light_ids=None, refresh_interval=60,
                  at_night=True, at_day=True, check_open_port=None,
-                 on_open_port=True, check_ping=None, on_ping=True):
+                 on_open_port=True, check_ping=None, on_ping=True,
+                 turn_off=False):
 
         self.light_ids = light_ids
         """A list of light IDS. """
@@ -154,6 +155,9 @@ class ReachableLights(object):
         """Check if a host is pingable. You have to be root e. g.
           192.168.3.11"""
 
+        self.turn_off = turn_off
+        """Turn off lights on certain conditions."""
+
         self._current_light_index = 0
         """Needed for the foor loop iteration."""
 
@@ -164,14 +168,27 @@ class ReachableLights(object):
         """The bridge object :class:`lively_lights.phue.Bridge`"""
 
         self._lights_refresh_state = {}
-        """Cache for light states. To avoid querying for reachable lights every
-        time.
+        """Cache for light reachable states. To avoid querying for reachable
+        lights every time.
 
         .. code-block:: python
 
             self._lights_refresh_state = {
                 1: (1530997150.9431288, True),
                 2: (1530997179.6412678, False),
+            }
+
+        """
+
+        self._lights_turn_off_state = {}
+        """Cache for light turn off states. To avoid turning off the lights
+        every time.
+
+        .. code-block:: python
+
+            self._lights_refresh_state = {
+                1: 1530997150.9431288,
+                2: 1530997179.6412678,
             }
 
         """
@@ -206,15 +223,24 @@ class ReachableLights(object):
                 light_ids.append(light.light_id)
             return light_ids
 
-    def _turn_off(self):
-        for light_id in self._list_light_ids():
+    def _turn_off_light(self, light_id):
+        state = self._lights_turn_off_state
+        if light_id not in state or (light_id in state and \
+           time.time() - state[light_id] < self.refresh_interval):
             self._bridge[light_id].on = False
+            state[light_id] = time.time()
+
+    def _turn_off_lights(self):
+        for light_id in self._list_light_ids():
+            self._turn_off_light(light_id)
 
     def _get_reachable(self):
         lights = []
 
         if (not self.at_night and self._day_night.is_night()) or \
            (not self.at_day and self._day_night.is_day()):
+            if self.turn_off:
+                self._turn_off_lights()
             return lights
 
         for light_id in self._list_light_ids():

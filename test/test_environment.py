@@ -110,6 +110,8 @@ class TestClassReachableLights(unittest.TestCase):
     def test_method_list(self):
         lights = self.get_reachable_lights([1, True], [2, True])
         self.assertEqual(lights.get_light_ids(), [1, 2])
+        self.assertTrue(lights._lights_refresh_state[1][1])
+        self.assertTrue(lights._lights_refresh_state[2][1])
 
     def test_iterator_all_reachable(self):
         lights = self.get_reachable_lights([1, True], [2, True])
@@ -155,6 +157,15 @@ class TestClassReachableLights(unittest.TestCase):
     def test_parameter_at_night_true_by_day(self):
         lights = self.get_reachable_lights([1, True], at_night=True)
         self.assertEqual(lights.get_light_ids(), [1])
+        self.assertTrue(lights._bridge[1].on)
+
+    @freeze_time('2000-01-01 12:00:00')
+    def test_parameter_turn_off(self):
+        lights = self.get_reachable_lights([1, True], at_day=False,
+                                           turn_off=True)
+        self.assertEqual(lights.get_light_ids(), [])
+        self.assertEqual(lights._bridge[1].on, False)
+        self.assertTrue(lights._lights_turn_off_state[1])
 
 
 class TestClassReachableLightsFactory(unittest.TestCase):
