@@ -238,7 +238,7 @@ class ReachableLights(object):
 
     def list_light_ids(self):
         out = []
-        for light in self.list():
+        for light in self._get_reachable():
             out.append(light.light_id)
         return(out)
 

@@ -147,7 +147,6 @@ class TestClassSceneTimeOuts(unittest.TestCase):
 
     @mock.patch('lively_lights.scenes.set_light_multiple', mock.Mock())
     def assertTimeOut(self, scene, duration):
-        get_reachable_lights([1, 2])
         reachable_lights = get_reachable_lights([1, 2])
         Scene = getattr(scenes, scene)
         scene = Scene(mock.Mock(), reachable_lights)
