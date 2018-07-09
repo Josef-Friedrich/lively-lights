@@ -425,7 +425,7 @@ class ScenePendulum(Scene):
             raise ValueError('transition_time should be less than sleep_time')
 
     def _distribute_lights(self):
-        light_ids = self.reachable_lights.list_light_ids()
+        light_ids = self.reachable_lights.get_light_ids()
         random.shuffle(light_ids)
         count = len(light_ids)
         half = int(count / 2)

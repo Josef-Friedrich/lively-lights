@@ -107,7 +107,7 @@ class ReachableLights(object):
 
     :param list light_ids: Light IDs to filter the output of the methods
       :class:`lively_lights.ReachableLights.list` and
-      :class:`lively_lights.ReachableLights.list_light_ids`.
+      :class:`lively_lights.ReachableLights.get_light_ids`.
 
     :param int refresh_interval: Search every n seconds for new lights.
 
@@ -236,7 +236,7 @@ class ReachableLights(object):
     def list(self):
         return self._get_reachable()
 
-    def list_light_ids(self):
+    def get_light_ids(self):
         out = []
         for light in self._get_reachable():
             out.append(light.light_id)
@@ -267,7 +267,7 @@ class ReachableLightsFactory(object):
         """
         :param list light_ids: Light IDs to filter the output of the methods
           :class:`lively_lights.ReachableLights.list` and
-          :class:`lively_lights.ReachableLights.list_light_ids`.
+          :class:`lively_lights.ReachableLights.get_light_ids`.
         """
         return ReachableLights(self._bridge, self._day_night, light_ids,
                                self._refresh_interval)
