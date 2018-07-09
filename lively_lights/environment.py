@@ -225,7 +225,7 @@ class ReachableLights(object):
 
     def _turn_off_light(self, light_id):
         state = self._lights_turn_off_state
-        if light_id not in state or (light_id in state and \
+        if light_id not in state or (light_id in state and
            time.time() - state[light_id] < self.refresh_interval):
             self._bridge[light_id].on = False
             state[light_id] = time.time()
