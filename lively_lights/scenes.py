@@ -359,7 +359,7 @@ class SceneBreath(Scene):
             if self._time_to_end and self._time_to_end <= time.time():
                 break
 
-            for light in self.reachable_lights.list():
+            for light in self.reachable_lights.get_light_objects():
                 if light.light_id not in self._threads or \
                    not self._threads[light.light_id].is_alive():
                     t = threading.Thread(
@@ -517,7 +517,7 @@ class SceneSequence(Scene):
         try:
             while True:
                 for hue in self.hue_sequence:
-                    for light in self.reachable_lights.list():
+                    for light in self.reachable_lights.get_light_objects():
                         data = {
                             'hue': hue,
                             'bri': self.brightness,

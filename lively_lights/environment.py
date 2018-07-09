@@ -106,7 +106,7 @@ class ReachableLights(object):
     :type day_night: lively_lights.DayNight
 
     :param list light_ids: Light IDs to filter the output of the methods
-      :class:`lively_lights.ReachableLights.list` and
+      :class:`lively_lights.ReachableLights.get_light_objects` and
       :class:`lively_lights.ReachableLights.get_light_ids`.
 
     :param int refresh_interval: Search every n seconds for new lights.
@@ -183,7 +183,7 @@ class ReachableLights(object):
         """Count of reachable lights."""
 
     def __iter__(self):
-        self._lights = self.list()
+        self._lights = self.get_light_objects()
         self._lights_count = len(self._lights)
         self._current_light_index = 0
         return self
@@ -233,7 +233,7 @@ class ReachableLights(object):
             state[light_id] = (time.time(), reachable)
             return reachable
 
-    def list(self):
+    def get_light_objects(self):
         return self._get_reachable()
 
     def get_light_ids(self):
@@ -266,7 +266,7 @@ class ReachableLightsFactory(object):
     def get_lights(self, *light_ids):
         """
         :param list light_ids: Light IDs to filter the output of the methods
-          :class:`lively_lights.ReachableLights.list` and
+          :class:`lively_lights.ReachableLights.get_light_objects` and
           :class:`lively_lights.ReachableLights.get_light_ids`.
         """
         return ReachableLights(self._bridge, self._day_night, light_ids,

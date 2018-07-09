@@ -123,7 +123,7 @@ class TestClassSceneSequence(unittest.TestCase):
     @mock.patch('lively_lights.scenes.set_light_multiple')
     def test_start(self, set_light_multiple):
         reachable_lights = mock.Mock()
-        reachable_lights.list.return_value = [mock.Mock()]
+        reachable_lights.get_light_objects.return_value = [mock.Mock()]
         scene = SceneSequence(
             mock.Mock(),
             reachable_lights,
