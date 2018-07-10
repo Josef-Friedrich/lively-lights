@@ -61,6 +61,37 @@ def get_parser():
         help='Make output more verbose.',
     )
 
+    parser.add_argument(
+        '--turn-off',
+        action='store_true',
+        help='Turn off the lights if one of the three options ('
+        '--not-during-daytime, '
+        '--not-at-night, '
+        '--not-host-up) are present and take effect.'
+    )
+
+    parser.add_argument(
+        '--not-during-daytime',
+        action='store_true',
+        help='Do nothing during daytime. In order to pause '
+        'at the right time, you have to supply informations of your '
+        'location in the configuration file.',
+    )
+
+    parser.add_argument(
+        '--not-at-night',
+        action='store_true',
+        help='Do nothing at night. In order to pause at the right time, '
+        'you have to supply informations of your '
+        'location in the configuration file.',
+    )
+
+    parser.add_argument(
+        '--not-host-up',
+        nargs=1,
+        help='Do nothing if a external host is up and reachable.',
+    )
+
     ###########################################################################
     ###########################################################################
     #
