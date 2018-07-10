@@ -104,7 +104,14 @@ def main():
               verbosity_level=args.verbosity_level,
               colorize_output=args.colorize)
 
-    reachable_lights = ReachableLights(hue.bridge, day_night)
+    reachable_lights = ReachableLights(
+        hue.bridge,
+        day_night,
+        not_at_night=args.not_at_night,
+        not_during_daytime=args.not_during_daytime,
+        turn_off=args.turn_off,
+    )
+
     if args.lights:
         reachable_lights.light_ids = args.lights
 
@@ -130,7 +137,7 @@ def main():
 
             scene = Scene(
                 hue.bridge,
-                hue.reachable_lights,
+                reachable_lights,
             )
             scene.get_properties_from_args(args)
             scene.scene_reporter(args.verbosity_level)
