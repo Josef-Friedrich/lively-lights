@@ -111,9 +111,9 @@ class ReachableLights(object):
 
     :param int refresh_interval: Search every n seconds for new lights.
 
-    :param bool at_night: Return light IDs only at night.
+    :param bool not_at_night: Return light IDs not at night.
 
-    :param bool at_day: Return light IDs only at day.
+    :param bool not_during_daytime: Return light IDs not during at day.
 
     :param string check_open_port: Check if a host has an open TCP port:
       e. g. 192.168.3.11:22
@@ -128,9 +128,9 @@ class ReachableLights(object):
       `check_ping` is not empty.
     """
     def __init__(self, bridge, day_night, light_ids=None, refresh_interval=60,
-                 at_night=True, at_day=True, check_open_port=None,
-                 on_open_port=True, check_ping=None, on_ping=True,
-                 turn_off=False):
+                 not_at_night=False, not_during_daytime=False,
+                 check_open_port=None, on_open_port=True, check_ping=None,
+                 on_ping=True, turn_off=False):
 
         self.light_ids = light_ids
         """A list of light IDS. """
@@ -138,10 +138,10 @@ class ReachableLights(object):
         self.refresh_interval = refresh_interval
         """Search every n seconds for new lights."""
 
-        self.at_night = at_night
+        self.not_at_night = not_at_night
         """Return light IDs only at night."""
 
-        self.at_day = at_day
+        self.not_during_daytime = not_during_daytime
         """Return light IDs only at day."""
 
         self.check_open_port = check_open_port
@@ -237,8 +237,8 @@ class ReachableLights(object):
     def _get_reachable(self):
         lights = []
 
-        if (not self.at_night and self._day_night.is_night()) or \
-           (not self.at_day and self._day_night.is_day()):
+        if (self.not_at_night and self._day_night.is_night()) or \
+           (self.not_during_daytime and self._day_night.is_day()):
             if self.turn_off:
                 self._turn_off_lights()
             return lights

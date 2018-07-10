@@ -139,29 +139,29 @@ class TestClassReachableLights(unittest.TestCase):
         self.assertEqual(lights.get_light_ids(), [1])
 
     @freeze_time('2000-01-01 23:00:00')
-    def test_parameter_at_night_false_by_night(self):
-        lights = self.get_reachable_lights([1, True], at_night=False)
+    def test_parameter_not_at_night_true_by_night(self):
+        lights = self.get_reachable_lights([1, True], not_at_night=True)
         self.assertEqual(lights.get_light_ids(), [])
 
     @freeze_time('2000-01-01 23:00:00')
-    def test_parameter_at_night_true_by_night(self):
-        lights = self.get_reachable_lights([1, True], at_night=True)
+    def test_parameter_not_at_night_false_by_night(self):
+        lights = self.get_reachable_lights([1, True], not_at_night=False)
         self.assertEqual(lights.get_light_ids(), [1])
 
     @freeze_time('2000-01-01 12:00:00')
-    def test_parameter_at_night_false_by_day(self):
-        lights = self.get_reachable_lights([1, True], at_night=False)
+    def test_parameter_not_at_night_true_by_day(self):
+        lights = self.get_reachable_lights([1, True], not_at_night=True)
         self.assertEqual(lights.get_light_ids(), [1])
 
     @freeze_time('2000-01-01 12:00:00')
-    def test_parameter_at_night_true_by_day(self):
-        lights = self.get_reachable_lights([1, True], at_night=True)
+    def test_parameter_not_at_night_false_by_day(self):
+        lights = self.get_reachable_lights([1, True], not_at_night=False)
         self.assertEqual(lights.get_light_ids(), [1])
         self.assertTrue(lights._bridge[1].on)
 
     @freeze_time('2000-01-01 12:00:00')
     def test_parameter_turn_off(self):
-        lights = self.get_reachable_lights([1, True], at_day=False,
+        lights = self.get_reachable_lights([1, True], not_during_daytime=True,
                                            turn_off=True)
         self.assertEqual(lights.get_light_ids(), [])
         self.assertEqual(lights._bridge[1].on, False)
