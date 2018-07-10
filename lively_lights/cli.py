@@ -25,9 +25,21 @@ def get_parser():
     )
 
     parser.add_argument(
+        '-D', '--duration',
+        type=types.time,
+        help='Set the duration of the scene in seconds.',
+    )
+
+    parser.add_argument(
         '-d', '--daemonize',
         action='store_true',
         help='Fork the process in the background.',
+    )
+
+    parser.add_argument(
+        '-H', '--not-host-up',
+        nargs=1,
+        help='Do nothing if a external host is up and reachable.',
     )
 
     parser.add_argument(
@@ -43,15 +55,26 @@ def get_parser():
     )
 
     parser.add_argument(
+        '-n', '--not-at-night',
+        action='store_true',
+        help='Do nothing at night. In order to pause at the right time, '
+        'you have to supply informations of your '
+        'location in the configuration file.',
+    )
+
+    parser.add_argument(
         '-u', '--username',
         type=str,
         help='The username to login.',
     )
 
     parser.add_argument(
-        '-D', '--duration',
-        type=types.time,
-        help='Set the duration of the scene in seconds.',
+        '-t', '--turn-off',
+        action='store_true',
+        help='Turn off the lights if one of the three options ('
+        '--not-during-daytime, '
+        '--not-at-night, '
+        '--not-host-up) is present and takes effect.'
     )
 
     parser.add_argument(
@@ -62,34 +85,11 @@ def get_parser():
     )
 
     parser.add_argument(
-        '--turn-off',
-        action='store_true',
-        help='Turn off the lights if one of the three options ('
-        '--not-during-daytime, '
-        '--not-at-night, '
-        '--not-host-up) are present and take effect.'
-    )
-
-    parser.add_argument(
-        '--not-during-daytime',
+        '-y', '--not-during-daytime',
         action='store_true',
         help='Do nothing during daytime. In order to pause '
         'at the right time, you have to supply informations of your '
         'location in the configuration file.',
-    )
-
-    parser.add_argument(
-        '--not-at-night',
-        action='store_true',
-        help='Do nothing at night. In order to pause at the right time, '
-        'you have to supply informations of your '
-        'location in the configuration file.',
-    )
-
-    parser.add_argument(
-        '--not-host-up',
-        nargs=1,
-        help='Do nothing if a external host is up and reachable.',
     )
 
     ###########################################################################
