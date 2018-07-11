@@ -345,6 +345,7 @@ class SceneBreath(Scene):
                     'transitiontime': types.transition_time(time_span - 0.2),
                     'bri': randint(*self.brightness_range),
                     'sat': 254,
+                    'on': True,
                 }
                 set_light_multiple(self.bridge, light_id, data)
                 time.sleep(time_span)
@@ -438,6 +439,7 @@ class ScenePendulum(Scene):
                 'bri': 254,
                 'transitiontime': types.transition_time(self.transition_time),
                 'sat': 254,
+                'on': True,
             }
             set_light_multiple(self.bridge, light_id, data)
 
@@ -525,6 +527,7 @@ class SceneSequence(Scene):
                                 self.transition_time
                             ),
                             'sat': 255,
+                            'on': True,
                         }
                         set_light_multiple(self.bridge, light.light_id, data)
 
