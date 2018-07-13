@@ -6,6 +6,39 @@ import datetime
 import pyowm
 import socket
 import time
+import platform
+import subprocess
+
+
+class HostUp(object):
+
+    timeout = 3
+
+    def ping_ping3(host, timeout=3):
+        if ping(host, timeout=3):
+            return True
+        else:
+            return False
+
+    def _ping_external_command(self, host):
+        option = "-n" if platform.system().lower() == "windows" else "-c"
+        need_sh = True if platform.system().lower() == "windows" else False
+        return subprocess.call(['ping', option, '1', host], shell=need_sh,
+                               timeout=self.timeout) == 0
+
+    def open_port(host, port, timeout=3):
+        """
+        https://stackoverflow.com/a/33117579
+        :param string host: ipv4 address
+        :param int port: open port
+        :param in timeout: Timeout in seconds
+        """
+        try:
+            socket.setdefaulttimeout(timeout)
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+            return True
+        except Exception:
+            return False
 
 
 def is_host_pingable(host, timeout=3):

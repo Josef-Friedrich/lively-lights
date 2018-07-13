@@ -4,6 +4,7 @@ from lively_lights.environment import \
     is_host_reachable, \
     ReachableLights, \
     ReachableLightsFactory, \
+    HostUp, \
     Weather
 from _helper import mock_bridge, get_day_night
 from freezegun import freeze_time
@@ -16,6 +17,15 @@ INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
 
 def get_username():
     return pwd.getpwuid(os.getuid()).pw_name
+
+
+class TestClassHostUp(unittest.TestCase):
+
+    def setUp(self):
+        self.host_up = HostUp()
+
+    def test_ping_google(self):
+        self.assertTrue(self.host_up._ping_external_command('8.8.8.8'))
 
 
 @unittest.skipIf(not INTERNET_CONNECTIFITY or get_username() != 'root',
