@@ -13,17 +13,20 @@ import pwd
 import unittest
 
 INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
+ON_TRAVIS = os.getenv('TRAVIS') == 'true'
 
 
 def get_username():
     return pwd.getpwuid(os.getuid()).pw_name
 
 
+@unittest.skipIf(not INTERNET_CONNECTIFITY, 'No internet connectifity')
 class TestClassHostUp(unittest.TestCase):
 
     def setUp(self):
         self.host_up = HostUp()
 
+    @unittest.skipIf(ON_TRAVIS, 'ICMP not allowed on travis.')
     def test_ping_google(self):
         self.assertTrue(self.host_up._ping_external_command('8.8.8.8'))
 

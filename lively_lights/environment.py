@@ -35,7 +35,8 @@ class HostUp(object):
         """
         try:
             socket.setdefaulttimeout(timeout)
-            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host,
+                                                                       port))
             return True
         except Exception:
             return False
