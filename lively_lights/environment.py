@@ -1,6 +1,7 @@
 """Gather informations about the environment `lively_lights` is running in."""
 
 from ping3 import ping
+import ping3
 import astral
 import datetime
 import pyowm
@@ -12,10 +13,12 @@ import subprocess
 
 class HostUp(object):
 
-    timeout = 3
+    def __init__(self):
+        self.timeout = 3
+        """How long to wait for an answer (in seconds)."""
 
-    def ping_ping3(host, timeout=3):
-        if ping(host, timeout=3):
+    def _ping_python(self, host):
+        if ping3.ping(host, self.timeout):
             return True
         else:
             return False
@@ -23,10 +26,15 @@ class HostUp(object):
     def _ping_external_command(self, host):
         option = "-n" if platform.system().lower() == "windows" else "-c"
         need_sh = True if platform.system().lower() == "windows" else False
-        return subprocess.call(['ping', option, '1', host], shell=need_sh,
-                               timeout=self.timeout) == 0
+        try:
+            return subprocess.call(['ping', option, '1', host], shell=need_sh,
+                                   timeout=self.timeout,
+                                   stderr=subprocess.PIPE,
+                                   stdout=subprocess.PIPE) == 0
+        except subprocess.TimeoutExpired:
+            return False
 
-    def open_port(host, port, timeout=3):
+    def _open_port(self, host, port):
         """
         https://stackoverflow.com/a/33117579
         :param string host: ipv4 address
@@ -34,7 +42,7 @@ class HostUp(object):
         :param in timeout: Timeout in seconds
         """
         try:
-            socket.setdefaulttimeout(timeout)
+            socket.setdefaulttimeout(self.timeout)
             socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host,
                                                                        port))
             return True

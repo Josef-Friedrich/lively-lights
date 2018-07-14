@@ -25,10 +25,29 @@ class TestClassHostUp(unittest.TestCase):
 
     def setUp(self):
         self.host_up = HostUp()
+        self.host_up.timeout = 1
 
     @unittest.skipIf(ON_TRAVIS, 'ICMP not allowed on travis.')
-    def test_ping_google(self):
+    def test_method_ping_external_command_true(self):
         self.assertTrue(self.host_up._ping_external_command('8.8.8.8'))
+
+    @unittest.skipIf(ON_TRAVIS, 'ICMP not allowed on travis.')
+    def test_method_ping_external_command_false(self):
+        self.assertFalse(self.host_up._ping_external_command('192.0.0.1'))
+
+    @unittest.skipIf(get_username() != 'root', 'You have to be root')
+    def test_method_ping_python_true(self):
+        self.assertTrue(self.host_up._ping_python('8.8.8.8'))
+
+    @unittest.skipIf(get_username() != 'root', 'You have to be root')
+    def test_method_ping_python_false(self):
+        self.assertFalse(self.host_up._ping_python('192.0.0.1'))
+
+    def test_method_open_port_true(self):
+        self.assertTrue(self.host_up._open_port('8.8.8.8', 53))
+
+    def test_method_open_port_false(self):
+        self.assertFalse(self.host_up._open_port('8.8.8.8', 52))
 
 
 @unittest.skipIf(not INTERNET_CONNECTIFITY or get_username() != 'root',
