@@ -13,7 +13,11 @@ import pwd
 import unittest
 
 INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
-ON_TRAVIS = os.getenv('TRAVIS') == 'true'
+
+if 'TRAVIS' in os.environ:
+    ON_TRAVIS = True
+else:
+    ON_TRAVIS = False
 
 
 def get_username():
