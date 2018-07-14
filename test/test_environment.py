@@ -59,11 +59,13 @@ class TestClassHostUp(unittest.TestCase):
     def test_method_is_up_open_port_false(self):
         self.assertFalse(self.host_up.is_up('192.0.0.1:52'))
 
+    @unittest.skipIf(ON_TRAVIS, 'ICMP not allowed on travis.')
     def test_method_is_up_ping_true(self):
         self.assertTrue(self.host_up.is_up('8.8.8.8'))
 
+    @unittest.skipIf(ON_TRAVIS, 'ICMP not allowed on travis.')
     def test_method_is_up_ping_false(self):
-        self.assertFalse(self.host_up.is_up('8.192.0.0.1.8.8'))
+        self.assertFalse(self.host_up.is_up('192.0.0.1'))
 
 
 @unittest.skipIf(not INTERNET_CONNECTIFITY or get_username() != 'root',
