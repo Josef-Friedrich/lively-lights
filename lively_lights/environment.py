@@ -43,11 +43,33 @@ class HostUp(object):
         """
         try:
             socket.setdefaulttimeout(self.timeout)
-            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host,
-                                                                       port))
+            socket.socket(socket.AF_INET,
+                          socket.SOCK_STREAM).connect((host, int(port)))
             return True
         except Exception:
             return False
+
+    def is_up(self, address):
+        """
+        :param str address: The address of the host to check if it’s up, e. g.
+        `192.168.1.2:80` or `192.168.1.2:80`
+        """
+        labels = address.split(':')
+        ip_address = labels[0]
+        tcp_port = None
+        if len(labels) == 2:
+            tcp_port = labels[1]
+
+        if tcp_port:
+            return self._open_port(ip_address, tcp_port)
+        else:
+            try:
+                return self._ping_python(ip_address)
+            except PermissionError:
+                return self._ping_external_command(ip_address)
+
+
+host_up = HostUp()
 
 
 def is_host_pingable(host, timeout=3):

@@ -53,6 +53,18 @@ class TestClassHostUp(unittest.TestCase):
     def test_method_open_port_false(self):
         self.assertFalse(self.host_up._open_port('8.8.8.8', 52))
 
+    def test_method_is_up_open_port_true(self):
+        self.assertTrue(self.host_up.is_up('8.8.8.8:53'))
+
+    def test_method_is_up_open_port_false(self):
+        self.assertFalse(self.host_up.is_up('192.0.0.1:52'))
+
+    def test_method_is_up_ping_true(self):
+        self.assertTrue(self.host_up.is_up('8.8.8.8'))
+
+    def test_method_is_up_ping_false(self):
+        self.assertFalse(self.host_up.is_up('8.192.0.0.1.8.8'))
+
 
 @unittest.skipIf(not INTERNET_CONNECTIFITY or get_username() != 'root',
                  'No internet connectifity')
