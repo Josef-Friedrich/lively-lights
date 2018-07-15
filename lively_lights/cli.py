@@ -38,7 +38,7 @@ def get_parser():
 
     parser.add_argument(
         '-H', '--not-host-up',
-        nargs=1,
+        default=False,
         help='Do nothing if an external host is up and reachable.',
     )
 

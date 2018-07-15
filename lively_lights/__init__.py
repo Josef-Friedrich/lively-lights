@@ -109,6 +109,7 @@ def main():
         day_night,
         not_at_night=args.not_at_night,
         not_during_daytime=args.not_during_daytime,
+        not_host_up=args.not_host_up,
         turn_off=args.turn_off,
     )
 
