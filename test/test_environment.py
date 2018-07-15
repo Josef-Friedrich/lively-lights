@@ -1,10 +1,9 @@
 from lively_lights.environment import \
     DayNight, \
-    is_host_pingable, \
-    is_host_reachable, \
+    host_up, \
+    HostUp, \
     ReachableLights, \
     ReachableLightsFactory, \
-    HostUp, \
     Weather
 from _helper import mock_bridge, get_day_night
 from freezegun import freeze_time
@@ -12,7 +11,8 @@ import os
 import pwd
 import unittest
 
-INTERNET_CONNECTIFITY = is_host_reachable('8.8.8.8', 53)
+
+INTERNET_CONNECTIFITY = host_up.is_up('8.8.8.8:53')
 
 if 'TRAVIS' in os.environ:
     ON_TRAVIS = True
@@ -66,27 +66,6 @@ class TestClassHostUp(unittest.TestCase):
     @unittest.skipIf(ON_TRAVIS, 'ICMP not allowed on travis.')
     def test_method_is_up_ping_false(self):
         self.assertFalse(self.host_up.is_up('192.0.0.1'))
-
-
-@unittest.skipIf(not INTERNET_CONNECTIFITY or get_username() != 'root',
-                 'No internet connectifity')
-class TestFunctionIsHostPingable(unittest.TestCase):
-
-    def test_is_pingable(self):
-        self.assertTrue(is_host_pingable('8.8.8.8'))
-
-    def test_is_not_pingable(self):
-        self.assertFalse(is_host_pingable('192.0.0.1'))
-
-
-@unittest.skipIf(not INTERNET_CONNECTIFITY, 'No internet connectifity')
-class TestFunctionIsHostReachable(unittest.TestCase):
-
-    def test_is_reachable(self):
-        self.assertTrue(is_host_reachable('8.8.8.8', 53))
-
-    def test_is_not_reachable(self):
-        self.assertFalse(is_host_reachable('8.8.8.8', 52))
 
 
 class TestClassDayNight(unittest.TestCase):

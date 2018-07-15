@@ -1,6 +1,5 @@
 """Gather informations about the environment `lively_lights` is running in."""
 
-from ping3 import ping
 import ping3
 import astral
 import datetime
@@ -70,28 +69,6 @@ class HostUp(object):
 
 
 host_up = HostUp()
-
-
-def is_host_pingable(host, timeout=3):
-    if ping(host, timeout=3):
-        return True
-    else:
-        return False
-
-
-def is_host_reachable(host, port, timeout=3):
-    """
-    https://stackoverflow.com/a/33117579
-    :param string host: ipv4 address
-    :param int port: open port
-    :param in timeout: Timeout in seconds
-    """
-    try:
-        socket.setdefaulttimeout(timeout)
-        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
-        return True
-    except Exception:
-        return False
 
 
 class DayNight(object):
