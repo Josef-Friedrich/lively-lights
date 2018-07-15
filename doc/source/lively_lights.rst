@@ -21,6 +21,11 @@ lively_lights.cli
 
 .. automodule:: lively_lights.cli
 
+lively_lights.environment
+-------------------------
+
+.. automodule:: lively_lights.environment
+
 lively_lights.phue
 ------------------
 

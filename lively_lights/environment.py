@@ -51,7 +51,7 @@ class HostUp(object):
     def is_up(self, address):
         """
         :param str address: The address of the host to check if it’s up, e. g.
-        `192.168.1.2:80` or `192.168.1.2:80`
+          `192.168.1.2:80` or `192.168.1.2:80`.
         """
         labels = address.split(':')
         ip_address = labels[0]
