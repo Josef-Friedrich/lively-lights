@@ -39,7 +39,7 @@ def get_parser():
     parser.add_argument(
         '-H', '--not-host-up',
         nargs=1,
-        help='Do nothing if a external host is up and reachable.',
+        help='Do nothing if an external host is up and reachable.',
     )
 
     parser.add_argument(
@@ -71,7 +71,7 @@ def get_parser():
     parser.add_argument(
         '-t', '--turn-off',
         action='store_true',
-        help='Turn off the lights if one of the three options ('
+        help='Turn the lights off if one of the three options ('
         '--not-during-daytime, '
         '--not-at-night, '
         '--not-host-up) is present and takes effect.'

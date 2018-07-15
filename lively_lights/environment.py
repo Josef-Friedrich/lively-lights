@@ -156,22 +156,18 @@ class ReachableLights(object):
 
     :param bool not_during_daytime: Return light IDs not during at day.
 
-    :param string check_open_port: Check if a host has an open TCP port:
-      e. g. 192.168.3.11:22
+    :param string not_host_up: Do nothing if an external host is up.
+      Check if a host has an open TCP port:
+      e. g. `192.168.3.11:22` or is pingable e. g. `192.168.3.11`.
 
-    :param bool on_open_port: This parameter only takes effect if the parameter
-      `check_open_port` is not empty.
+    :param bool turn_off: Turn the lights off if one of the three arguments
+      (`not_during_daytime`, `not_at_night`, `not_host_up`) is present and
+      takes effect.
 
-    :param string check_ping: Check if a host is pingable. You have to be root
-       e. g. 192.168.3.11
-
-    :param bool on_ping: This parameter only takes effect if the parameter
-      `check_ping` is not empty.
     """
     def __init__(self, bridge, day_night, light_ids=None, refresh_interval=60,
                  not_at_night=False, not_during_daytime=False,
-                 check_open_port=None, on_open_port=True, check_ping=None,
-                 on_ping=True, turn_off=False):
+                 not_host_up=None, turn_off=False):
 
         self.light_ids = light_ids
         """A list of light IDS. """
@@ -185,16 +181,8 @@ class ReachableLights(object):
         self.not_during_daytime = not_during_daytime
         """Return light IDs only at day."""
 
-        self.check_open_port = check_open_port
+        self.not_host_up = not_host_up
         """Check if a host has an open TCP port: e. g. 192.168.3.11:22"""
-
-        self.on_open_port = on_open_port
-        """This parameter only takes effect if the parameter `check_open_port`
-        is not empty."""
-
-        self.check_ping = on_ping
-        """Check if a host is pingable. You have to be root e. g.
-          192.168.3.11"""
 
         self.turn_off = turn_off
         """Turn off lights on certain conditions."""
@@ -279,7 +267,8 @@ class ReachableLights(object):
         lights = []
 
         if (self.not_at_night and self._day_night.is_night()) or \
-           (self.not_during_daytime and self._day_night.is_day()):
+           (self.not_during_daytime and self._day_night.is_day()) or \
+           (self.not_host_up and host_up.is_up(self.not_host_up)):
             if self.turn_off:
                 self._turn_off_lights()
             return lights
