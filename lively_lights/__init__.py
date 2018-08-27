@@ -29,6 +29,13 @@ class Configuration(object):
 
     def __init__(self, config_file_path=None,
                  config_environ_prefix=None):
+        """
+        :param str config_file_path: The path of the configuration file.
+          The default value is `~/.lively-lights.ini`.
+        :param str config_environ_prefix: The environment variable prefix
+          `lively_lights` should look for configuration, by default
+          `LIVELY_LIGHTS_`.
+        """
 
         if not config_file_path:
             config_file_path = '~/.lively-lights.ini'
@@ -67,12 +74,27 @@ class Configuration(object):
 
 
 class Hue(object):
+    """Convenience class to bundle all configuration and setup in one
+    object."""
 
     def __init__(self, ip=None, username=None,
                  config_file_path=None,
                  config_environ_prefix=None, verbosity_level=0,
                  colorize_output=False):
+        """
+        :param str ip: The IP address of the Hue bridge. IP address as dotted
+          quad.
+        :param str username: The username to authenticate against the Hue
+          bridge.
+        :param str config_file_path: The path of the configuration file.
+          The default value is `~/.lively-lights.ini`.
+        :param str config_environ_prefix: The environment variable prefix
+          `lively_lights` should look for configuration, by default
+          `LIVELY_LIGHTS_`.
+        """
+
         self.config = Configuration(config_file_path, config_environ_prefix)
+        """:class:`lively_lights.Configuration`"""
 
         if not ip:
             ip = self.config.get('bridge', 'ip')
@@ -82,6 +104,7 @@ class Hue(object):
 
         self.bridge = Bridge(ip, username, verbosity_level=verbosity_level,
                              colorize_output=colorize_output)
+        """:class:`lively_lights.phue.Bridge`"""
 
 
 def main():
