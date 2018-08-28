@@ -8,6 +8,7 @@ from lively_lights.phue import Bridge
 import configparser
 import contextlib
 import daemon
+import evdev
 import lockfile
 import os
 
@@ -17,6 +18,10 @@ __version__ = get_versions()['version']
 del get_versions
 
 args = None
+
+
+evdev
+"""Import the evdev package."""
 
 
 def lights_info(bridge):
