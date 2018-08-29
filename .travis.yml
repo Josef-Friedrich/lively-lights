@@ -6,10 +6,6 @@ env:
 - TOXENV=docs
 - TOXENV=flake8
 install:
-- sudo apt install python3-dev
-- sudo apt install linux-headers-$(uname -r)
-- ls -l /usr/include/linux
-#- sudo apt install python3-evdev
 - pip install tox
 script: tox
 jobs:
