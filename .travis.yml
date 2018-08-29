@@ -8,6 +8,7 @@ env:
 install:
 #- sudo apt install python-dev
 - sudo apt install linux-headers-$(uname -r)
+- ls -l /usr/include/linux
 #- sudo apt install python3-evdev
 - pip install tox
 script: tox
