@@ -26,7 +26,6 @@ setup(
     install_requires = [
         'ansicolors',
         'astral',
-        'evdev',
         'phue',
         'ping3',
         'Pygments',
