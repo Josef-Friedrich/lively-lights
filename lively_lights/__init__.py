@@ -25,6 +25,16 @@ def lights_info(bridge):
         print(info)
 
 
+def groups_info(bridge):
+    for group in bridge.groups:
+        lights_info = []
+        for light in group.lights:
+                lights_info.append('{}: {}'.format(light.light_id, light.name))
+        info = '{}: {} ({})'.format(group.group_id, group.name,
+                                    ', '.join(lights_info))
+        print(info)
+
+
 class Configuration(object):
 
     def __init__(self, config_file_path=None,
@@ -139,8 +149,11 @@ def main():
     if args.lights:
         reachable_lights.light_ids = args.lights
 
-    if args.subcommand == 'info' and args.info == 'lights':
-        lights_info(hue.bridge)
+    if args.subcommand == 'info':
+        if args.info == 'lights':
+            lights_info(hue.bridge)
+        elif args.info == 'groups':
+            groups_info(hue.bridge)
         return
 
     if args.daemonize:

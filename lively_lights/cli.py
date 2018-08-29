@@ -130,6 +130,11 @@ def get_parser():
         help='Print informations about all lights.'
     )
 
+    info.add_parser(
+        'groups',
+        help='Print informations about all groups.'
+    )
+
     ###########################################################################
     # scene
     ###########################################################################
