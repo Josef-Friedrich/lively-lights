@@ -1,9 +1,14 @@
 .. image:: http://img.shields.io/pypi/v/lively_lights.svg
     :target: https://pypi.python.org/pypi/lively_lights
+    :alt: This package on the Python Package Index
 
 .. image:: https://travis-ci.org/Josef-Friedrich/lively-lights.svg?branch=master
     :target: https://travis-ci.org/Josef-Friedrich/lively-lights
+    :alt: Continuous integration
 
+.. image:: https://readthedocs.org/projects/lively-lights/badge/?version=latest
+    :target: https://lively-lights.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 lively-lights
 -------------
