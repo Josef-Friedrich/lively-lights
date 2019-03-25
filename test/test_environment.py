@@ -86,11 +86,11 @@ class TestClassDayNight(unittest.TestCase):
     def test_is_day(self):
         self.assertTrue(self.day_night.is_day())
 
-    @freeze_time('2000-01-01 08:11:49+01')
+    @freeze_time('2000-01-01 08:09:41+01')
     def test_is_night_close(self):
         self.assertTrue(self.day_night.is_night())
 
-    @freeze_time('2000-01-01 08:11:50+01')
+    @freeze_time('2000-01-01 08:09:42+01')
     def test_is_day_close(self):
         self.assertTrue(self.day_night.is_day())
 
@@ -98,11 +98,11 @@ class TestClassDayNight(unittest.TestCase):
     def test_overview(self):
         self.assertEqual(
             self.day_night.overview(),
-            'Dawn:    2000-01-01 07:34:09+01:00\n'
-            'Sunrise: 2000-01-01 08:11:49+01:00\n'
+            'Dawn:    2000-01-01 07:32:10+01:00\n'
+            'Sunrise: 2000-01-01 08:09:41+01:00\n'
             'Noon:    2000-01-01 12:18:44+01:00\n'
-            'Sunset:  2000-01-01 16:25:40+01:00\n'
-            'Dusk:    2000-01-01 17:03:20+01:00'
+            'Sunset:  2000-01-01 16:27:48+01:00\n'
+            'Dusk:    2000-01-01 17:05:19+01:00'
         )
 
 

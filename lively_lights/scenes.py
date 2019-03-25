@@ -103,7 +103,7 @@ class Launcher(object):
     @staticmethod
     def _read_yaml(yaml_file):
         with open(yaml_file, 'r') as stream:
-            return yaml.load(stream)
+            return yaml.load(stream, Loader=yaml.FullLoader)
 
     @staticmethod
     def _get_scene_class(scene_name):
