@@ -29,7 +29,7 @@ def groups_info(bridge):
     for group in bridge.groups:
         lights_info = []
         for light in group.lights:
-                lights_info.append('{}: {}'.format(light.light_id, light.name))
+            lights_info.append('{}: {}'.format(light.light_id, light.name))
         info = '{}: {} ({})'.format(group.group_id, group.name,
                                     ', '.join(lights_info))
         print(info)
