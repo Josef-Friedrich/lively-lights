@@ -1,10 +1,22 @@
-from setuptools import setup
 import os
+
+from setuptools import setup, find_packages
 import versioneer
 
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+def read(file_name):
+    """
+    Read the contents of a text file and return its content.
+
+    :param str file_name: The name of the file to read.
+
+    :return: The content of the text file.
+    :rtype: str
+    """
+    return open(
+        os.path.join(os.path.dirname(__file__), file_name),
+        encoding='utf-8'
+    ).read()
 
 
 setup(
@@ -15,15 +27,15 @@ setup(
     author_email='josef@friedrich.rocks',
     description=('Lively light scenes on then Philips Hue lamps using Python.'),
     license='MIT',
-    packages=['lively_lights'],
+    packages=find_packages(),
     url='https://github.com/Josef-Friedrich/lively-lights',
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'lively-lights.py = lively_lights:main',
         ],
     },
     keywords='hue philips',
-    install_requires = [
+    install_requires=[
         'ansicolors',
         'astral',
         'phue',
@@ -34,7 +46,7 @@ setup(
         'PyYaml',
         'sphinx-argparse',
     ],
-    tests_requires = [
+    tests_requires=[
         'freezegun',
     ],
     long_description=read('README.rst'),
