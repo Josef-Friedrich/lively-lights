@@ -37,7 +37,7 @@ setup(
     keywords='hue philips',
     install_requires=[
         'ansicolors',
-        'astral',
+        'astral==1.10.1',
         'phue',
         'ping3',
         'Pygments',

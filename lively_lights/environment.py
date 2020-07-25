@@ -17,7 +17,7 @@ class HostUp(object):
         """How long to wait for an answer (in seconds)."""
 
     def _ping_python(self, host):
-        if ping3.ping(host, self.timeout):
+        if ping3.ping(host, timeout=self.timeout):
             return True
         else:
             return False
