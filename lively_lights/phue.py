@@ -20,7 +20,6 @@ import os
 import platform
 import sys
 import socket
-from lively_lights._utils import RestDebug
 if sys.version_info[0] > 2:
     PY3K = True
 else:
@@ -39,7 +38,7 @@ if platform.system() == 'Windows':
 else:
     USER_HOME = 'HOME'
 
-__version__ = '1.1'
+__version__ = '1.2'
 
 
 def is_string(data):
@@ -49,6 +48,19 @@ def is_string(data):
     else:
         return isinstance(data, str) or isinstance(data, unicode)  # noqa
 
+def encodeString(string):
+    """Utility method to encode strings as utf-8."""
+    if PY3K:
+        return string
+    else:
+        return string.encode('utf-8')
+
+def decodeString(string):
+    """Utility method to decode strings as utf-8."""
+    if PY3K:
+        return string
+    else:
+        return string.decode('utf-8')
 
 class PhueException(Exception):
 
@@ -119,11 +131,7 @@ class Light(object):
     @property
     def name(self):
         '''Get or set the name of the light [string]'''
-        if PY3K:
-            self._name = self._get('name')
-        else:
-            self._name = self._get('name').encode('utf-8')
-        return self._name
+        return encodeString(self._get('name'))
 
     @name.setter
     def name(self, value):
@@ -361,11 +369,7 @@ class Sensor(object):
     @property
     def name(self):
         '''Get or set the name of the sensor [string]'''
-        if PY3K:
-            self._name = self._get('name')
-        else:
-            self._name = self._get('name').encode('utf-8')
-        return self._name
+        return encodeString(self._get('name'))
 
     @name.setter
     def name(self, value):
@@ -468,14 +472,9 @@ class Group(Light):
             name = group_id
             groups = bridge.get_group()
             for idnumber, info in groups.items():
-                if PY3K:
-                    if info['name'] == name:
-                        self.group_id = int(idnumber)
-                        break
-                else:
-                    if info['name'] == name.decode('utf-8'):
-                        self.group_id = int(idnumber)
-                        break
+                if info['name'] == decodeString(name):
+                    self.group_id = int(idnumber)
+                    break
             else:
                 raise LookupError("Could not find a group by that name.")
 
@@ -500,11 +499,7 @@ class Group(Light):
     @property
     def name(self):
         '''Get or set the name of the light group [string]'''
-        if PY3K:
-            self._name = self._get('name')
-        else:
-            self._name = self._get('name').encode('utf-8')
-        return self._name
+        return encodeString(self._get('name'))
 
     @name.setter
     def name(self, value):
@@ -550,7 +545,8 @@ class Scene(object):
 
     def __init__(self, sid, appdata=None, lastupdated=None,
                  lights=None, locked=False, name="", owner="",
-                 picture="", recycle=False, version=0):
+                 picture="", recycle=False, version=0, type="", group="",
+                 *args, **kwargs):
         self.scene_id = sid
         self.appdata = appdata or {}
         self.lastupdated = lastupdated
@@ -559,14 +555,16 @@ class Scene(object):
         else:
             self.lights = []
         self.locked = locked
-        self.name = name
+        self.name = encodeString(name)
         self.owner = owner
         self.picture = picture
         self.recycle = recycle
         self.version = version
+        self.type = type
+        self.group = group
 
     def __repr__(self):
-        # like default python repr function, but add sensor name
+        # like default python repr function, but add scene name
         return '<{0}.{1} id="{2}" name="{3}" lights={4}>'.format(
             self.__class__.__module__,
             self.__class__.__name__,
@@ -596,8 +594,7 @@ class Bridge(object):
 
 
     """
-    def __init__(self, ip=None, username=None, config_file_path=None,
-                 verbosity_level=0, colorize_output=False):
+    def __init__(self, ip=None, username=None, config_file_path=None):
         """ Initialization function.
 
         Parameters:
@@ -623,8 +620,6 @@ class Bridge(object):
         self.lights_by_name = {}
         self.sensors_by_id = {}
         self.sensors_by_name = {}
-        self.verbosity_level = verbosity_level
-        self.colorize_output = colorize_output
         self._name = None
 
         # self.minutes = 600 # these do not seem to be used anywhere?
@@ -648,9 +643,6 @@ class Bridge(object):
 
     def request(self, mode='GET', address=None, data=None):
         """ Utility function for HTTP GET/PUT requests for the API"""
-
-        rest_debug = RestDebug(self.verbosity_level, self.colorize_output)
-        rest_debug.print_request(mode, address, data)
         connection = httplib.HTTPConnection(self.ip, timeout=10)
 
         try:
@@ -669,14 +661,12 @@ class Bridge(object):
 
         result = connection.getresponse()
         response = result.read()
-        if response:
-            rest_debug.print_json(json.loads(response.decode('utf-8')))
         connection.close()
         if PY3K:
-            return json.loads(response.decode('utf-8'))
-        else:
-            logger.debug(response)
-            return json.loads(response)
+            response = response.decode('utf-8')
+
+        logger.debug(response)
+        return json.loads(response)
 
     def get_ip_address(self, set_result=False):
 
@@ -764,12 +754,8 @@ class Bridge(object):
         """ Lookup a light id based on string name. Case-sensitive. """
         lights = self.get_light()
         for light_id in lights:
-            if PY3K:
-                if name == lights[light_id]['name']:
-                    return light_id
-            else:
-                if name.decode('utf-8') == lights[light_id]['name']:
-                    return light_id
+            if decodeString(name) == lights[light_id]['name']:
+                return light_id
         return False
 
     def get_light_objects(self, mode='list'):
@@ -794,12 +780,8 @@ class Bridge(object):
         """ Lookup a sensor id based on string name. Case-sensitive. """
         sensors = self.get_sensor()
         for sensor_id in sensors:
-            if PY3K:
-                if name == sensors[sensor_id]['name']:
-                    return sensor_id
-            else:
-                if name.decode('utf-8') == sensors[sensor_id]['name']:
-                    return sensor_id
+            if decodeString(name) == sensors[sensor_id]['name']:
+                return sensor_id
         return False
 
     def get_sensor_objects(self, mode='list'):
@@ -829,10 +811,7 @@ class Bridge(object):
             return self.lights_by_id[key]
         except:
             try:
-                if PY3K:
-                    return self.lights_by_name[key]
-                else:
-                    return self.lights_by_name[key.decode('utf-8')]
+                return self.lights_by_name[decodeString(key)]
             except:
                 raise KeyError(
                     'Not a valid key (integer index starting with 1, or light name): ' + str(key))
@@ -1035,12 +1014,6 @@ class Bridge(object):
         logger.debug(result)
         return result
 
-    def delete_scene(self, scene_id):
-        try:
-            return self.request('DELETE', '/api/' + self.username + '/scenes/' + str(scene_id))
-        except:
-            logger.debug("Unable to delete scene with ID {0}".format(scene_id))
-
     def delete_sensor(self, sensor_id):
         try:
             name = self.sensors_by_id[sensor_id].name
@@ -1060,19 +1033,15 @@ class Bridge(object):
         """ Lookup a group id based on string name. Case-sensitive. """
         groups = self.get_group()
         for group_id in groups:
-            if PY3K:
-                if name == groups[group_id]['name']:
-                    return group_id
-            else:
-                if name.decode('utf-8') == groups[group_id]['name']:
-                    return group_id
+            if decodeString(name) == groups[group_id]['name']:
+                return int(group_id)
         return False
 
     def get_group(self, group_id=None, parameter=None):
         if is_string(group_id):
             group_id = self.get_group_id_by_name(group_id)
         if group_id is False:
-            logger.error('Group name does not exit')
+            logger.error('Group name does not exist')
             return
         if group_id is None:
             return self.request('GET', '/api/' + self.username + '/groups/')
@@ -1116,7 +1085,7 @@ class Bridge(object):
             else:
                 converted_group = group
             if converted_group is False:
-                logger.error('Group name does not exit')
+                logger.error('Group name does not exist')
                 return
             if parameter == 'name' or parameter == 'lights':
                 result.append(self.request('PUT', '/api/' + self.username + '/groups/' + str(converted_group), data))
@@ -1134,7 +1103,7 @@ class Bridge(object):
         """ Create a group of lights
 
         Parameters
-
+        ------------
         name : string
             Name for this group of lights
         lights : list
@@ -1151,6 +1120,32 @@ class Bridge(object):
     @property
     def scenes(self):
         return [Scene(k, **v) for k, v in self.get_scene().items()]
+
+    def create_group_scene(self, name, group):
+        """Create a Group Scene
+
+        Group scenes are based on the definition of groups and contain always all
+        lights from the selected group. No other lights from other rooms can be
+        added to a group scene and the group scene can not contain less lights
+        as available in the selected group. If a group is extended with new lights,
+        the new lights are added with default color to all group scenes based on
+        the corresponding group. This app has no influence on this behavior, it
+        was defined by Philips.
+
+        :param name: The name of the scene to be created
+        :param group: The group id of where the scene will be added
+        :return:
+        """
+        data = {
+            "name": name,
+            "group": group,
+            "recycle": True,
+            "type": "GroupScene"
+        }
+        return self.request('POST', '/api/' + self.username + '/scenes', data)
+
+    def modify_scene(self, scene_id, data):
+        return self.request('PUT', '/api/' + self.username + '/scenes/' + scene_id, data)
 
     def get_scene(self):
         return self.request('GET', '/api/' + self.username + '/scenes')
@@ -1180,8 +1175,8 @@ class Bridge(object):
         can be improved later).
 
         :param transition_time: The duration of the transition from the
-          light’s current state to the new state in a multiple of 100ms
-        :returns: True if a scene was run, False otherwise
+        light’s current state to the new state in a multiple of 100ms
+        :returns True if a scene was run, False otherwise
 
         """
         groups = [x for x in self.groups if x.name == group_name]
@@ -1194,18 +1189,24 @@ class Bridge(object):
             logger.warn("run_scene: No scene found {}".format(scene_name))
             return False
         if len(scenes) == 1:
-            self.activate_scene(group.group_id, scenes[0].scene_id)
+            self.activate_scene(group.group_id, scenes[0].scene_id, transition_time)
             return True
         # otherwise, lets figure out if one of the named scenes uses
         # all the lights of the group
         group_lights = sorted([x.light_id for x in group.lights])
         for scene in scenes:
             if group_lights == scene.lights:
-                self.activate_scene(group.group_id, scene.scene_id)
+                self.activate_scene(group.group_id, scene.scene_id, transition_time)
                 return True
         logger.warn("run_scene: did not find a scene: {} "
                     "that shared lights with group {}".format(scene_name, group_name))
         return False
+
+    def delete_scene(self, scene_id):
+        try:
+            return self.request('DELETE', '/api/' + self.username + '/scenes/' + str(scene_id))
+        except:
+            logger.debug("Unable to delete scene with ID {0}".format(scene_id))
 
     # Schedules #####
     def get_schedule(self, schedule_id=None, parameter=None):

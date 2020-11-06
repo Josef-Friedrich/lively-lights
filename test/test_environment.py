@@ -126,9 +126,6 @@ class TestClassWeather(unittest.TestCase):
     def test_method_get_temperature(self):
         self.assertTrue(self.weather.get_temperature())
 
-    def test_location(self):
-        self.assertEqual(self.weather._location.get_name(), 'Nürnberg')
-
 
 class TestClassReachableLights(unittest.TestCase):
 

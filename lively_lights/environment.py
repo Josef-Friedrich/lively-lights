@@ -119,22 +119,20 @@ class Weather(object):
 
     def __init__(self, openweathermap_api_key, latitude, longitude):
         owm = pyowm.OWM(openweathermap_api_key)
-        observation_list = owm.weather_around_coords(
+        weather_manager = owm.weather_manager()
+        self._weather = weather_manager.weather_at_coords(
             latitude,
             longitude,
-        )
-        observation = observation_list[0]
-        self._location = observation.get_location()
-        self._weather = observation.get_weather()
+        ).weather
 
     def get_wind(self):
         """{'speed': 4.6, 'deg': 330}"""
-        wind = self._weather.get_wind()
+        wind = self._weather.wind()
         return wind['speed']
 
     def get_temperature(self):
         """{'temp_max': 10.5, 'temp': 9.7, 'temp_min': 9.0}"""
-        temperature = self._weather.get_temperature('celsius')
+        temperature = self._weather.temperature('celsius')
         return temperature['temp']
 
 

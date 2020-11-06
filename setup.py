@@ -41,7 +41,7 @@ setup(
         'phue',
         'ping3',
         'Pygments',
-        'pyowm',
+        'pyowm=3.1.1',
         'python-daemon',
         'PyYaml',
         'sphinx-argparse',
