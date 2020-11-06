@@ -4,7 +4,7 @@ from lively_lights import environment
 from lively_lights import scenes
 from lively_lights.cli import get_parser
 from lively_lights.environment import ReachableLights
-from phue import Bridge
+from lively_lights.phue import Bridge
 import configparser
 import contextlib
 import daemon
