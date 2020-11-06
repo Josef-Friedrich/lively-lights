@@ -26,11 +26,6 @@ lively_lights.environment
 
 .. automodule:: lively_lights.environment
 
-lively_lights.phue
-------------------
-
-.. automodule:: lively_lights.phue
-
 lively_lights.scenes
 --------------------
 
