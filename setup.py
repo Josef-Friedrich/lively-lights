@@ -40,7 +40,7 @@ setup(
         'astral==1.10.1',
         'phue==1.1',
         'ping3==2.6.6',
-        'Pygments==2.7.2',
+        'Pygments==2.7.4',
         'pyowm==3.1.1',
         'python-daemon==2.2.4',
         'PyYaml==5.3.1',
