@@ -43,7 +43,7 @@ setup(
         'Pygments==2.7.4',
         'pyowm==3.1.1',
         'python-daemon==2.2.4',
-        'PyYaml==5.3.1',
+        'PyYaml==5.4',
         'sphinx-argparse==0.2.5',
     ],
     tests_requires=[
